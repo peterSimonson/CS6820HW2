@@ -1,6 +1,4 @@
 project({TARGET_NAME})
+set(Sources )
 
-add_library(${PARSER_LIB_NAME}
-        trim.cpp trim.h
-        ProgramScanner.cpp ProgramScanner.h
-        AssemblyFile.cpp AssemblyFile.h)
+add_library(${LL1_Lib_Name} ${Sources})
