@@ -15,5 +15,5 @@ Once you have built the project there should be an executable called ``CS6820HW2
 
 To run the program enter the following
 
-    CS6820HW2 <Expr>
+    ./CS6820HW2 <Expr>
        <Expr>: The string containing the mathematical expression you wish to parse
