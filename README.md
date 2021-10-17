@@ -1,4 +1,4 @@
-# Peter Simonson CS6820 Project 1
+# Peter Simonson CS6820 Homework 2
 
 This is a C++ Cmake project
 
