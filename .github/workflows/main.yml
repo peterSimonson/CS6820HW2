@@ -28,7 +28,7 @@ jobs:
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Generate output Directory
-          run: mkdir cmake-build-debug
+        run: mkdir cmake-build-debug
       # build the project
       - name: build with cmake
         run: ./buildWithCMake.sh
