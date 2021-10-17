@@ -52,3 +52,11 @@ int DivideNode::EvaluateNode() {
 std::string DivideNode::NodeToString() {
     return left->NodeToString() + " / " + right->NodeToString();
 }
+
+int MultiplyNode::EvaluateNode() {
+    return left->EvaluateNode() * right->EvaluateNode();
+}
+
+std::string MultiplyNode::NodeToString() {
+    return left->NodeToString() + " * " + right->NodeToString();
+}

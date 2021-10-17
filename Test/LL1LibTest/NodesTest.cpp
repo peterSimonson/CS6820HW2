@@ -88,4 +88,27 @@ namespace {
         ASSERT_EQ(node3.EvaluateNode() , 1);
         ASSERT_EQ(node4.EvaluateNode() , 1);
     }
+
+    TEST(NodeTest, MultiplyNodeTest){
+        //these will be the left and right nodes for our add nodes
+        IntegerNode a = IntegerNode(8);
+        VariableNode var = VariableNode(8, "Test");
+
+        MultiplyNode node1 = MultiplyNode(&a, &var);
+        MultiplyNode node2 = MultiplyNode(&var, &a);
+        MultiplyNode node3 = MultiplyNode(&a, &a);
+        MultiplyNode node4 = MultiplyNode(&var, &var);
+
+        //test NodeToString
+        ASSERT_EQ(node1.NodeToString(), "8 * Test");
+        ASSERT_EQ(node2.NodeToString(), "Test * 8");
+        ASSERT_EQ(node3.NodeToString(), "8 * 8");
+        ASSERT_EQ(node4.NodeToString(), "Test * Test");
+
+        //test evaluate node
+        ASSERT_EQ(node1.EvaluateNode() , 64);
+        ASSERT_EQ(node2.EvaluateNode() , 64);
+        ASSERT_EQ(node3.EvaluateNode() , 64);
+        ASSERT_EQ(node4.EvaluateNode() , 64);
+    }
 }
