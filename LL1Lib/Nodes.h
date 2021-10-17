@@ -61,4 +61,12 @@ public:
     SubtractNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
 };
 
+class DivideNode : public OperationNode{
+public:
+    int EvaluateNode() override;
+    std::string NodeToString() override;
+    //We just need the constructor for Operation Node
+    DivideNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
+};
+
 #endif //CS6820HW2_NODES_H

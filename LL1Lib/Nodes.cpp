@@ -36,3 +36,19 @@ int AddNode::EvaluateNode() {
 std::string AddNode::NodeToString() {
     return left->NodeToString() + " + " + right->NodeToString();
 }
+
+int SubtractNode::EvaluateNode() {
+    return left->EvaluateNode() - right->EvaluateNode();
+}
+
+std::string SubtractNode::NodeToString() {
+    return left->NodeToString() + " - " + right->NodeToString();
+}
+
+int DivideNode::EvaluateNode() {
+    return left->EvaluateNode() / right->EvaluateNode();
+}
+
+std::string DivideNode::NodeToString() {
+    return left->NodeToString() + " / " + right->NodeToString();
+}
