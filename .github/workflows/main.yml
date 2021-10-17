@@ -30,4 +30,4 @@ jobs:
 
       # build the project
       - name: build with cmake
-        run: ./buildWithCMake
+        run: ./buildWithCMake.sh
