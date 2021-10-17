@@ -27,6 +27,12 @@ public:
     std::string NodeToString() override;
 };
 
+//Negate an integer value
+class NegateNode : public IntegerNode{
+public:
+    explicit NegateNode(int value) : IntegerNode(-value){}
+};
+
 //represents a variable value
 class VariableNode : public IntegerNode{
 public:
@@ -45,6 +51,7 @@ public:
     OperationNode(TreeNode * leftNode, TreeNode * rightNode);
 };
 
+//add two integer values
 class AddNode : public OperationNode{
 public:
     int EvaluateNode() override;
@@ -53,6 +60,7 @@ public:
     AddNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
 };
 
+//subtract two integer values
 class SubtractNode : public OperationNode{
 public:
     int EvaluateNode() override;
@@ -61,6 +69,7 @@ public:
     SubtractNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
 };
 
+//Divide two integer values
 class DivideNode : public OperationNode{
 public:
     int EvaluateNode() override;
@@ -69,6 +78,7 @@ public:
     DivideNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
 };
 
+//multiply two integer values
 class MultiplyNode : public OperationNode{
 public:
     int EvaluateNode() override;

@@ -111,4 +111,16 @@ namespace {
         ASSERT_EQ(node3.EvaluateNode() , 64);
         ASSERT_EQ(node4.EvaluateNode() , 64);
     }
+
+    TEST(NodeTest, NegateNodeTest){
+        //these will be the left and right nodes for our add nodes
+        IntegerNode a = IntegerNode(8);
+        VariableNode var = VariableNode(12, "Test");
+
+        NegateNode negIntNode = NegateNode(a.EvaluateNode());
+        NegateNode negVarNode = NegateNode(var.EvaluateNode());
+
+        ASSERT_EQ(negIntNode.EvaluateNode(), -8);
+        ASSERT_EQ(negVarNode.EvaluateNode(), -12);
+    }
 }
