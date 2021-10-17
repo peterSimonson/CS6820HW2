@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Build and Test
 
 # Controls when the workflow will run
 on:
@@ -24,11 +24,15 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
+      # gets the google test submodule
       - name: Checkout submodules
         run: git submodule update --init --recursive
+      #creates the output directory for our build
       - name: Generate output Directory
         run: mkdir cmake-build-debug
       # build the project
       - name: build with cmake
         run: ./buildWithCMake.sh
+      #test the project using google test and cmake
+      - name: Test Project
+        run: cd cmake-build-debug && ctest
