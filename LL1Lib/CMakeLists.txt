@@ -1,4 +1,4 @@
 project(${TARGET_NAME})
-set(Sources Nodes.cpp Nodes.h)
+set(Sources Nodes.cpp Nodes.h Parse.cpp Parse.h)
 
 add_library(${LL1_Lib_Name} ${Sources})

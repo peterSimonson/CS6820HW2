@@ -1,4 +1,4 @@
-set(Sources NodesTest.cpp)
+set(Sources NodesTest.cpp ParseTest.cpp)
 
 set(LL1_LIB_TEST_NAME LL1LibTest) # set the name of the parser test library
 
