@@ -36,5 +36,7 @@ class Table {
 };
 
 std::vector<int> TranslateWordsToTokens(std::vector<std::string> words);
+bool is_number(const std::string& s);
+bool is_name(const std::string& s);
 
 #endif //CS6820HW2_TABLE_H

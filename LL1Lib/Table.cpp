@@ -4,9 +4,6 @@
 
 #include "Table.h"
 
-bool is_number(const std::string& s);
-bool is_name(const std::string& s);
-
 std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
     //used to loop through the vector of strings
     std::vector<std::string>::iterator str;
@@ -54,6 +51,11 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
 
 //the functions is_number and is_name were taken from:
 //https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
+
+/// Checks if a string is a number
+/// note: does not accept '-' or '.' as part of a number
+/// \param s string we want to check if it is a number
+/// \return true if it is a number, false if it is not
 bool is_number(const std::string& s)
 {
     std::string::const_iterator it = s.begin();
@@ -61,9 +63,22 @@ bool is_number(const std::string& s)
     return !s.empty() && it == s.end();
 }
 
+/// Check if a string is a name or not
+/// We check that the first char is a letter and the rest are alphanumeric
+/// \param s string we want to check if it is a name
+/// \return True if a name, false if it is not
 bool is_name(const std::string& s)
 {
     std::string::const_iterator it = s.begin();
-    while (it != s.end() && std::isalnum(*it)) ++it;
-    return !s.empty() && it == s.end();
+    //first char must be a letter
+    if(std::isalpha(*it)){
+        it++;
+        //check the remaining numbers are alphanumeric
+        while (it != s.end() && std::isalnum(*it)) ++it;
+        return !s.empty() && it == s.end();
+    }
+    else{
+        return false;
+    }
+
 }

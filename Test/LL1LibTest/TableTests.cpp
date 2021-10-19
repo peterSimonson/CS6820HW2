@@ -18,4 +18,29 @@ namespace {
         results = {END_TERM , OPEN_PARAN, NAME_TERM, MINUS, NUM_TERM, CLOSE_PARAN, DIVIDE, NUM_TERM};
         ASSERT_EQ(tokens, results);
     }
+
+    TEST(TableTests, IsNumTest){
+        std::string test = "123";
+        ASSERT_TRUE(is_number(test));
+
+        test = "test";
+        ASSERT_FALSE(is_number(test));
+    }
+
+    TEST(TableTests, IsNameTest){
+        std::string test = "123";
+        ASSERT_FALSE(is_name(test));
+
+        test = "test";
+        ASSERT_TRUE(is_name(test));
+
+        test = "test123";
+        ASSERT_TRUE(is_name(test));
+
+        test = "123test";
+        ASSERT_FALSE(is_name(test));
+
+        test = "test!";
+        ASSERT_FALSE(is_name(test));
+    }
 }
