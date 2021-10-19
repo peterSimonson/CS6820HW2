@@ -46,3 +46,14 @@ std::vector<std::string> parseWords(std::string const& line){
 
     return words;
 }
+
+Parser::Parser(const std::string& line) {
+    //get the input strings
+    std::vector<std::string> inputWords = parseWords(line);
+    //translate the input from strings into tokens
+    inputTokens = TranslateWordsToTokens(inputWords);
+
+    //initialize the stack with EOF and Goal
+    stack.push_back(END_TERM);
+    stack.push_back(GOAL);
+}

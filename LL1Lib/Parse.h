@@ -7,6 +7,15 @@
 
 #include <vector>
 #include <string>
+#include "Table.h"
+
+class Parser{
+    explicit Parser(const std::string& line);
+    //contains the input words as tokens
+    std::vector<int> inputTokens;
+    //contains the tokens on the stack
+    std::vector<int> stack;
+};
 
 std::vector<std::string> parseWords(std::string const& line);
 
