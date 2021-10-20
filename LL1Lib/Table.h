@@ -32,7 +32,21 @@
 
 
 class Table {
-
+private:
+    //the token table is a 6x9 table that holds the values for the token swap function
+    int RuleTable [9][6] = {
+            {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 1
+            {ERROR_TOKEN, ERROR_TOKEN, 2, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 2
+            {ERROR_TOKEN, ERROR_TOKEN, 3, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 3
+            {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 6, ERROR_TOKEN},
+            {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 7, ERROR_TOKEN},
+            {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 9},
+            {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN},
+            {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 11},
+            {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 10}
+    };
+public:
+    int LookUpTable(int row, int column);
 };
 
 std::vector<int> TranslateWordsToTokens(std::vector<std::string> words);

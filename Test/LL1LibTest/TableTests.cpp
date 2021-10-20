@@ -43,4 +43,30 @@ namespace {
         test = "test!";
         ASSERT_FALSE(is_name(test));
     }
+
+    TEST(TableTests, LookUpTableTest){
+        Table table;
+
+        //we are going to look up a couple table entries
+        int result = table.LookUpTable(END_TOKEN, GOAL_TOKEN);
+        ASSERT_EQ(result, ERROR_TOKEN);
+
+        result = table.LookUpTable(END_TOKEN, EXPR_PRIME_TOKEN);
+        ASSERT_EQ(result, 4);
+
+        result = table.LookUpTable(END_TOKEN, TERM_PRIME_TOKEN);
+        ASSERT_EQ(result, 8);
+
+        result = table.LookUpTable(PLUS_TOKEN, EXPR_PRIME_TOKEN);
+        ASSERT_EQ(result, 2);
+
+        result = table.LookUpTable(PLUS_TOKEN, TERM_PRIME_TOKEN);
+        ASSERT_EQ(result, 8);
+
+        result = table.LookUpTable(MINUS_TOKEN, EXPR_PRIME_TOKEN);
+        ASSERT_EQ(result, 3);
+
+        result = table.LookUpTable(PLUS_TOKEN, TERM_PRIME_TOKEN);
+        ASSERT_EQ(result, 8);
+    }
 }

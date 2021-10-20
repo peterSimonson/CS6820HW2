@@ -82,3 +82,7 @@ bool is_name(const std::string& s)
     }
 
 }
+
+int Table::LookUpTable(int column, int row) {
+    return RuleTable[column - COLUMN_OFFSET][row];
+}
