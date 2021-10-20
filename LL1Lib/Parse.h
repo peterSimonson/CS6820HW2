@@ -10,11 +10,14 @@
 #include "Table.h"
 
 class Parser{
+public:
     explicit Parser(const std::string& line);
     //contains the input words as tokens
     std::vector<int> inputTokens;
     //contains the tokens on the stack
     std::vector<int> stack;
+
+    void SwapStack(int rule);
 };
 
 std::vector<std::string> parseWords(std::string const& line);

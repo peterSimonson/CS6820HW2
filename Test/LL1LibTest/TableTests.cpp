@@ -10,12 +10,12 @@ namespace {
         std::vector<std::string> words{"(" ,"peter", "+", "12", ")", "*", "2"};
 
         std::vector<int> tokens =  TranslateWordsToTokens(words);
-        std::vector<int> results{END_TERM , OPEN_PARAN, NAME_TERM, PLUS, NUM_TERM, CLOSE_PARAN, MULTIPLY, NUM_TERM};
+        std::vector<int> results{END_TOKEN , OPEN_PARAN_TOKEN, NAME_TOKEN, PLUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, MULTIPLY_TOKEN, NUM_TOKEN};
         ASSERT_EQ(tokens, results);
 
         words = {"(" ,"peter", "-", "12", ")", "/", "2"};
         tokens =  TranslateWordsToTokens(words);
-        results = {END_TERM , OPEN_PARAN, NAME_TERM, MINUS, NUM_TERM, CLOSE_PARAN, DIVIDE, NUM_TERM};
+        results = {END_TOKEN , OPEN_PARAN_TOKEN, NAME_TOKEN, MINUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN};
         ASSERT_EQ(tokens, results);
     }
 

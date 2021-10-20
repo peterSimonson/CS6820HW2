@@ -115,4 +115,70 @@ namespace {
         ASSERT_EQ(words[7], "altVar");
         ASSERT_EQ(words.size(), 8);
     }
+
+    TEST(ParseTest, SwapStack){
+        //this test check to see that our swap stack function works with figure 3.13 in the textbook
+
+        std::string expr = "test1 + test2 * test3";
+        std::vector<int> expectedStack{END_TOKEN, GOAL_TOKEN};
+        Parser parser = Parser(expr);
+        //test the initialized stack
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        //swap out goal
+        parser.SwapStack(0);
+        expectedStack = {END_TOKEN, EXPR_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        //swap out expr
+        parser.SwapStack(1);
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        //swap out term
+        parser.SwapStack(5);
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_PRIME_TOKEN, FACTOR_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        //swap out factor
+        parser.SwapStack(11);
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_PRIME_TOKEN, NAME_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        //remove name because it is a match
+        parser.stack.pop_back();
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_PRIME_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        //swap out Term prime
+        parser.SwapStack(8);
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        //swap out Term Expr prime
+        parser.SwapStack(2);
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_TOKEN, PLUS_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        parser.stack.pop_back();
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        parser.SwapStack(5);
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_PRIME_TOKEN, FACTOR_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        parser.SwapStack(11);
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_PRIME_TOKEN, NAME_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        parser.stack.pop_back();
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_PRIME_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+        parser.SwapStack(6);
+        expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_PRIME_TOKEN, FACTOR_TOKEN, MULTIPLY_TOKEN};
+        ASSERT_EQ(parser.stack, expectedStack);
+
+    }
 }

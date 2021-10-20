@@ -54,6 +54,66 @@ Parser::Parser(const std::string& line) {
     inputTokens = TranslateWordsToTokens(inputWords);
 
     //initialize the stack with EOF and Goal
-    stack.push_back(END_TERM);
-    stack.push_back(GOAL);
+    stack.push_back(END_TOKEN);
+    stack.push_back(GOAL_TOKEN);
+}
+
+/// This function implements figure 3.4 from the text book.
+/// It will swap whatever is on the back of the stack with the whatever the table wants
+/// \param rule the swap from figure 3.4 you will perform
+void Parser::SwapStack(int rule) {
+    //replace item in back of vector
+    stack.pop_back();
+
+    switch (rule) {
+        case 0:
+            stack.push_back(EXPR_TOKEN);
+            break;
+        case 1:
+            stack.push_back(EXPR_PRIME_TOKEN);
+            stack.push_back(TERM_TOKEN);
+            break;
+        case 2:
+            stack.push_back(EXPR_PRIME_TOKEN);
+            stack.push_back(TERM_TOKEN);
+            stack.push_back(PLUS_TOKEN);
+            break;
+        case 3:
+            stack.push_back(EXPR_PRIME_TOKEN);
+            stack.push_back(TERM_TOKEN);
+            stack.push_back(MINUS_TOKEN);
+            break;
+        //epsilon cases. do nothing
+        case 4:
+        case 8:
+            break;
+        case 5:
+            stack.push_back(TERM_PRIME_TOKEN);
+            stack.push_back(FACTOR_TOKEN);
+            break;
+        case 6:
+            stack.push_back(TERM_PRIME_TOKEN);
+            stack.push_back(FACTOR_TOKEN);
+            stack.push_back(MULTIPLY_TOKEN);
+            break;
+        case 7:
+            stack.push_back(TERM_PRIME_TOKEN);
+            stack.push_back(FACTOR_TOKEN);
+            stack.push_back(DIVIDE_TOKEN);
+            break;
+        case 9:
+            stack.push_back(CLOSE_PARAN_TOKEN);
+            stack.push_back(EXPR_TOKEN);
+            stack.push_back(OPEN_PARAN_TOKEN);
+            break;
+        case 10:
+            stack.push_back(NUM_TOKEN);
+            break;
+        case 11:
+            stack.push_back(NAME_TOKEN);
+            break;
+        //if we did not get a valid number than we have an error
+        default:
+            stack.push_back(ERROR_TOKEN);
+    }
 }

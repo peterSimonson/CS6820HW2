@@ -11,33 +11,33 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
     std::vector<int> tokens;
 
     //push the end of file to the base of the stack
-    tokens.push_back(END_TERM);
+    tokens.push_back(END_TOKEN);
 
     for(str = words.begin(); str != words.end(); str++){
         //check what type of token this is
         if(is_number(*str)){
-            tokens.push_back(NUM_TERM);
+            tokens.push_back(NUM_TOKEN);
         }
         else if(is_name(*str)){
-            tokens.push_back(NAME_TERM);
+            tokens.push_back(NAME_TOKEN);
         }
         else if(*str == "+"){
-            tokens.push_back(PLUS);
+            tokens.push_back(PLUS_TOKEN);
         }
         else if(*str == "-"){
-            tokens.push_back(MINUS);
+            tokens.push_back(MINUS_TOKEN);
         }
         else if(*str == "*"){
-            tokens.push_back(MULTIPLY);
+            tokens.push_back(MULTIPLY_TOKEN);
         }
         else if(*str == "/"){
-            tokens.push_back(DIVIDE);
+            tokens.push_back(DIVIDE_TOKEN);
         }
         else if(*str == "("){
-            tokens.push_back(OPEN_PARAN);
+            tokens.push_back(OPEN_PARAN_TOKEN);
         }
         else if(*str == ")"){
-            tokens.push_back(CLOSE_PARAN);
+            tokens.push_back(CLOSE_PARAN_TOKEN);
         }
         //if we could not find a match than push an error token
         else{
