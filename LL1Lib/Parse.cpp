@@ -55,7 +55,19 @@ Parser::Parser(const std::string& line) {
 
     //initialize the stack with EOF and Goal
     stack.push_back(END_TOKEN);
-    stack.push_back(GOAL_TOKEN);
+    stack.push_back(START_TOKEN);
+
+    int focus = stack.back();
+    int word = inputTokens.back();
+    //implements the pseudo-code in figure 3.11
+//    while(true){
+//        if(focus == END_TOKEN && word == END_TOKEN){
+//            return;
+//        }
+//        if(is_terminal(focus) || focus == END_TOKEN){
+//
+//        }
+//    }
 }
 
 /// This function implements figure 3.4 from the text book.

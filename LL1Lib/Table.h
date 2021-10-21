@@ -9,7 +9,7 @@
 #include <vector>
 #include <string>
 //Define the rows of the table
-#define GOAL_TOKEN 0
+#define START_TOKEN 0
 #define EXPR_TOKEN 1
 #define EXPR_PRIME_TOKEN 2
 #define TERM_TOKEN 3
@@ -52,5 +52,6 @@ public:
 std::vector<int> TranslateWordsToTokens(std::vector<std::string> words);
 bool is_number(const std::string& s);
 bool is_name(const std::string& s);
+bool is_terminal(const int& token);
 
 #endif //CS6820HW2_TABLE_H

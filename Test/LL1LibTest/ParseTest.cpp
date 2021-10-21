@@ -120,7 +120,7 @@ namespace {
         //this test check to see that our swap stack function works with figure 3.13 in the textbook
 
         std::string expr = "test1 + test2 * test3";
-        std::vector<int> expectedStack{END_TOKEN, GOAL_TOKEN};
+        std::vector<int> expectedStack{END_TOKEN, START_TOKEN};
         Parser parser = Parser(expr);
         //test the initialized stack
         ASSERT_EQ(parser.stack, expectedStack);

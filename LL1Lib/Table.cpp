@@ -4,6 +4,10 @@
 
 #include "Table.h"
 
+/// Translates an array of strings into an arroy of tokens that correspond to each string
+/// If the string does not have a matching token it will be represented with an error token
+/// \param words The strings you wish to translate to tokens
+/// \return a list of token corresponding to the strings that were entered
 std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
     //used to loop through the vector of strings
     std::vector<std::string>::iterator str;
@@ -83,6 +87,22 @@ bool is_name(const std::string& s)
 
 }
 
+/// Checks if a token is a terminal token
+/// \param token integer token you wish to check if it is a terminal
+/// \return Returns true if the token is a terminal. False if it is not a terminal
+bool is_terminal(const int &token) {
+    if(token >= 6 && token <= 14){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+/// Looks up the rule in figure 3.11 b
+/// \param column the token corresponding to the table column you wish to look up
+/// \param row the token corresponding to the table row you wish to look up
+/// \return the entry at the row and column you specify
 int Table::LookUpTable(int column, int row) {
     return RuleTable[column - COLUMN_OFFSET][row];
 }

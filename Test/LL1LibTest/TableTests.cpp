@@ -44,11 +44,32 @@ namespace {
         ASSERT_FALSE(is_name(test));
     }
 
+    TEST(TableTests, IsTerminalTest){
+        //check the terminals
+        ASSERT_TRUE(is_terminal(END_TOKEN));
+        ASSERT_TRUE(is_terminal(PLUS_TOKEN));
+        ASSERT_TRUE(is_terminal(MINUS_TOKEN));
+        ASSERT_TRUE(is_terminal(MULTIPLY_TOKEN));
+        ASSERT_TRUE(is_terminal(DIVIDE_TOKEN));
+        ASSERT_TRUE(is_terminal(OPEN_PARAN_TOKEN));
+        ASSERT_TRUE(is_terminal(CLOSE_PARAN_TOKEN));
+        ASSERT_TRUE(is_terminal(NAME_TOKEN));
+        ASSERT_TRUE(is_terminal(NUM_TOKEN));
+
+        //check the non-terminals
+        ASSERT_FALSE(is_terminal(START_TOKEN));
+        ASSERT_FALSE(is_terminal(EXPR_TOKEN));
+        ASSERT_FALSE(is_terminal(EXPR_PRIME_TOKEN));
+        ASSERT_FALSE(is_terminal(TERM_TOKEN));
+        ASSERT_FALSE(is_terminal(TERM_PRIME_TOKEN));
+        ASSERT_FALSE(is_terminal(FACTOR_TOKEN));
+    }
+
     TEST(TableTests, LookUpTableTest){
         Table table;
 
         //we are going to look up a couple table entries
-        int result = table.LookUpTable(END_TOKEN, GOAL_TOKEN);
+        int result = table.LookUpTable(END_TOKEN, START_TOKEN);
         ASSERT_EQ(result, ERROR_TOKEN);
 
         result = table.LookUpTable(END_TOKEN, EXPR_PRIME_TOKEN);

@@ -1,4 +1,5 @@
 #include <iostream>
+#include "LL1Lib/Parse.h"
 
 #define NUM_OF_COMMAND_LINE_ARGS 2
 #define INCORRECT_NUM_OF_ARGS_ERR 1
@@ -17,7 +18,8 @@ int main(int argc, char *argv[]) {
     //grab the expression the user entered
     std::string expression = argv[1];
 
-    std::cout << expression << std::endl;
+    //initialize a parser with the expression the user entered
+    Parser parser = Parser(expression);
 
     return 0;
 }
