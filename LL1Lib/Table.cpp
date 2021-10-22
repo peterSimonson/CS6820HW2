@@ -65,26 +65,27 @@ bool is_number(const std::string& s)
     std::string::const_iterator it = s.begin();\
     bool isDecimalNum = false;
     while (it != s.end()){
-        if(std::isdigit(*it)){
-            ++it;
-            continue;
-        }
+        //if it is a digit go to next char
+        if(std::isdigit(*it));
+        //if it is not a number check if it is a decimal point
         else if(*it == '.'){
             if(isDecimalNum){
-                //we have multiple decimals
+                //we cannot have multiple decimals
                 break;
             }
             else{
-                //we have found a decimal point save the flag
+                //save the fact we have a decimal point
                 isDecimalNum = true;
             }
         }
         else{
+            //this is not a number or a decimal point
             break;
         }
 
         ++it;
     }
+    //if we looped through the whole word without breaking, and it is not an empty word, we have a number
     return !s.empty() && it == s.end();
 }
 
