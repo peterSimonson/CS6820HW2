@@ -4,7 +4,7 @@
 
 #include "Table.h"
 
-/// Translates an array of strings into an arroy of tokens that correspond to each string
+/// Translates an array of strings into an array of tokens that correspond to each string
 /// If the string does not have a matching token it will be represented with an error token
 /// \param words The strings you wish to translate to tokens
 /// \return a list of token corresponding to the strings that were entered
@@ -88,6 +88,7 @@ bool is_name(const std::string& s)
 }
 
 /// Checks if a token is a terminal token
+/// Note: END_TOKEN is considered a terminal
 /// \param token integer token you wish to check if it is a terminal
 /// \return Returns true if the token is a terminal. False if it is not a terminal
 bool is_terminal(const int &token) {

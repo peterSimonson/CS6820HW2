@@ -2,7 +2,10 @@
 // Created by Peter Simonson on 10/17/21.
 //
 
+#include <iostream>
 #include "Parse.h"
+
+void PrintParserError(const std::string& expr);
 
 /// Parse the words from a line of code. Separate words based on whitespace and reserved chars such as ';'
 /// Note: strings will be parsed into one word
@@ -52,22 +55,52 @@ Parser::Parser(const std::string& line) {
     std::vector<std::string> inputWords = parseWords(line);
     //translate the input from strings into tokens
     inputTokens = TranslateWordsToTokens(inputWords);
-
+    //holds our table of tokens
+    Table table;
     //initialize the stack with EOF and Goal
     stack.push_back(END_TOKEN);
     stack.push_back(START_TOKEN);
 
-    int focus = stack.back();
-    int word = inputTokens.back();
+    //declare reverse iterators to traverse our stack and input
+    auto focus = stack.rbegin();
+    auto word = inputTokens.rbegin();
     //implements the pseudo-code in figure 3.11
-//    while(true){
-//        if(focus == END_TOKEN && word == END_TOKEN){
-//            return;
-//        }
-//        if(is_terminal(focus) || focus == END_TOKEN){
-//
-//        }
-//    }
+    while(true){
+        //if both the focus and the word are EOF then we have successfully completed a parse
+        if(*focus == END_TOKEN && *word == END_TOKEN){
+            stack.pop_back(); //remove end token
+            std::cout << "Success Parsing: " << line << std::endl;
+            return;
+        }
+        //check if focus is terminal
+        if(is_terminal(*focus)){
+            //if the word matches the focus
+            if(*focus == *word){
+                //go to next word
+                word++;
+                //go to next word on stack and pop the last
+                focus++;
+                stack.pop_back();
+            }
+            else{
+                //print an error message
+                PrintParserError(line);
+            }
+        }
+        //if word or focus is an error
+        else if(*focus == ERROR_TOKEN || *word == ERROR_TOKEN){
+            //print error message
+            PrintParserError(line);
+        }
+        //otherwise, focus is non-terminal, and we need to swap it out
+        else{
+            //look up the swap rule we must perform
+            int rule = table.LookUpTable(*word, *focus);
+            //perform the swap
+            SwapStack(rule);
+            focus = stack.rbegin(); //move focus to the back of the stack
+        }
+    }
 }
 
 /// This function implements figure 3.4 from the text book.
@@ -128,4 +161,8 @@ void Parser::SwapStack(int rule) {
         default:
             stack.push_back(ERROR_TOKEN);
     }
+}
+
+void PrintParserError(const std::string& expr){
+    std::cout << "Error Parsing: " << expr << std::endl;
 }
