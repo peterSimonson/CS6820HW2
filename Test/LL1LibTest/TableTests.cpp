@@ -23,7 +23,19 @@ namespace {
         std::string test = "123";
         ASSERT_TRUE(is_number(test));
 
+        test = "12.3";
+        ASSERT_TRUE(is_number(test));
+
+        test = ".3";
+        ASSERT_TRUE(is_number(test));
+
         test = "test";
+        ASSERT_FALSE(is_number(test));
+
+        test = ".test";
+        ASSERT_FALSE(is_number(test));
+
+        test = "1.2.3";
         ASSERT_FALSE(is_number(test));
     }
 

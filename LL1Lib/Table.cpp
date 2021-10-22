@@ -53,7 +53,7 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
 }
 
 
-//the functions is_number and is_name were taken from:
+//the functions is_number and is_name were taken and modified from:
 //https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
 
 /// Checks if a string is a number
@@ -62,8 +62,29 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
 /// \return true if it is a number, false if it is not
 bool is_number(const std::string& s)
 {
-    std::string::const_iterator it = s.begin();
-    while (it != s.end() && std::isdigit(*it)) ++it;
+    std::string::const_iterator it = s.begin();\
+    bool isDecimalNum = false;
+    while (it != s.end()){
+        if(std::isdigit(*it)){
+            ++it;
+            continue;
+        }
+        else if(*it == '.'){
+            if(isDecimalNum){
+                //we have multiple decimals
+                break;
+            }
+            else{
+                //we have found a decimal point save the flag
+                isDecimalNum = true;
+            }
+        }
+        else{
+            break;
+        }
+
+        ++it;
+    }
     return !s.empty() && it == s.end();
 }
 
