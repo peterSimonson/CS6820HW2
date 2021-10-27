@@ -16,6 +16,7 @@ public:
     std::vector<int> inputTokens;
     //contains the tokens on the stack
     std::vector<int> stack;
+    Table table;
 
     void SwapStack(int rule);
 };

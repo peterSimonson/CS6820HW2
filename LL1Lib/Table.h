@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 //Define the rows of the table
 #define START_TOKEN 0
 #define EXPR_TOKEN 1
@@ -32,7 +33,12 @@
 
 
 class Table {
-private:
+public:
+    Table();
+    //holds the first set
+    std::map<int, std::vector<int>> firstSet;
+    std::map<int, std::vector<int>> rules;
+
     //the token table is a 6x9 table that holds the values for the token swap function
     int RuleTable [9][6] = {
             {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 1
@@ -45,8 +51,10 @@ private:
             {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 11},
             {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 10}
     };
-public:
     int LookUpTable(int row, int column);
+    void GenerateRules();
+    void GenerateFirstSet();
+    void GenerateFollowSet();
 };
 
 std::vector<int> TranslateWordsToTokens(std::vector<std::string> words);

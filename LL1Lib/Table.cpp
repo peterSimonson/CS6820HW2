@@ -129,3 +129,68 @@ bool is_terminal(const int &token) {
 int Table::LookUpTable(int column, int row) {
     return RuleTable[column - COLUMN_OFFSET][row];
 }
+
+void Table::GenerateFirstSet() {
+
+}
+
+void Table::GenerateRules() {
+    //rule 0
+    std::vector<int> rule{EXPR_TOKEN};
+    rules.insert({0, rule});
+
+    //rule 1
+    rule = {TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rules.insert({1, rule});
+
+    //rule 2
+    rule = {PLUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rules.insert({2, rule});
+
+    //rule 3
+    rule = {MINUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rules.insert({3, rule});
+
+    //rule 4 is epsilon so it is empty
+    rule = {};
+    rules.insert({4, rule});
+
+    //rule 5
+    rule = {FACTOR_TOKEN, TERM_PRIME_TOKEN};
+    rules.insert({5, rule});
+
+    //rule 6
+    rule = {MULTIPLY_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
+    rules.insert({6, rule});
+
+    //rule 7
+    rule = {DIVIDE_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
+    rules.insert({7, rule});
+
+    //rule 8 is epsilon
+    rule = {};
+    rules.insert({8, rule});
+
+    //rule 9
+    rule = {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN};
+    rules.insert({9, rule});
+
+    //rule 10
+    rule = {NUM_TOKEN};
+    rules.insert({10, rule});
+
+    //rule 11
+    rule = {NAME_TOKEN};
+    rules.insert({11, rule});
+
+}
+
+Table::Table() {
+    GenerateRules();
+    GenerateFirstSet();
+    GenerateFollowSet();
+}
+
+void Table::GenerateFollowSet() {
+
+}

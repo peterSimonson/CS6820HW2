@@ -56,7 +56,7 @@ Parser::Parser(const std::string& line) {
     //translate the input from strings into tokens
     inputTokens = TranslateWordsToTokens(inputWords);
     //holds our table of tokens
-    Table table;
+    table = Table();
     //initialize the stack with EOF and Goal
     stack.push_back(END_TOKEN);
     stack.push_back(START_TOKEN);
@@ -109,57 +109,11 @@ Parser::Parser(const std::string& line) {
 void Parser::SwapStack(int rule) {
     //replace item in back of vector
     stack.pop_back();
-
-    switch (rule) {
-        case 0:
-            stack.push_back(EXPR_TOKEN);
-            break;
-        case 1:
-            stack.push_back(EXPR_PRIME_TOKEN);
-            stack.push_back(TERM_TOKEN);
-            break;
-        case 2:
-            stack.push_back(EXPR_PRIME_TOKEN);
-            stack.push_back(TERM_TOKEN);
-            stack.push_back(PLUS_TOKEN);
-            break;
-        case 3:
-            stack.push_back(EXPR_PRIME_TOKEN);
-            stack.push_back(TERM_TOKEN);
-            stack.push_back(MINUS_TOKEN);
-            break;
-        //epsilon cases. do nothing
-        case 4:
-        case 8:
-            break;
-        case 5:
-            stack.push_back(TERM_PRIME_TOKEN);
-            stack.push_back(FACTOR_TOKEN);
-            break;
-        case 6:
-            stack.push_back(TERM_PRIME_TOKEN);
-            stack.push_back(FACTOR_TOKEN);
-            stack.push_back(MULTIPLY_TOKEN);
-            break;
-        case 7:
-            stack.push_back(TERM_PRIME_TOKEN);
-            stack.push_back(FACTOR_TOKEN);
-            stack.push_back(DIVIDE_TOKEN);
-            break;
-        case 9:
-            stack.push_back(CLOSE_PARAN_TOKEN);
-            stack.push_back(EXPR_TOKEN);
-            stack.push_back(OPEN_PARAN_TOKEN);
-            break;
-        case 10:
-            stack.push_back(NUM_TOKEN);
-            break;
-        case 11:
-            stack.push_back(NAME_TOKEN);
-            break;
-        //if we did not get a valid number than we have an error
-        default:
-            stack.push_back(ERROR_TOKEN);
+    //get the SwapRule at the index
+    std::vector<int> SwapRule = table.rules[rule];
+    //push the items back in reverse using reverse iteration
+    for(auto it = SwapRule.rbegin(); it != SwapRule.rend(); it++){
+        stack.push_back(*it);
     }
 }
 
