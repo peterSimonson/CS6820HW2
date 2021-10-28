@@ -18,7 +18,7 @@ public:
     std::vector<int> stack;
     Table table;
 
-    void SwapStack(int rule);
+    void SwapStack(int ruleIndex);
 };
 
 std::vector<std::string> parseWords(std::string const& line);

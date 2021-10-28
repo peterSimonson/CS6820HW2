@@ -27,17 +27,23 @@
 #define CLOSE_PARAN_TOKEN 12
 #define NAME_TOKEN 13
 #define NUM_TOKEN 14
+#define NUMBER_OF_TOKENS 14
 
 //other tokens
 #define ERROR_TOKEN -1
 
+class rule{
+public:
+    int leftHandSide;
+    std::vector<int> rightHandSide;
+};
 
 class Table {
 public:
     Table();
     //holds the first set
     std::map<int, std::vector<int>> firstSet;
-    std::map<int, std::vector<int>> rules;
+    std::map<int, rule> rules;
 
     //the token table is a 6x9 table that holds the values for the token swap function
     int RuleTable [9][6] = {

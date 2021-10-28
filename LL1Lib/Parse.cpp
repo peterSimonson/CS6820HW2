@@ -105,16 +105,25 @@ Parser::Parser(const std::string& line) {
 
 /// This function implements figure 3.4 from the text book.
 /// It will swap whatever is on the back of the stack with the whatever the table wants
-/// \param rule the swap from figure 3.4 you will perform
-void Parser::SwapStack(int rule) {
-    //replace item in back of vector
-    stack.pop_back();
+/// \param ruleIndex the swap from figure 3.4 you will perform
+void Parser::SwapStack(int ruleIndex) {
     //get the SwapRule at the index
-    std::vector<int> SwapRule = table.rules[rule];
-    //push the items back in reverse using reverse iteration
-    for(auto it = SwapRule.rbegin(); it != SwapRule.rend(); it++){
-        stack.push_back(*it);
+    rule SwapRule = table.rules[ruleIndex];
+    //back of stack must match lhs
+    if(stack.back() == SwapRule.leftHandSide){
+        //replace item in back of vector
+        stack.pop_back();
+
+        //push the items back in reverse using reverse iteration
+        for(auto it = SwapRule.rightHandSide.rbegin(); it != SwapRule.rightHandSide.rend(); it++){
+            stack.push_back(*it);
+        }
     }
+    //else print an error
+    else{
+
+    }
+
 }
 
 void PrintParserError(const std::string& expr){

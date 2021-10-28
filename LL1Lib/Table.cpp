@@ -131,57 +131,74 @@ int Table::LookUpTable(int column, int row) {
 }
 
 void Table::GenerateFirstSet() {
+    //set to true when we are finished finding the set
+    bool finishedFindingSet = false;
 
+    //loop through all the tokens
+    for(int CURRENT_TOKEN = 0; CURRENT_TOKEN <= NUMBER_OF_TOKENS; CURRENT_TOKEN++){
+        //just add it
+        if(is_terminal(CURRENT_TOKEN)){
+            firstSet.insert({CURRENT_TOKEN, {CURRENT_TOKEN}});
+        }
+        //find the set
+        else{
+            firstSet.insert({CURRENT_TOKEN, {}});
+        }
+    }
+
+    while(!finishedFindingSet){
+
+    }
 }
 
 void Table::GenerateRules() {
     //rule 0
-    std::vector<int> rule{EXPR_TOKEN};
-    rules.insert({0, rule});
+    std::vector<int> rhs{EXPR_TOKEN};
+    rules.insert({0, {START_TOKEN, rhs}});
 
     //rule 1
-    rule = {TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({1, rule});
+    rhs = {TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rules.insert({1, {EXPR_TOKEN, rhs}});
 
     //rule 2
-    rule = {PLUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({2, rule});
+    rhs = {PLUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rules.insert({2, {EXPR_PRIME_TOKEN, rhs}});
 
     //rule 3
-    rule = {MINUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({3, rule});
+    rhs = {MINUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rules.insert({3, {EXPR_PRIME_TOKEN, rhs}});
 
     //rule 4 is epsilon so it is empty
-    rule = {};
-    rules.insert({4, rule});
+    rhs = {};
+    rules.insert({4, {EXPR_PRIME_TOKEN, rhs}});
 
     //rule 5
-    rule = {FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({5, rule});
+    rhs = {FACTOR_TOKEN, TERM_PRIME_TOKEN};
+    rules.insert({5, {TERM_TOKEN, rhs}});
 
     //rule 6
-    rule = {MULTIPLY_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({6, rule});
+    rhs = {MULTIPLY_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
+    rules.insert({6, {TERM_PRIME_TOKEN, rhs}});
 
     //rule 7
-    rule = {DIVIDE_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({7, rule});
+    rhs = {DIVIDE_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
+    rules.insert({7, {TERM_PRIME_TOKEN, rhs}});
 
     //rule 8 is epsilon
-    rule = {};
-    rules.insert({8, rule});
+    rhs = {};
+    rules.insert({8, {TERM_PRIME_TOKEN, rhs}});
 
     //rule 9
-    rule = {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN};
-    rules.insert({9, rule});
+    rhs = {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN};
+    rules.insert({9, {FACTOR_TOKEN, rhs}});
 
     //rule 10
-    rule = {NUM_TOKEN};
-    rules.insert({10, rule});
+    rhs = {NUM_TOKEN};
+    rules.insert({10, {FACTOR_TOKEN, rhs}});
 
     //rule 11
-    rule = {NAME_TOKEN};
-    rules.insert({11, rule});
+    rhs = {NAME_TOKEN};
+    rules.insert({11, {FACTOR_TOKEN, rhs}});
 
 }
 
