@@ -85,12 +85,14 @@ Parser::Parser(const std::string& line) {
             else{
                 //print an error message
                 PrintParserError(line);
+                return;
             }
         }
         //if word or focus is an error
         else if(*focus == ERROR_TOKEN || *word == ERROR_TOKEN){
             //print error message
             PrintParserError(line);
+            return;
         }
         //otherwise, focus is non-terminal, and we need to swap it out
         else{

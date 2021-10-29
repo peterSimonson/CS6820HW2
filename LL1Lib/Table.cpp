@@ -148,18 +148,24 @@ void Table::GenerateFirstSet() {
     }
 
     while(!finishedFindingSet){
+        //hold whether we made a change in the for loop
+        bool madeAChange = false;
         //loop through all the productions
         for(auto & production : rules){
             //find the left and right sides of our production
             std::vector<int> productionRHS = production.second.rightHandSide;
-            int productionLHS = production.first;
+            int productionLHS = production.second.leftHandSide;
             auto beta_i = productionRHS.begin();
+            //save the original first set for this production
+            std::vector<int> originalSet = firstSet[productionLHS];
+
             //get the first production element without epsilon
             std::vector<int> rhs = removeEpsilonFromSet(firstSet[*beta_i]);
 
             //starts as one and k starts as the amount of production terms
             int i = 1, k = (int) productionRHS.size();
-            while(set_contains_epsilon(firstSet[*beta_i]) && i <= k){
+            //TODO: Figure out why I do not ever enter this loop yet find the correct result
+            while(set_contains_epsilon(firstSet[*beta_i]) && i <= k - 1){
                 //increment our counters
                 i++;
                 beta_i++;
@@ -168,14 +174,18 @@ void Table::GenerateFirstSet() {
             }
 
             //check if we need to add epsilon
-            if(i == k && set_contains_epsilon(firstSet[k])){
+            if(i == k && set_contains_epsilon(firstSet[productionRHS[k - 1]])){
                 rhs = unionize_sets(rhs, {EPSILON_TOKEN});
             }
             //update the set
             firstSet[productionLHS] = unionize_sets(firstSet[productionLHS], rhs);
 
-            finishedFindingSet = true;
+            if(originalSet != firstSet[productionLHS]){
+                madeAChange = true;
+            }
         }
+        //if we made a change do another loop
+        finishedFindingSet = !madeAChange;
     }
 }
 
