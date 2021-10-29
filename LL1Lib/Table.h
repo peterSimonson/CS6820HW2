@@ -27,7 +27,8 @@
 #define CLOSE_PARAN_TOKEN 12
 #define NAME_TOKEN 13
 #define NUM_TOKEN 14
-#define NUMBER_OF_TOKENS 14
+#define EPSILON_TOKEN 15
+#define NUMBER_OF_TOKENS 15
 
 //other tokens
 #define ERROR_TOKEN -1
@@ -63,9 +64,12 @@ public:
     void GenerateFollowSet();
 };
 
+std::vector<int> removeEpsilonFromSet(std::vector<int> set);
 std::vector<int> TranslateWordsToTokens(std::vector<std::string> words);
+std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vector<int>& secondSet);
 bool is_number(const std::string& s);
 bool is_name(const std::string& s);
 bool is_terminal(const int& token);
+bool set_contains_epsilon(std::vector<int> set);
 
 #endif //CS6820HW2_TABLE_H

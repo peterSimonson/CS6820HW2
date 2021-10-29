@@ -116,7 +116,9 @@ void Parser::SwapStack(int ruleIndex) {
 
         //push the items back in reverse using reverse iteration
         for(auto it = SwapRule.rightHandSide.rbegin(); it != SwapRule.rightHandSide.rend(); it++){
-            stack.push_back(*it);
+            if(*it != EPSILON_TOKEN){
+                stack.push_back(*it);
+            }
         }
     }
     //else print an error

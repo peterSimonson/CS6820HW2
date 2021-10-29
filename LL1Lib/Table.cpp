@@ -3,6 +3,7 @@
 //
 
 #include "Table.h"
+#include <set>
 
 /// Translates an array of strings into an array of tokens that correspond to each string
 /// If the string does not have a matching token it will be represented with an error token
@@ -114,7 +115,7 @@ bool is_name(const std::string& s)
 /// \param token integer token you wish to check if it is a terminal
 /// \return Returns true if the token is a terminal. False if it is not a terminal
 bool is_terminal(const int &token) {
-    if(token >= 6 && token <= 14){
+    if(token >= COLUMN_OFFSET && token <= NUMBER_OF_TOKENS){
         return true;
     }
     else{
@@ -147,7 +148,34 @@ void Table::GenerateFirstSet() {
     }
 
     while(!finishedFindingSet){
+        //loop through all the productions
+        for(auto & production : rules){
+            //find the left and right sides of our production
+            std::vector<int> productionRHS = production.second.rightHandSide;
+            int productionLHS = production.first;
+            auto beta_i = productionRHS.begin();
+            //get the first production element without epsilon
+            std::vector<int> rhs = removeEpsilonFromSet(firstSet[*beta_i]);
 
+            //starts as one and k starts as the amount of production terms
+            int i = 1, k = (int) productionRHS.size();
+            while(set_contains_epsilon(firstSet[*beta_i]) && i <= k){
+                //increment our counters
+                i++;
+                beta_i++;
+                //unionize the sets
+                rhs = unionize_sets(rhs, removeEpsilonFromSet(firstSet[*beta_i]));
+            }
+
+            //check if we need to add epsilon
+            if(i == k && set_contains_epsilon(firstSet[k])){
+                rhs = unionize_sets(rhs, {EPSILON_TOKEN});
+            }
+            //update the set
+            firstSet[productionLHS] = unionize_sets(firstSet[productionLHS], rhs);
+
+            finishedFindingSet = true;
+        }
     }
 }
 
@@ -168,8 +196,8 @@ void Table::GenerateRules() {
     rhs = {MINUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
     rules.insert({3, {EXPR_PRIME_TOKEN, rhs}});
 
-    //rule 4 is epsilon so it is empty
-    rhs = {};
+    //rule 4
+    rhs = {EPSILON_TOKEN};
     rules.insert({4, {EXPR_PRIME_TOKEN, rhs}});
 
     //rule 5
@@ -184,8 +212,8 @@ void Table::GenerateRules() {
     rhs = {DIVIDE_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
     rules.insert({7, {TERM_PRIME_TOKEN, rhs}});
 
-    //rule 8 is epsilon
-    rhs = {};
+    //rule 8
+    rhs = {EPSILON_TOKEN};
     rules.insert({8, {TERM_PRIME_TOKEN, rhs}});
 
     //rule 9
@@ -210,4 +238,43 @@ Table::Table() {
 
 void Table::GenerateFollowSet() {
 
+}
+
+/// Removes epsilon from a set if it exists in the set
+/// \param set the set of integers you wish to remove EPSILON_TOKEN from
+/// \return set without EPSILON_TOKEN
+std::vector<int> removeEpsilonFromSet(std::vector<int> set){
+    //remove epsilon token from the set if it exists
+    set.erase(std::remove(set.begin(), set.end(), EPSILON_TOKEN), set.end());
+    return set;
+}
+
+/// check if a set contains EPSILON_TOKEN
+/// \param set the vector of ints you wish to check for EPSILON_TOKEN
+/// \return return true if EPSILON_TOKEN is found. otherwise, return false
+bool set_contains_epsilon(std::vector<int> set){
+    if(std::find(set.begin(), set.end(), EPSILON_TOKEN) != set.end()){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+/// Finds the union of two int vectors
+/// \param firstSet vector of ints you wish to union with secondSet
+/// \param secondSet vector of ints you wish to union with firstSet
+/// \return a vector of sorted unionized tokens
+std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vector<int>& secondSet){
+    std::set<int> all;
+    //add everything from the first set
+    for(auto & token : firstSet){
+        all.insert(token);
+    }
+    //add everything from second set
+    for(auto & token : secondSet){
+        all.insert(token);
+    }
+
+    return {all.begin(), all.end()};
 }
