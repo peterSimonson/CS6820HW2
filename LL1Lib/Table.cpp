@@ -115,7 +115,7 @@ bool is_name(const std::string& s)
 /// \param token integer token you wish to check if it is a terminal
 /// \return Returns true if the token is a terminal. False if it is not a terminal
 bool is_terminal(const int &token) {
-    if(token >= COLUMN_OFFSET && token <= NUMBER_OF_TOKENS){
+    if(token >= NUM_OF_NON_TERMINALS && token <= NUM_OF_TOKENS){
         return true;
     }
     else{
@@ -128,7 +128,7 @@ bool is_terminal(const int &token) {
 /// \param row the token corresponding to the table row you wish to look up
 /// \return the entry at the row and column you specify
 int Table::LookUpTable(int column, int row) {
-    return RuleTable[column - COLUMN_OFFSET][row];
+    return RuleTable[column - NUM_OF_NON_TERMINALS][row];
 }
 
 void Table::GenerateFirstSet() {
@@ -136,7 +136,7 @@ void Table::GenerateFirstSet() {
     bool finishedFindingSet = false;
 
     //loop through all the tokens
-    for(int CURRENT_TOKEN = 0; CURRENT_TOKEN <= NUMBER_OF_TOKENS; CURRENT_TOKEN++){
+    for(int CURRENT_TOKEN = 0; CURRENT_TOKEN <= NUM_OF_TOKENS; CURRENT_TOKEN++){
         //just add it
         if(is_terminal(CURRENT_TOKEN)){
             firstSet.insert({CURRENT_TOKEN, {CURRENT_TOKEN}});
@@ -249,7 +249,7 @@ Table::Table() {
 
 void Table::GenerateFollowSet() {
     //loop through the non-terminals
-    for (int currentToken = START_TOKEN; currentToken < COLUMN_OFFSET; currentToken++){
+    for (int currentToken = START_TOKEN; currentToken < NUM_OF_NON_TERMINALS; currentToken++){
         //add an empty entry for each non-terminal
         followSet.insert({currentToken, {}});
     }

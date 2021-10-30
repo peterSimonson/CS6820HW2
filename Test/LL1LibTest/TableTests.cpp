@@ -194,7 +194,7 @@ namespace {
         ASSERT_EQ(table.firstSet[TERM_PRIME_TOKEN], expectedSet);
 
 
-        for(int i = COLUMN_OFFSET; i <= NUMBER_OF_TOKENS; i++){
+        for(int i = NUM_OF_NON_TERMINALS; i <= NUM_OF_TOKENS; i++){
             //the first set entry for a terminal should be the same terminal
             expectedSet = {i};
             ASSERT_EQ(table.firstSet[i], expectedSet);
@@ -205,7 +205,7 @@ namespace {
         Table table = Table();
 
         //check that follow set only has non-terminals for entries
-        ASSERT_EQ(table.followSet.size(), COLUMN_OFFSET);
+        ASSERT_EQ(table.followSet.size(), NUM_OF_NON_TERMINALS);
 
         //check the entries
         std::vector<int> expectedSet = {END_TOKEN};

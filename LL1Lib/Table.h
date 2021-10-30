@@ -17,7 +17,7 @@
 #define TERM_PRIME_TOKEN 4
 #define FACTOR_TOKEN 5
 //Define Columns of our table
-#define COLUMN_OFFSET 6
+#define NUM_OF_NON_TERMINALS 6
 #define END_TOKEN 6
 #define PLUS_TOKEN 7
 #define MINUS_TOKEN 8
@@ -28,7 +28,7 @@
 #define NAME_TOKEN 13
 #define NUM_TOKEN 14
 #define EPSILON_TOKEN 15
-#define NUMBER_OF_TOKENS 15
+#define NUM_OF_TOKENS 15
 
 //other tokens
 #define ERROR_TOKEN -1
@@ -48,6 +48,8 @@ public:
     std::map<int, std::vector<int>> followSet;
     //holds the productions
     std::map<int, rule> rules;
+    //holds the table
+    int newTable [NUM_OF_TOKENS - NUM_OF_NON_TERMINALS][NUM_OF_NON_TERMINALS];
 
     //the token table is a 6x9 table that holds the values for the token swap function
     int RuleTable [9][6] = {
