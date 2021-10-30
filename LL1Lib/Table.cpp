@@ -245,6 +245,8 @@ Table::Table() {
     GenerateRules();
     GenerateFirstSet();
     GenerateFollowSet();
+    //Note: we are not building first+ set. Instead, we use the function findFirstPlusSet
+    BuildTable();
 }
 
 void Table::GenerateFollowSet() {
@@ -301,17 +303,41 @@ void Table::GenerateFollowSet() {
     }
 }
 
+void Table::BuildTable(){
+    //loop through the non-terminals
+    for(int A = START_TOKEN; A < NUM_OF_NON_TERMINALS; A++){
+        //fill the table completely with error tokens
+        for(int w = START_TOKEN; w < NUM_OF_TOKENS - NUM_OF_NON_TERMINALS; w++){
+            RuleTable[w][A] = ERROR_TOKEN;
+        }
+
+        //loop through all the productions
+        for(auto & ruleEntry : rules){
+            //get the rule number and the production
+            rule productionRule = ruleEntry.second;
+            int ruleNumber = ruleEntry.first;
+            if(productionRule.leftHandSide == A){
+                std::vector<int> firstPlusSet = findFirstPlusSet(productionRule);
+                //first plus should only have terminals in it
+                for(auto & terminal : firstPlusSet){
+                    RuleTable[terminal - NUM_OF_NON_TERMINALS][A] = ruleNumber;
+                }
+            }
+        }
+    }
+}
+
 std::vector<int> Table::findFirstPlusSet(rule production){
-    //find the first beta on the right hand side of the production
+    //find the first beta on the right-hand side of the production
     int beta_1 = production.rightHandSide.front();
-    //find A on left hand side of the production
+    //find A on left-hand side of the production
     int A = production.leftHandSide;
     //check if beta_1 contains epsilon
     if(!set_contains_epsilon(firstSet[beta_1])){
         //if it does not return the first set for beta_1
         return firstSet[beta_1];
     }
-    //otherwise union the first of beta_1 with the front of alpha
+    //otherwise, union the first of beta_1 with the front of alpha
     else{
         return unionize_sets(followSet[A], firstSet[beta_1]);
     }

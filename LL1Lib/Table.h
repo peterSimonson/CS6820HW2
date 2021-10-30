@@ -49,24 +49,13 @@ public:
     //holds the productions
     std::map<int, rule> rules;
     //holds the table
-    int newTable [NUM_OF_TOKENS - NUM_OF_NON_TERMINALS][NUM_OF_NON_TERMINALS];
+    int RuleTable [NUM_OF_TOKENS - NUM_OF_NON_TERMINALS][NUM_OF_NON_TERMINALS]{};
 
-    //the token table is a 6x9 table that holds the values for the token swap function
-    int RuleTable [9][6] = {
-            {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 1
-            {ERROR_TOKEN, ERROR_TOKEN, 2, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 2
-            {ERROR_TOKEN, ERROR_TOKEN, 3, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 3
-            {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 6, ERROR_TOKEN},
-            {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 7, ERROR_TOKEN},
-            {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 9},
-            {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN},
-            {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 11},
-            {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 10}
-    };
     int LookUpTable(int row, int column);
     void GenerateRules();
     void GenerateFirstSet();
     void GenerateFollowSet();
+    void BuildTable();
     std::vector<int> findFirstPlusSet(rule production);
 };
 
