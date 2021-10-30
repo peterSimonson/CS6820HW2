@@ -254,9 +254,7 @@ namespace {
 
     TEST(TableTests, TableTest){
 
-        Table table = Table();
-
-        //the token table is a 6x9 table that holds the values for the token swap function
+        //this is what the table from the text book looks like
         int ExpectedRuleTable [9][6] = {
                 {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 1
                 {ERROR_TOKEN, ERROR_TOKEN, 2, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 2
@@ -269,7 +267,10 @@ namespace {
                 {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 10} //9
         };
 
-        //check that every entry of the table is equal
+        //generate the table using our code
+        Table table = Table();
+
+        //check that every entry of the table is equal to the textbook's table
         for(int A = START_TOKEN; A < NUM_OF_NON_TERMINALS; A++){
             for(int w = START_TOKEN; w < NUM_OF_TOKENS - NUM_OF_NON_TERMINALS; w++){
                 ASSERT_EQ(table.RuleTable[w][A], ExpectedRuleTable[w][A]);
