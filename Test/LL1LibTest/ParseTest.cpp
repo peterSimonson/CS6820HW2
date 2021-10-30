@@ -121,7 +121,8 @@ namespace {
 
         std::string expr = "test1 + test2 * test3";
         std::vector<int> expectedStack{};
-        Parser parser = Parser(expr);
+        Table table = Table();
+        Parser parser = Parser(expr, table);
         //test the initialized stack
         ASSERT_EQ(parser.stack, expectedStack);
         //manually add initial stack elements

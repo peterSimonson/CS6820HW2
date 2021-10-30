@@ -18,8 +18,11 @@ int main(int argc, char *argv[]) {
     //grab the expression the user entered
     std::string expression = argv[1];
 
+    //holds our table
+    Table table = Table();
+
     //initialize a parser with the expression the user entered
-    Parser parser = Parser(expression);
+    Parser parser = Parser(expression, table);
 
     return 0;
 }

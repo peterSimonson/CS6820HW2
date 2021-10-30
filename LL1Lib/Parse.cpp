@@ -50,13 +50,11 @@ std::vector<std::string> parseWords(std::string const& line){
     return words;
 }
 
-Parser::Parser(const std::string& line) {
+Parser::Parser(const std::string& line, Table table) {
     //get the input strings
     std::vector<std::string> inputWords = parseWords(line);
     //translate the input from strings into tokens
     inputTokens = TranslateWordsToTokens(inputWords);
-    //holds our table of tokens
-    table = Table();
     //initialize the stack with EOF and Goal
     stack.push_back(END_TOKEN);
     stack.push_back(START_TOKEN);
