@@ -320,7 +320,9 @@ void Table::BuildTable(){
                 std::vector<int> firstPlusSet = findFirstPlusSet(productionRule);
                 //first plus should only have terminals in it
                 for(auto & terminal : firstPlusSet){
-                    RuleTable[terminal - NUM_OF_NON_TERMINALS][A] = ruleNumber;
+                    if(terminal!= EPSILON_TOKEN){
+                        RuleTable[terminal - NUM_OF_NON_TERMINALS][A] = ruleNumber;
+                    }
                 }
             }
         }
