@@ -227,4 +227,27 @@ namespace {
         ASSERT_EQ(table.followSet[FACTOR_TOKEN], expectedSet);
 
     }
+
+    TEST(TableTests, FirstPlusSetTest){
+        Table table = Table();
+
+        //productions 4 and 8 should be different from 1st. Otherwise, first+ should be the same as first
+        for(const std::pair<const int, rule>& productionRule: table.rules){
+
+            rule production = productionRule.second;
+            std::vector<int> expectedSet = table.firstSet[production.rightHandSide.front()];
+            std::vector<int> firstPlusSet = table.findFirstPlusSet(production);
+            if(productionRule.first == 4){
+                expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN, EPSILON_TOKEN};
+                ASSERT_EQ(expectedSet, firstPlusSet);
+            }
+            else if(productionRule.first == 8){
+                expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN, EPSILON_TOKEN};
+                ASSERT_EQ(expectedSet, firstPlusSet);
+            }
+            else{
+                ASSERT_EQ(expectedSet, firstPlusSet);
+            }
+        }
+    }
 }

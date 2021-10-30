@@ -301,6 +301,22 @@ void Table::GenerateFollowSet() {
     }
 }
 
+std::vector<int> Table::findFirstPlusSet(rule production){
+    //find the first beta on the right hand side of the production
+    int beta_1 = production.rightHandSide.front();
+    //find A on left hand side of the production
+    int A = production.leftHandSide;
+    //check if beta_1 contains epsilon
+    if(!set_contains_epsilon(firstSet[beta_1])){
+        //if it does not return the first set for beta_1
+        return firstSet[beta_1];
+    }
+    //otherwise union the first of beta_1 with the front of alpha
+    else{
+        return unionize_sets(followSet[A], firstSet[beta_1]);
+    }
+}
+
 /// Removes epsilon from a set if it exists in the set
 /// \param set the set of integers you wish to remove EPSILON_TOKEN from
 /// \return set without EPSILON_TOKEN

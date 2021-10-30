@@ -65,6 +65,7 @@ public:
     void GenerateRules();
     void GenerateFirstSet();
     void GenerateFollowSet();
+    std::vector<int> findFirstPlusSet(rule production);
 };
 
 std::vector<int> removeEpsilonFromSet(std::vector<int> set);
