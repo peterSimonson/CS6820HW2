@@ -206,4 +206,24 @@ namespace {
         //close input file
         file.close();
     }
+
+    TEST(ParseTest, ValidParseTest){
+        std::ifstream file("../TestResources/GoodExpressions.txt");//holds file we are opening
+        std::string line; //holds a single expression we wish to parse
+
+        ASSERT_TRUE(file.is_open());
+
+        //generate our table
+        Table table = Table();
+
+        //read each line from the file
+        while (std::getline(file, line)){
+            Parser parse = Parser(line, table);
+            //each one of these parses should fail
+            ASSERT_TRUE(parse.successfulParse);
+        }
+
+        //close input file
+        file.close();
+    }
 }
