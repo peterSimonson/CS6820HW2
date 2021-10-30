@@ -63,11 +63,13 @@ Parser::Parser(const std::string& line, Table table) {
     auto focus = stack.rbegin();
     auto word = inputTokens.rbegin();
     //implements the pseudo-code in figure 3.11
+    successfulParse = false;
     while(true){
         //if both the focus and the word are EOF then we have successfully completed a parse
         if(*focus == END_TOKEN && *word == END_TOKEN){
             stack.pop_back(); //remove end token
             std::cout << "Success Parsing: " << line << std::endl;
+            successfulParse = true;
             return;
         }
         //check if focus is terminal
@@ -96,6 +98,11 @@ Parser::Parser(const std::string& line, Table table) {
         else{
             //look up the swap rule we must perform
             int rule = table.LookUpTable(*word, *focus);
+            if(rule == ERROR_TOKEN){
+                //print error message
+                PrintParserError(line);
+                return;
+            }
             //perform the swap
             SwapStack(rule);
             focus = stack.rbegin(); //move focus to the back of the stack

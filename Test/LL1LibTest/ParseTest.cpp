@@ -2,6 +2,7 @@
 // Created by Peter Simonson on 10/17/21.
 //
 
+#include <fstream>
 #include "gtest/gtest.h"
 #include "../../LL1Lib/Parse.h"
 
@@ -184,5 +185,25 @@ namespace {
         expectedStack = {END_TOKEN, EXPR_PRIME_TOKEN, TERM_PRIME_TOKEN, FACTOR_TOKEN, MULTIPLY_TOKEN};
         ASSERT_EQ(parser.stack, expectedStack);
 
+    }
+
+    TEST(ParseTest, InvalidParseTest){
+        std::ifstream file("../TestResources/BadExpressions.txt");//holds file we are opening
+        std::string line; //holds a single expression we wish to parse
+
+        ASSERT_TRUE(file.is_open());
+
+        //generate our table
+        Table table = Table();
+
+        //read each line from the file
+        while (std::getline(file, line)){
+            Parser parse = Parser(line, table);
+            //each one of these parses should fail
+            ASSERT_FALSE(parse.successfulParse);
+        }
+
+        //close input file
+        file.close();
     }
 }

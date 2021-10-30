@@ -12,6 +12,7 @@
 class Parser{
 public:
     explicit Parser(const std::string& line, Table table);
+    bool successfulParse;
     //contains the input words as tokens
     std::vector<int> inputTokens;
     //contains the tokens on the stack
