@@ -165,6 +165,7 @@ void Table::GenerateFirstSet() {
             //starts as one and k starts as the amount of production terms
             int i = 1, k = (int) productionRHS.size();
             //TODO: Figure out why I do not ever enter this loop yet find the correct result
+            //I think I need to loop through all the betas
             while(set_contains_epsilon(firstSet[*beta_i]) && i <= k - 1){
                 //increment our counters
                 i++;
@@ -247,7 +248,57 @@ Table::Table() {
 }
 
 void Table::GenerateFollowSet() {
+    //loop through the non-terminals
+    for (int currentToken = START_TOKEN; currentToken < COLUMN_OFFSET; currentToken++){
+        //add an empty entry for each non-terminal
+        followSet.insert({currentToken, {}});
+    }
 
+    //add END_TOKEN to the start token
+    followSet[START_TOKEN] = {END_TOKEN};
+
+    //set to true when we are finished finding the set
+    bool finishedFindingSet = false;
+
+    //keep on looping until we are finished finding the follow set
+    while(!finishedFindingSet){
+        //hold whether we made a change in the for loop
+        bool madeAChange = false;
+
+        //loop through all the productions
+        for(auto & production : rules){
+            //find the left and right sides of our production
+            std::vector<int> productionRHS = production.second.rightHandSide;
+            int productionLHS = production.second.leftHandSide;
+            auto beta_i = productionRHS.rbegin();
+
+            std::vector<int> trailer = followSet[productionLHS];
+            for(int k = (int) productionRHS.size(); k >= 1; k--){
+                if(!is_terminal(*beta_i)){
+                    std::vector<int> originalSet = followSet[*beta_i];
+                    followSet[*beta_i] = unionize_sets(originalSet, trailer);
+
+                    if(set_contains_epsilon(firstSet[*beta_i])){
+                        trailer = unionize_sets(trailer, removeEpsilonFromSet(firstSet[*beta_i]));
+                    }
+                    else{
+                        trailer = firstSet[*beta_i];
+                    }
+                    //check if we made a change
+                    if(originalSet != followSet[*beta_i]){
+                        madeAChange = true;
+                    }
+                }
+                else{
+                    trailer = firstSet[*beta_i];
+                }
+                beta_i++;
+            }
+        }
+
+        //if we did not make any changes we can exit the while loop
+        finishedFindingSet = !madeAChange;
+    }
 }
 
 /// Removes epsilon from a set if it exists in the set

@@ -44,6 +44,9 @@ public:
     Table();
     //holds the first set
     std::map<int, std::vector<int>> firstSet;
+    //holds the follow set
+    std::map<int, std::vector<int>> followSet;
+    //holds the productions
     std::map<int, rule> rules;
 
     //the token table is a 6x9 table that holds the values for the token swap function

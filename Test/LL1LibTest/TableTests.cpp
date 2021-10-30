@@ -200,4 +200,31 @@ namespace {
             ASSERT_EQ(table.firstSet[i], expectedSet);
         }
     }
+
+    TEST(TableTests, FollowSetTest){
+        Table table = Table();
+
+        //check that follow set only has non-terminals for entries
+        ASSERT_EQ(table.followSet.size(), COLUMN_OFFSET);
+
+        //check the entries
+        std::vector<int> expectedSet = {END_TOKEN};
+        ASSERT_EQ(table.followSet[START_TOKEN], expectedSet);
+
+        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
+        ASSERT_EQ(table.followSet[EXPR_TOKEN], expectedSet);
+
+        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
+        ASSERT_EQ(table.followSet[EXPR_PRIME_TOKEN], expectedSet);
+
+        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN};
+        ASSERT_EQ(table.followSet[TERM_TOKEN], expectedSet);
+
+        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN};
+        ASSERT_EQ(table.followSet[TERM_PRIME_TOKEN], expectedSet);
+
+        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, MULTIPLY_TOKEN, DIVIDE_TOKEN, CLOSE_PARAN_TOKEN};
+        ASSERT_EQ(table.followSet[FACTOR_TOKEN], expectedSet);
+
+    }
 }
