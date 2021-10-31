@@ -113,6 +113,7 @@ Parser::Parser(const std::string& line, Table table) {
             else{
                 //print an error message
                 PrintParserError(line);
+                std::cout << "Focus = " <<std::to_string(*focus) << ". Word = " <<std::to_string(*word) << std::endl;
                 return;
             }
         }
