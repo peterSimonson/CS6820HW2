@@ -20,9 +20,19 @@ namespace {
     }
 
     TEST(TableTests, TranslateNegativeTest){
-        std::vector<std::string> words{"-32", " -32", "-", " -", "-testVar", " -testVar"};
+        std::vector<std::string> words{"-32", " -", " -32", "-",  "-testVar", "-"," -testVar"};
         std::vector<int> tokens =  TranslateWordsToTokens(words);
-        std::vector<int> results{NEG_NUM_TOKEN, SPACE_NEG_NUM_TOKEN, MINUS_TOKEN, MINUS_TOKEN, NEG_NAME_TOKEN, SPACE_NEG_NAME_TOKEN, END_TOKEN};
+        std::vector<int> results{NEG_NUM_TOKEN, MINUS_TOKEN ,SPACE_NEG_NUM_TOKEN, MINUS_TOKEN, NEG_NAME_TOKEN, MINUS_TOKEN ,SPACE_NEG_NAME_TOKEN, END_TOKEN};
+        ASSERT_EQ(tokens, results);
+
+        words = {"-32", " -32"};
+        tokens =  TranslateWordsToTokens(words);
+        results = {NEG_NUM_TOKEN, MINUS_TOKEN, NUM_TOKEN, END_TOKEN};
+        ASSERT_EQ(tokens, results);
+
+        words = {"-test1", " -test2"};
+        tokens =  TranslateWordsToTokens(words);
+        results = {NEG_NAME_TOKEN, MINUS_TOKEN, NAME_TOKEN, END_TOKEN};
         ASSERT_EQ(tokens, results);
     }
 

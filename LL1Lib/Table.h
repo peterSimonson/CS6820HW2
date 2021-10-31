@@ -76,6 +76,7 @@ bool is_Neg_Num(const std::string& s);
 bool is_name(const std::string& s);
 bool is_Neg_Name(const std::string& s);
 bool is_terminal(const int& token);
+bool is_Value_Token(int token);
 bool set_contains_epsilon(std::vector<int> set);
 
 #endif //CS6820HW2_TABLE_H

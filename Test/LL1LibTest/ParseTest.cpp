@@ -220,7 +220,7 @@ namespace {
         ASSERT_EQ(words.size(), 8);
     }
 
-    TEST(ParseTest, SwapStack){
+    TEST(ParseTests, SwapStack){
         //this test check to see that our swap stack function works with figure 3.13 in the textbook
 
 //        std::string expr = "test1 + test2 * test3";
@@ -290,7 +290,7 @@ namespace {
 
     }
 
-    TEST(ParseTest, InvalidParseTest){
+    TEST(ParseTests, InvalidParseTest){
         std::ifstream file("../TestResources/BadExpressions.txt");//holds file we are opening
         std::string line; //holds a single expression we wish to parse
 
@@ -310,7 +310,7 @@ namespace {
         file.close();
     }
 
-    TEST(ParseTest, ValidParseTest){
+    TEST(ParseTests, ValidParseTest){
         std::ifstream file("../TestResources/GoodExpressions.txt");//holds file we are opening
         std::string line; //holds a single expression we wish to parse
 
