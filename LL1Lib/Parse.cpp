@@ -28,6 +28,10 @@ std::vector<std::string> parseWords(std::string const& line){
     while(it != line.end()){
         //check if there is whitespace leading up to our term
         while(whitespace.find(*it) != std::string::npos){
+            if(!word.empty()){
+                words.push_back(word);
+                word = "";
+            }
             leadingWhiteSpace = true;
             it++;
         }

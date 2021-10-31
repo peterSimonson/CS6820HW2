@@ -82,6 +82,11 @@ namespace {
         ASSERT_EQ(words[5], "/");
         ASSERT_EQ(words[6], "2");
         ASSERT_EQ(words.size(), 7);
+
+        expr = "42 42";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "42");
+        ASSERT_EQ(words[1], "42");
     }
 
     TEST(ParseTests, ParseNegNumTests){
