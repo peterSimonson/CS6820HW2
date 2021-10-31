@@ -59,6 +59,7 @@ std::vector<std::string> parseWords(std::string const& line){
             words.push_back(word);
             word = "";
             it ++;
+            leadingWhiteSpace = false;
         }
         else{
             word += *it;

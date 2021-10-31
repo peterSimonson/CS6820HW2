@@ -108,6 +108,32 @@ namespace {
         ASSERT_EQ(words[1], " -");
         ASSERT_EQ(words[2], " -32");
 
+        expr = "2 --32";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], " -");
+        ASSERT_EQ(words[2], "-32");
+
+        expr = "2 ++32";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], "+");
+        ASSERT_EQ(words[2], "+");
+        ASSERT_EQ(words[3], "32");
+
+        expr = "2 +-32";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], "+");
+        ASSERT_EQ(words[2], "-32");
+
+        expr = "2 -+32";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], " -");
+        ASSERT_EQ(words[2], "+");
+        ASSERT_EQ(words[3], "32");
+
     }
 
     TEST(ParseTests, ParseVaribaleTest){
