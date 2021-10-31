@@ -10,12 +10,12 @@ namespace {
         std::vector<std::string> words{"(" ,"peter", "+", "12", ")", "*", "2"};
 
         std::vector<int> tokens =  TranslateWordsToTokens(words);
-        std::vector<int> results{END_TOKEN , OPEN_PARAN_TOKEN, NAME_TOKEN, PLUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, MULTIPLY_TOKEN, NUM_TOKEN};
+        std::vector<int> results{OPEN_PARAN_TOKEN, NAME_TOKEN, PLUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, MULTIPLY_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(tokens, results);
 
         words = {"(" ,"peter", "-", "12", ")", "/", "2"};
         tokens =  TranslateWordsToTokens(words);
-        results = {END_TOKEN , OPEN_PARAN_TOKEN, NAME_TOKEN, MINUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN};
+        results = {OPEN_PARAN_TOKEN, NAME_TOKEN, MINUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(tokens, results);
     }
 
@@ -27,7 +27,7 @@ namespace {
         ASSERT_TRUE(is_number(test));
 
         test = ".3";
-        ASSERT_TRUE(is_number(test));
+        ASSERT_FALSE(is_number(test));
 
         test = "test";
         ASSERT_FALSE(is_number(test));
@@ -36,6 +36,9 @@ namespace {
         ASSERT_FALSE(is_number(test));
 
         test = "1.2.3";
+        ASSERT_FALSE(is_number(test));
+
+        test = ".";
         ASSERT_FALSE(is_number(test));
     }
 

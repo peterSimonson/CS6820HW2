@@ -15,9 +15,6 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
     //will hold all the strings we translated to int tokens
     std::vector<int> tokens;
 
-    //push the end of file to the base of the stack
-    tokens.push_back(END_TOKEN);
-
     for(str = words.begin(); str != words.end(); str++){
         //check what type of token this is
         if(is_number(*str)){
@@ -50,6 +47,9 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
         }
     }
 
+    //push the end of file to the end of the vector
+    tokens.push_back(END_TOKEN);
+
     return tokens;
 }
 
@@ -63,8 +63,15 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
 /// \return true if it is a number, false if it is not
 bool is_number(const std::string& s)
 {
-    std::string::const_iterator it = s.begin();\
+    std::string::const_iterator it = s.begin();
     bool isDecimalNum = false;
+
+    //first char must be a digit
+    if(!std::isdigit(*it)){
+        return false;
+    }
+    it++;
+
     while (it != s.end()){
         //if it is a digit go to next char
         if(std::isdigit(*it));

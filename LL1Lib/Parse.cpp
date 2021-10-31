@@ -61,7 +61,7 @@ Parser::Parser(const std::string& line, Table table) {
 
     //declare reverse iterators to traverse our stack and input
     auto focus = stack.rbegin();
-    auto word = inputTokens.rbegin();
+    auto word = inputTokens.begin();
     //implements the pseudo-code in figure 3.11
     successfulParse = false;
     while(true){
