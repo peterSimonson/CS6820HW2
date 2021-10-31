@@ -14,32 +14,55 @@ void PrintParserError(const std::string& expr);
 std::vector<std::string> parseWords(std::string const& line){
 
     std::vector<std::string> words; //holds all the words from an input line
-    std::string word; //holds a word we are parsing
+
     //whitespace chars that separate words
     const std::string whitespace = " \n\r\t\f\v";
     //these reserved chars also separate words
     const std::string keyChar = "=+-()*^/";
 
-    for (char x : line){
-        //check if x is a whitespace char. if it is then push the word
-        if (whitespace.find(x) != std::string::npos){
+    auto it = line.begin();
+    std::string word; //holds a word we are parsing
+
+    //put while loop here to get all words
+    bool leadingWhiteSpace = false;
+    while(it != line.end()){
+        //check if there is whitespace leading up to our term
+        while(whitespace.find(*it) != std::string::npos){
+            leadingWhiteSpace = true;
+            it++;
+        }
+
+        //if the first non-whitespace char is a minus, and we have leading whitespace we have a spacenegnum
+        if(*it == '-'){
             if(!word.empty()){
                 words.push_back(word);
+                word = "";
             }
-            word = "";
+
+            if(leadingWhiteSpace){
+                word += " "; //add the leading whitespace
+                leadingWhiteSpace = false;
+            }
+            word += *it; //add the minus sign
+            it++; //increment the iterator
+            while(whitespace.find(*it) != std::string::npos){
+                leadingWhiteSpace = true;
+                it++;
+            }
         }
-        //if we have a key char then we must push the word and the char
-        else if(keyChar.find(x) != std::string::npos){
+        else if(keyChar.find(*it) != std::string::npos){
             if(!word.empty()){
                 words.push_back(word);
             }
             //the next word we need to push is the keyChar
-            word = x;
+            word = *it;
             words.push_back(word);
             word = "";
+            it ++;
         }
         else{
-            word += x;
+            word += *it;
+            it++;
         }
     }
     //our strings are not whitespace terminated, so we need to add the last word

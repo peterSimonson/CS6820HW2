@@ -84,6 +84,32 @@ namespace {
         ASSERT_EQ(words.size(), 7);
     }
 
+    TEST(ParseTests, ParseNegNumTests){
+        std::string expr = "-32";
+        std::vector<std::string> words = parseWords(expr);
+        ASSERT_EQ(words[0], "-32");
+
+        expr = "2 + -32";
+        words = parseWords(expr);
+
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], "+");
+        ASSERT_EQ(words[2], " -32");
+
+        expr = "2 - 32";
+        words = parseWords(expr);
+
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], " -32");
+
+        expr = "2 - -32";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], " -");
+        ASSERT_EQ(words[2], " -32");
+
+    }
+
     TEST(ParseTests, ParseVaribaleTest){
 
         std::string expr = "testVar + 1";
