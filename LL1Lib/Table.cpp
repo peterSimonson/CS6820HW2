@@ -108,7 +108,7 @@ bool is_name(const std::string& s)
     if(std::isalpha(*it)){
         it++;
         //check the remaining numbers are alphanumeric
-        while (it != s.end() && std::isalnum(*it)) ++it;
+        while (it != s.end() && (std::isalnum(*it)) || *it == '_') ++it;
         return !s.empty() && it == s.end();
     }
     else{

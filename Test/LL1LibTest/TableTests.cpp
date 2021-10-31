@@ -52,7 +52,19 @@ namespace {
         test = "test123";
         ASSERT_TRUE(is_name(test));
 
+        test = "test_123";
+        ASSERT_TRUE(is_name(test));
+
+        test = "test___________123";
+        ASSERT_TRUE(is_name(test));
+
+        test = "test___________123";
+        ASSERT_TRUE(is_name(test));
+
         test = "123test";
+        ASSERT_FALSE(is_name(test));
+
+        test = "123_test";
         ASSERT_FALSE(is_name(test));
 
         test = "test!";
