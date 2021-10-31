@@ -108,32 +108,32 @@ namespace {
         ASSERT_FALSE(is_terminal(TERM_PRIME_TOKEN));
     }
 
-    TEST(TableTests, LookUpTableTest){
-
-        Table table = Table();
-
-        //we are going to look up a couple table entries
-        int result = table.LookUpTable(END_TOKEN, START_TOKEN);
-        ASSERT_EQ(result, ERROR_TOKEN);
-
-        result = table.LookUpTable(END_TOKEN, EXPR_PRIME_TOKEN);
-        ASSERT_EQ(result, 4);
-
-        result = table.LookUpTable(END_TOKEN, TERM_PRIME_TOKEN);
-        ASSERT_EQ(result, 8);
-
-        result = table.LookUpTable(PLUS_TOKEN, EXPR_PRIME_TOKEN);
-        ASSERT_EQ(result, 2);
-
-        result = table.LookUpTable(PLUS_TOKEN, TERM_PRIME_TOKEN);
-        ASSERT_EQ(result, 8);
-
-        result = table.LookUpTable(MINUS_TOKEN, EXPR_PRIME_TOKEN);
-        ASSERT_EQ(result, 3);
-
-        result = table.LookUpTable(PLUS_TOKEN, TERM_PRIME_TOKEN);
-        ASSERT_EQ(result, 8);
-    }
+//    TEST(TableTests, LookUpTableTest){
+//
+//        Table table = Table();
+//
+//        //we are going to look up a couple table entries
+//        int result = table.LookUpTable(END_TOKEN, START_TOKEN);
+//        ASSERT_EQ(result, ERROR_TOKEN);
+//
+//        result = table.LookUpTable(END_TOKEN, EXPR_PRIME_TOKEN);
+//        ASSERT_EQ(result, 4);
+//
+//        result = table.LookUpTable(END_TOKEN, TERM_PRIME_TOKEN);
+//        ASSERT_EQ(result, 8);
+//
+//        result = table.LookUpTable(PLUS_TOKEN, EXPR_PRIME_TOKEN);
+//        ASSERT_EQ(result, 2);
+//
+//        result = table.LookUpTable(PLUS_TOKEN, TERM_PRIME_TOKEN);
+//        ASSERT_EQ(result, 8);
+//
+//        result = table.LookUpTable(MINUS_TOKEN, EXPR_PRIME_TOKEN);
+//        ASSERT_EQ(result, 3);
+//
+//        result = table.LookUpTable(PLUS_TOKEN, TERM_PRIME_TOKEN);
+//        ASSERT_EQ(result, 8);
+//    }
 
     TEST(TableTests, RemoveEpsilonTest){
         //remove third element
@@ -206,106 +206,106 @@ namespace {
         ASSERT_EQ(tempSet, set1);
     }
 
-    TEST(TableTests, FirstSetTest){
-        Table table = Table();
-
-        //start, expr, term and factor should all be the same
-        std::vector<int> expectedSet{OPEN_PARAN_TOKEN, NAME_TOKEN, NUM_TOKEN};
-        ASSERT_EQ(table.firstSet[START_TOKEN], expectedSet);
-        ASSERT_EQ(table.firstSet[EXPR_TOKEN], expectedSet);
-//        ASSERT_EQ(table.firstSet[TERM_TOKEN], expectedSet);
-//        ASSERT_EQ(table.firstSet[FACTOR_TOKEN], expectedSet);
-
-        //check expr_prime
-        expectedSet = {PLUS_TOKEN, MINUS_TOKEN, EPSILON_TOKEN};
-        ASSERT_EQ(table.firstSet[EXPR_PRIME_TOKEN], expectedSet);
-
-        //check term_prime
-        expectedSet = {MULTIPLY_TOKEN, DIVIDE_TOKEN, EPSILON_TOKEN};
-        ASSERT_EQ(table.firstSet[TERM_PRIME_TOKEN], expectedSet);
-
-
-        for(int i = NUM_OF_NON_TERMINALS; i <= NUM_OF_TOKENS; i++){
-            //the first set entry for a terminal should be the same terminal
-            expectedSet = {i};
-            ASSERT_EQ(table.firstSet[i], expectedSet);
-        }
-    }
-
-    TEST(TableTests, FollowSetTest){
-        Table table = Table();
-
-        //check that follow set only has non-terminals for entries
-        ASSERT_EQ(table.followSet.size(), NUM_OF_NON_TERMINALS);
-
-        //check the entries
-        std::vector<int> expectedSet = {END_TOKEN};
-        ASSERT_EQ(table.followSet[START_TOKEN], expectedSet);
-
-        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
-        ASSERT_EQ(table.followSet[EXPR_TOKEN], expectedSet);
-
-        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
-        ASSERT_EQ(table.followSet[EXPR_PRIME_TOKEN], expectedSet);
-
+//    TEST(TableTests, FirstSetTest){
+//        Table table = Table();
+//
+//        //start, expr, term and factor should all be the same
+//        std::vector<int> expectedSet{OPEN_PARAN_TOKEN, NAME_TOKEN, NUM_TOKEN};
+//        ASSERT_EQ(table.firstSet[START_TOKEN], expectedSet);
+//        ASSERT_EQ(table.firstSet[EXPR_TOKEN], expectedSet);
+////        ASSERT_EQ(table.firstSet[TERM_TOKEN], expectedSet);
+////        ASSERT_EQ(table.firstSet[FACTOR_TOKEN], expectedSet);
+//
+//        //check expr_prime
+//        expectedSet = {PLUS_TOKEN, MINUS_TOKEN, EPSILON_TOKEN};
+//        ASSERT_EQ(table.firstSet[EXPR_PRIME_TOKEN], expectedSet);
+//
+//        //check term_prime
+//        expectedSet = {MULTIPLY_TOKEN, DIVIDE_TOKEN, EPSILON_TOKEN};
+//        ASSERT_EQ(table.firstSet[TERM_PRIME_TOKEN], expectedSet);
+//
+//
+//        for(int i = NUM_OF_NON_TERMINALS; i <= NUM_OF_TOKENS; i++){
+//            //the first set entry for a terminal should be the same terminal
+//            expectedSet = {i};
+//            ASSERT_EQ(table.firstSet[i], expectedSet);
+//        }
+//    }
+//
+//    TEST(TableTests, FollowSetTest){
+//        Table table = Table();
+//
+//        //check that follow set only has non-terminals for entries
+//        ASSERT_EQ(table.followSet.size(), NUM_OF_NON_TERMINALS);
+//
+//        //check the entries
+//        std::vector<int> expectedSet = {END_TOKEN};
+//        ASSERT_EQ(table.followSet[START_TOKEN], expectedSet);
+//
+//        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
+//        ASSERT_EQ(table.followSet[EXPR_TOKEN], expectedSet);
+//
+//        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
+//        ASSERT_EQ(table.followSet[EXPR_PRIME_TOKEN], expectedSet);
+//
+////        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN};
+////        ASSERT_EQ(table.followSet[TERM_TOKEN], expectedSet);
+//
 //        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN};
-//        ASSERT_EQ(table.followSet[TERM_TOKEN], expectedSet);
+//        ASSERT_EQ(table.followSet[TERM_PRIME_TOKEN], expectedSet);
+//
+////        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, MULTIPLY_TOKEN, DIVIDE_TOKEN, CLOSE_PARAN_TOKEN};
+////        ASSERT_EQ(table.followSet[FACTOR_TOKEN], expectedSet);
+//
+//    }
 
-        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN};
-        ASSERT_EQ(table.followSet[TERM_PRIME_TOKEN], expectedSet);
+//    TEST(TableTests, FirstPlusSetTest){
+//        Table table = Table();
+//
+//        //productions 4 and 8 should be different from 1st. Otherwise, first+ should be the same as first
+//        for(const std::pair<const int, rule>& productionRule: table.rules){
+//
+//            rule production = productionRule.second;
+//            std::vector<int> expectedSet = table.firstSet[production.rightHandSide.front()];
+//            std::vector<int> firstPlusSet = table.findFirstPlusSet(production);
+//            if(productionRule.first == 4){
+//                expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN, EPSILON_TOKEN};
+//                ASSERT_EQ(expectedSet, firstPlusSet);
+//            }
+//            else if(productionRule.first == 8){
+//                expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN, EPSILON_TOKEN};
+//                ASSERT_EQ(expectedSet, firstPlusSet);
+//            }
+//            else{
+//                ASSERT_EQ(expectedSet, firstPlusSet);
+//            }
+//        }
+//    }
 
-//        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, MULTIPLY_TOKEN, DIVIDE_TOKEN, CLOSE_PARAN_TOKEN};
-//        ASSERT_EQ(table.followSet[FACTOR_TOKEN], expectedSet);
-
-    }
-
-    TEST(TableTests, FirstPlusSetTest){
-        Table table = Table();
-
-        //productions 4 and 8 should be different from 1st. Otherwise, first+ should be the same as first
-        for(const std::pair<const int, rule>& productionRule: table.rules){
-
-            rule production = productionRule.second;
-            std::vector<int> expectedSet = table.firstSet[production.rightHandSide.front()];
-            std::vector<int> firstPlusSet = table.findFirstPlusSet(production);
-            if(productionRule.first == 4){
-                expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN, EPSILON_TOKEN};
-                ASSERT_EQ(expectedSet, firstPlusSet);
-            }
-            else if(productionRule.first == 8){
-                expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN, EPSILON_TOKEN};
-                ASSERT_EQ(expectedSet, firstPlusSet);
-            }
-            else{
-                ASSERT_EQ(expectedSet, firstPlusSet);
-            }
-        }
-    }
-
-    TEST(TableTests, TableTest){
-
-        //this is what the table from the text book looks like
-        int ExpectedRuleTable [9][6] = {
-                {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 1
-                {ERROR_TOKEN, ERROR_TOKEN, 2, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 2
-                {ERROR_TOKEN, ERROR_TOKEN, 3, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 3
-                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 6, ERROR_TOKEN}, // 4
-                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 7, ERROR_TOKEN}, // 5
-                {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 9}, // 6
-                {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN}, // 7
-                {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 11}, // 8
-                {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 10} //9
-        };
-
-        //generate the table using our code
-        Table table = Table();
-
-        //check that every entry of the table is equal to the textbook's table
-        for(int A = START_TOKEN; A < NUM_OF_NON_TERMINALS; A++){
-            for(int w = START_TOKEN; w < NUM_OF_TOKENS - NUM_OF_NON_TERMINALS; w++){
-                ASSERT_EQ(table.RuleTable[w][A], ExpectedRuleTable[w][A]);
-            }
-        }
-
-    }
+//    TEST(TableTests, TableTest){
+//
+//        //this is what the table from the text book looks like
+//        int ExpectedRuleTable [9][6] = {
+//                {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 1
+//                {ERROR_TOKEN, ERROR_TOKEN, 2, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 2
+//                {ERROR_TOKEN, ERROR_TOKEN, 3, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 3
+//                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 6, ERROR_TOKEN}, // 4
+//                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 7, ERROR_TOKEN}, // 5
+//                {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 9}, // 6
+//                {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN}, // 7
+//                {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 11}, // 8
+//                {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 10} //9
+//        };
+//
+//        //generate the table using our code
+//        Table table = Table();
+//
+//        //check that every entry of the table is equal to the textbook's table
+//        for(int A = START_TOKEN; A < NUM_OF_NON_TERMINALS; A++){
+//            for(int w = START_TOKEN; w < NUM_OF_TOKENS - NUM_OF_NON_TERMINALS; w++){
+//                ASSERT_EQ(table.RuleTable[w][A], ExpectedRuleTable[w][A]);
+//            }
+//        }
+//
+//    }
 }
