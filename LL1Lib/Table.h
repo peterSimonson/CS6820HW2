@@ -13,22 +13,31 @@
 #define START_TOKEN 0
 #define EXPR_TOKEN 1
 #define EXPR_PRIME_TOKEN 2
-#define TERM_TOKEN 3
-#define TERM_PRIME_TOKEN 4
-#define FACTOR_TOKEN 5
+#define L_TERM_TOKEN 3
+#define R_TERM_TOKEN 4
+#define TERM_PRIME_TOKEN 5
+#define L_FACTOR_TOKEN 6
+#define R_FACTOR_TOKEN 7
+#define G_FACTOR_TOKEN 8
+#define POSVAL_TOKEN 9
+#define SPACE_NEG_VAL_TOKEN 10
 //Define Columns of our table
-#define NUM_OF_NON_TERMINALS 6
-#define END_TOKEN 6
-#define PLUS_TOKEN 7
-#define MINUS_TOKEN 8
-#define MULTIPLY_TOKEN 9
-#define DIVIDE_TOKEN 10
-#define OPEN_PARAN_TOKEN 11
-#define CLOSE_PARAN_TOKEN 12
-#define NAME_TOKEN 13
-#define NUM_TOKEN 14
-#define EPSILON_TOKEN 15
-#define NUM_OF_TOKENS 15
+#define NUM_OF_NON_TERMINALS 11
+#define END_TOKEN 11
+#define PLUS_TOKEN 12
+#define MINUS_TOKEN 13
+#define MULTIPLY_TOKEN 14
+#define DIVIDE_TOKEN 15
+#define OPEN_PARAN_TOKEN 16
+#define CLOSE_PARAN_TOKEN 17
+#define NAME_TOKEN 18
+#define NUM_TOKEN 19
+#define NEG_NAME_TOKEN 20
+#define NEG_NUM_TOKEN 21
+#define SPACE_NEG_NAME_TOKEN 22
+#define SPACE_NEG_NUM_TOKEN 23
+#define EPSILON_TOKEN 24
+#define NUM_OF_TOKENS 24
 
 //other tokens
 #define ERROR_TOKEN -1
@@ -63,7 +72,9 @@ std::vector<int> removeEpsilonFromSet(std::vector<int> set);
 std::vector<int> TranslateWordsToTokens(std::vector<std::string> words);
 std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vector<int>& secondSet);
 bool is_number(const std::string& s);
+bool is_Neg_Num(const std::string& s);
 bool is_name(const std::string& s);
+bool is_Neg_Name(const std::string& s);
 bool is_terminal(const int& token);
 bool set_contains_epsilon(std::vector<int> set);
 

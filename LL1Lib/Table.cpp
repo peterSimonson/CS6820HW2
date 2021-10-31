@@ -16,29 +16,44 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
     std::vector<int> tokens;
 
     for(str = words.begin(); str != words.end(); str++){
+        std::string word = *str;
         //check what type of token this is
-        if(is_number(*str)){
+        if(is_number(word)){
             tokens.push_back(NUM_TOKEN);
         }
-        else if(is_name(*str)){
+        else if(is_name(word)){
             tokens.push_back(NAME_TOKEN);
         }
-        else if(*str == "+"){
+        else if(is_Neg_Num(word)){
+            tokens.push_back(NEG_NUM_TOKEN);
+        }
+        else if(is_Neg_Name(word)){
+            tokens.push_back(NEG_NAME_TOKEN);
+        }
+        //if the first char is a space check if everything else is a num
+        else if(word.at(0) == ' ' && is_Neg_Num(word.substr(1, word.size()))){
+            tokens.push_back(SPACE_NEG_NUM_TOKEN);
+        }
+        //if the first char is a space check if everything else is a name
+        else if(word.at(0) == ' ' && is_Neg_Name(word.substr(1, word.size()))){
+            tokens.push_back(SPACE_NEG_NAME_TOKEN);
+        }
+        else if(word == "+"){
             tokens.push_back(PLUS_TOKEN);
         }
-        else if(*str == "-"){
+        else if(word == "-" || word == " -"){
             tokens.push_back(MINUS_TOKEN);
         }
-        else if(*str == "*"){
+        else if(word == "*"){
             tokens.push_back(MULTIPLY_TOKEN);
         }
-        else if(*str == "/"){
+        else if(word == "/"){
             tokens.push_back(DIVIDE_TOKEN);
         }
-        else if(*str == "("){
+        else if(word == "("){
             tokens.push_back(OPEN_PARAN_TOKEN);
         }
-        else if(*str == ")"){
+        else if(word == ")"){
             tokens.push_back(CLOSE_PARAN_TOKEN);
         }
         //if we could not find a match than push an error token
@@ -115,6 +130,24 @@ bool is_name(const std::string& s)
         return false;
     }
 
+}
+
+bool is_Neg_Num(const std::string& s){
+    if(s.at(0) == '-' && is_number(s.substr(1, s.size()))){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool is_Neg_Name(const std::string& s){
+    if(s.at(0) == '-' && is_name(s.substr(1, s.size()))){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 /// Checks if a token is a terminal token
@@ -198,53 +231,53 @@ void Table::GenerateFirstSet() {
 }
 
 void Table::GenerateRules() {
-    //rule 0
-    std::vector<int> rhs{EXPR_TOKEN};
-    rules.insert({0, {START_TOKEN, rhs}});
-
-    //rule 1
-    rhs = {TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({1, {EXPR_TOKEN, rhs}});
-
-    //rule 2
-    rhs = {PLUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({2, {EXPR_PRIME_TOKEN, rhs}});
-
-    //rule 3
-    rhs = {MINUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({3, {EXPR_PRIME_TOKEN, rhs}});
-
-    //rule 4
-    rhs = {EPSILON_TOKEN};
-    rules.insert({4, {EXPR_PRIME_TOKEN, rhs}});
-
-    //rule 5
-    rhs = {FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({5, {TERM_TOKEN, rhs}});
-
-    //rule 6
-    rhs = {MULTIPLY_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({6, {TERM_PRIME_TOKEN, rhs}});
-
-    //rule 7
-    rhs = {DIVIDE_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({7, {TERM_PRIME_TOKEN, rhs}});
-
-    //rule 8
-    rhs = {EPSILON_TOKEN};
-    rules.insert({8, {TERM_PRIME_TOKEN, rhs}});
-
-    //rule 9
-    rhs = {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN};
-    rules.insert({9, {FACTOR_TOKEN, rhs}});
-
-    //rule 10
-    rhs = {NUM_TOKEN};
-    rules.insert({10, {FACTOR_TOKEN, rhs}});
-
-    //rule 11
-    rhs = {NAME_TOKEN};
-    rules.insert({11, {FACTOR_TOKEN, rhs}});
+//    //rule 0
+//    std::vector<int> rhs{EXPR_TOKEN};
+//    rules.insert({0, {START_TOKEN, rhs}});
+//
+//    //rule 1
+//    rhs = {TERM_TOKEN, EXPR_PRIME_TOKEN};
+//    rules.insert({1, {EXPR_TOKEN, rhs}});
+//
+//    //rule 2
+//    rhs = {PLUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
+//    rules.insert({2, {EXPR_PRIME_TOKEN, rhs}});
+//
+//    //rule 3
+//    rhs = {MINUS_TOKEN, TERM_TOKEN, EXPR_PRIME_TOKEN};
+//    rules.insert({3, {EXPR_PRIME_TOKEN, rhs}});
+//
+//    //rule 4
+//    rhs = {EPSILON_TOKEN};
+//    rules.insert({4, {EXPR_PRIME_TOKEN, rhs}});
+//
+//    //rule 5
+//    rhs = {FACTOR_TOKEN, TERM_PRIME_TOKEN};
+//    rules.insert({5, {TERM_TOKEN, rhs}});
+//
+//    //rule 6
+//    rhs = {MULTIPLY_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
+//    rules.insert({6, {TERM_PRIME_TOKEN, rhs}});
+//
+//    //rule 7
+//    rhs = {DIVIDE_TOKEN, FACTOR_TOKEN, TERM_PRIME_TOKEN};
+//    rules.insert({7, {TERM_PRIME_TOKEN, rhs}});
+//
+//    //rule 8
+//    rhs = {EPSILON_TOKEN};
+//    rules.insert({8, {TERM_PRIME_TOKEN, rhs}});
+//
+//    //rule 9
+//    rhs = {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN};
+//    rules.insert({9, {FACTOR_TOKEN, rhs}});
+//
+//    //rule 10
+//    rhs = {NUM_TOKEN};
+//    rules.insert({10, {FACTOR_TOKEN, rhs}});
+//
+//    //rule 11
+//    rhs = {NAME_TOKEN};
+//    rules.insert({11, {FACTOR_TOKEN, rhs}});
 
 }
 

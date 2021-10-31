@@ -19,6 +19,13 @@ namespace {
         ASSERT_EQ(tokens, results);
     }
 
+    TEST(TableTests, TranslateNegativeTest){
+        std::vector<std::string> words{"-32", " -32", "-", " -", "-testVar", " -testVar"};
+        std::vector<int> tokens =  TranslateWordsToTokens(words);
+        std::vector<int> results{NEG_NUM_TOKEN, SPACE_NEG_NUM_TOKEN, MINUS_TOKEN, MINUS_TOKEN, NEG_NAME_TOKEN, SPACE_NEG_NAME_TOKEN, END_TOKEN};
+        ASSERT_EQ(tokens, results);
+    }
+
     TEST(TableTests, IsNumTest){
         std::string test = "123";
         ASSERT_TRUE(is_number(test));
@@ -88,9 +95,7 @@ namespace {
         ASSERT_FALSE(is_terminal(START_TOKEN));
         ASSERT_FALSE(is_terminal(EXPR_TOKEN));
         ASSERT_FALSE(is_terminal(EXPR_PRIME_TOKEN));
-        ASSERT_FALSE(is_terminal(TERM_TOKEN));
         ASSERT_FALSE(is_terminal(TERM_PRIME_TOKEN));
-        ASSERT_FALSE(is_terminal(FACTOR_TOKEN));
     }
 
     TEST(TableTests, LookUpTableTest){
@@ -146,9 +151,9 @@ namespace {
         ASSERT_EQ(set, postRemoveSet);
 
         //do not remove an element
-        set = {FACTOR_TOKEN, NAME_TOKEN, NUM_TOKEN};
+        set = {R_FACTOR_TOKEN, NAME_TOKEN, NUM_TOKEN};
         set = removeEpsilonFromSet(set);
-        postRemoveSet = {FACTOR_TOKEN, NAME_TOKEN, NUM_TOKEN};
+        postRemoveSet = {R_FACTOR_TOKEN, NAME_TOKEN, NUM_TOKEN};
         ASSERT_EQ(set, postRemoveSet);
     }
 
@@ -165,7 +170,7 @@ namespace {
         set = {EPSILON_TOKEN, EPSILON_TOKEN, NUM_TOKEN};
         ASSERT_TRUE(set_contains_epsilon(set));
 
-        set = {FACTOR_TOKEN, NAME_TOKEN, NUM_TOKEN};
+        set = {L_FACTOR_TOKEN, NAME_TOKEN, NUM_TOKEN};
         ASSERT_FALSE(set_contains_epsilon(set));
     }
 
@@ -179,12 +184,12 @@ namespace {
         ASSERT_EQ(set1, set2);
 
         //test adding factor token
-        set2.push_back(FACTOR_TOKEN);
+        set2.push_back(L_FACTOR_TOKEN);
         std::sort(set2.begin(), set2.end());
         set1 = unionize_sets(set1, set2);
         ASSERT_EQ(set1, set2);
 
-        set1 = {TERM_PRIME_TOKEN, FACTOR_TOKEN, EXPR_PRIME_TOKEN};
+        set1 = {TERM_PRIME_TOKEN, G_FACTOR_TOKEN, EXPR_PRIME_TOKEN};
         std::vector<int> tempSet = unionize_sets(set1, {EPSILON_TOKEN});
         set1.push_back(EPSILON_TOKEN);
         std::sort(set1.begin(), set1.end());
@@ -198,8 +203,8 @@ namespace {
         std::vector<int> expectedSet{OPEN_PARAN_TOKEN, NAME_TOKEN, NUM_TOKEN};
         ASSERT_EQ(table.firstSet[START_TOKEN], expectedSet);
         ASSERT_EQ(table.firstSet[EXPR_TOKEN], expectedSet);
-        ASSERT_EQ(table.firstSet[TERM_TOKEN], expectedSet);
-        ASSERT_EQ(table.firstSet[FACTOR_TOKEN], expectedSet);
+//        ASSERT_EQ(table.firstSet[TERM_TOKEN], expectedSet);
+//        ASSERT_EQ(table.firstSet[FACTOR_TOKEN], expectedSet);
 
         //check expr_prime
         expectedSet = {PLUS_TOKEN, MINUS_TOKEN, EPSILON_TOKEN};
@@ -233,14 +238,14 @@ namespace {
         expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
         ASSERT_EQ(table.followSet[EXPR_PRIME_TOKEN], expectedSet);
 
-        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN};
-        ASSERT_EQ(table.followSet[TERM_TOKEN], expectedSet);
+//        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN};
+//        ASSERT_EQ(table.followSet[TERM_TOKEN], expectedSet);
 
         expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN};
         ASSERT_EQ(table.followSet[TERM_PRIME_TOKEN], expectedSet);
 
-        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, MULTIPLY_TOKEN, DIVIDE_TOKEN, CLOSE_PARAN_TOKEN};
-        ASSERT_EQ(table.followSet[FACTOR_TOKEN], expectedSet);
+//        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, MULTIPLY_TOKEN, DIVIDE_TOKEN, CLOSE_PARAN_TOKEN};
+//        ASSERT_EQ(table.followSet[FACTOR_TOKEN], expectedSet);
 
     }
 
