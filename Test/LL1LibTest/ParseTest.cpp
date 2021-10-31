@@ -136,6 +136,57 @@ namespace {
 
     }
 
+    TEST(ParseTests, ParseNegNameTest){
+        std::string expr = "-testVar";
+        std::vector<std::string> words = parseWords(expr);
+        ASSERT_EQ(words[0], "-testVar");
+
+        expr = "2 + -testVar";
+        words = parseWords(expr);
+
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], "+");
+        ASSERT_EQ(words[2], " -testVar");
+
+        expr = "2 - testVar";
+        words = parseWords(expr);
+
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], " -testVar");
+
+        expr = "2 - -testVar";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], " -");
+        ASSERT_EQ(words[2], " -testVar");
+
+        expr = "2 --testVar";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], " -");
+        ASSERT_EQ(words[2], "-testVar");
+
+        expr = "2 ++testVar";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], "+");
+        ASSERT_EQ(words[2], "+");
+        ASSERT_EQ(words[3], "testVar");
+
+        expr = "2 +-testVar";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], "+");
+        ASSERT_EQ(words[2], "-testVar");
+
+        expr = "2 -+testVar";
+        words = parseWords(expr);
+        ASSERT_EQ(words[0], "2");
+        ASSERT_EQ(words[1], " -");
+        ASSERT_EQ(words[2], "+");
+        ASSERT_EQ(words[3], "testVar");
+    }
+
     TEST(ParseTests, ParseVaribaleTest){
 
         std::string expr = "testVar + 1";
