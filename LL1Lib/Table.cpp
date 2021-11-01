@@ -224,12 +224,12 @@ void Table::GenerateFirstSet() {
             std::vector<int> rhs = removeEpsilonFromSet(firstSet[productionRHS.front()]);
 
             //starts as one and k starts as the amount of production terms
-            int i , k = (int) productionRHS.size();
+            int i = 1 , k = (int) productionRHS.size();
             //TODO: Figure out why I do not ever enter this loop yet find the correct result
             //I think I need to loop through all the betas
-            for(i = 1; i < k - 1; i++){
-                if(set_contains_epsilon(firstSet[productionRHS[i - 1]])){
-                    unionize_sets(rhs, removeEpsilonFromSet(firstSet[productionRHS[i]]));
+            for(int ii = 0; ii < k - 1; ii++){
+                if(set_contains_epsilon(firstSet[productionRHS[ii]]) && i <= k){
+                    unionize_sets(rhs, removeEpsilonFromSet(firstSet[productionRHS[ii+1]]));
                     i++;
                 }
             }
