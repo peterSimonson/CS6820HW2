@@ -221,18 +221,17 @@ void Table::GenerateFirstSet() {
             std::vector<int> originalSet = firstSet[productionLHS];
 
             //get the first production element without epsilon
-            std::vector<int> rhs = removeEpsilonFromSet(firstSet[*beta_i]);
+            std::vector<int> rhs = removeEpsilonFromSet(firstSet[productionRHS.front()]);
 
             //starts as one and k starts as the amount of production terms
-            int i = 1, k = (int) productionRHS.size();
+            int i , k = (int) productionRHS.size();
             //TODO: Figure out why I do not ever enter this loop yet find the correct result
             //I think I need to loop through all the betas
-            while(set_contains_epsilon(firstSet[*beta_i]) && i <= k - 1){
-                //increment our counters
-                i++;
-                beta_i++;
-                //unionize the sets
-                rhs = unionize_sets(rhs, removeEpsilonFromSet(firstSet[*beta_i]));
+            for(i = 1; i < k - 1; i++){
+                if(set_contains_epsilon(firstSet[productionRHS[i - 1]])){
+                    unionize_sets(rhs, removeEpsilonFromSet(firstSet[productionRHS[i]]));
+                    i++;
+                }
             }
 
             //check if we need to add epsilon
