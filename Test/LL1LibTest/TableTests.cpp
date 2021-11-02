@@ -206,31 +206,51 @@ namespace {
         ASSERT_EQ(tempSet, set1);
     }
 
-//    TEST(TableTests, FirstSetTest){
-//        Table table = Table();
-//
-//        //start, expr, term and factor should all be the same
-//        std::vector<int> expectedSet{OPEN_PARAN_TOKEN, NAME_TOKEN, NUM_TOKEN};
-//        ASSERT_EQ(table.firstSet[START_TOKEN], expectedSet);
-//        ASSERT_EQ(table.firstSet[EXPR_TOKEN], expectedSet);
-////        ASSERT_EQ(table.firstSet[TERM_TOKEN], expectedSet);
-////        ASSERT_EQ(table.firstSet[FACTOR_TOKEN], expectedSet);
-//
-//        //check expr_prime
-//        expectedSet = {PLUS_TOKEN, MINUS_TOKEN, EPSILON_TOKEN};
-//        ASSERT_EQ(table.firstSet[EXPR_PRIME_TOKEN], expectedSet);
-//
-//        //check term_prime
-//        expectedSet = {MULTIPLY_TOKEN, DIVIDE_TOKEN, EPSILON_TOKEN};
-//        ASSERT_EQ(table.firstSet[TERM_PRIME_TOKEN], expectedSet);
-//
-//
-//        for(int i = NUM_OF_NON_TERMINALS; i <= NUM_OF_TOKENS; i++){
-//            //the first set entry for a terminal should be the same terminal
-//            expectedSet = {i};
-//            ASSERT_EQ(table.firstSet[i], expectedSet);
-//        }
-//    }
+    TEST(TableTests, FirstSetTest){
+        Table table = Table();
+
+        //start, expr, term and factor should all be the same
+        std::vector<int> expectedSet{NEG_NUM_TOKEN, SPACE_NEG_NAME_TOKEN, NAME_TOKEN, NUM_TOKEN, OPEN_PARAN_TOKEN, NEG_NAME_TOKEN, SPACE_NEG_NUM_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.firstSet[START_TOKEN], expectedSet);
+        ASSERT_EQ(table.firstSet[EXPR_TOKEN], expectedSet);
+        ASSERT_EQ(table.firstSet[L_TERM_TOKEN], expectedSet);
+
+        expectedSet = {SPACE_NEG_NAME_TOKEN, NAME_TOKEN, NUM_TOKEN, OPEN_PARAN_TOKEN, SPACE_NEG_NUM_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.firstSet[R_TERM_TOKEN], expectedSet);
+
+        expectedSet = {MINUS_TOKEN, EPSILON_TOKEN, PLUS_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.firstSet[EXPR_PRIME_TOKEN], expectedSet);
+
+        expectedSet = {DIVIDE_TOKEN, EPSILON_TOKEN, MULTIPLY_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.firstSet[TERM_PRIME_TOKEN], expectedSet);
+
+        expectedSet = {NEG_NUM_TOKEN, SPACE_NEG_NAME_TOKEN, NAME_TOKEN, NUM_TOKEN, OPEN_PARAN_TOKEN, NEG_NAME_TOKEN, SPACE_NEG_NUM_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.firstSet[L_FACTOR_TOKEN], expectedSet);
+
+        expectedSet = {SPACE_NEG_NAME_TOKEN, NAME_TOKEN, NUM_TOKEN, OPEN_PARAN_TOKEN, SPACE_NEG_NUM_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.firstSet[R_FACTOR_TOKEN], expectedSet);
+        ASSERT_EQ(table.firstSet[G_FACTOR_TOKEN], expectedSet);
+
+        expectedSet = {NAME_TOKEN, NUM_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.firstSet[POSVAL_TOKEN], expectedSet);
+
+        expectedSet = {SPACE_NEG_NAME_TOKEN, SPACE_NEG_NUM_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.firstSet[SPACE_NEG_VAL_TOKEN], expectedSet);
+
+        for(int i = NUM_OF_NON_TERMINALS; i <= NUM_OF_TOKENS; i++){
+            //the first set entry for a terminal should be the same terminal
+            expectedSet = {i};
+            ASSERT_EQ(table.firstSet[i], expectedSet);
+        }
+    }
 //
 //    TEST(TableTests, FollowSetTest){
 //        Table table = Table();
