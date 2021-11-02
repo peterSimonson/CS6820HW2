@@ -251,33 +251,46 @@ namespace {
             ASSERT_EQ(table.firstSet[i], expectedSet);
         }
     }
-//
-//    TEST(TableTests, FollowSetTest){
-//        Table table = Table();
-//
-//        //check that follow set only has non-terminals for entries
-//        ASSERT_EQ(table.followSet.size(), NUM_OF_NON_TERMINALS);
-//
-//        //check the entries
-//        std::vector<int> expectedSet = {END_TOKEN};
-//        ASSERT_EQ(table.followSet[START_TOKEN], expectedSet);
-//
-//        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
-//        ASSERT_EQ(table.followSet[EXPR_TOKEN], expectedSet);
-//
-//        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
-//        ASSERT_EQ(table.followSet[EXPR_PRIME_TOKEN], expectedSet);
-//
-////        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN};
-////        ASSERT_EQ(table.followSet[TERM_TOKEN], expectedSet);
-//
-//        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN};
-//        ASSERT_EQ(table.followSet[TERM_PRIME_TOKEN], expectedSet);
-//
-////        expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, MULTIPLY_TOKEN, DIVIDE_TOKEN, CLOSE_PARAN_TOKEN};
-////        ASSERT_EQ(table.followSet[FACTOR_TOKEN], expectedSet);
-//
-//    }
+
+    TEST(TableTests, FollowSetTest){
+        Table table = Table();
+
+        //check that follow set only has non-terminals for entries
+        ASSERT_EQ(table.followSet.size(), NUM_OF_NON_TERMINALS);
+
+        //check the entries
+        std::vector<int> expectedSet = {END_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.followSet[START_TOKEN], expectedSet);
+
+        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.followSet[EXPR_TOKEN], expectedSet);
+
+        expectedSet = {CLOSE_PARAN_TOKEN, MINUS_TOKEN, PLUS_TOKEN, END_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.followSet[L_TERM_TOKEN], expectedSet);
+
+        expectedSet = {CLOSE_PARAN_TOKEN, MINUS_TOKEN, MULTIPLY_TOKEN, PLUS_TOKEN, END_TOKEN, DIVIDE_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.followSet[R_TERM_TOKEN], expectedSet);
+
+        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.followSet[EXPR_PRIME_TOKEN], expectedSet);
+
+        expectedSet = {PLUS_TOKEN, CLOSE_PARAN_TOKEN, MINUS_TOKEN, DIVIDE_TOKEN, MULTIPLY_TOKEN, END_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.followSet[TERM_PRIME_TOKEN], expectedSet);
+
+        expectedSet = {CLOSE_PARAN_TOKEN, MINUS_TOKEN, MULTIPLY_TOKEN, PLUS_TOKEN, END_TOKEN, DIVIDE_TOKEN};
+        std::sort(expectedSet.begin(), expectedSet.end());
+        ASSERT_EQ(table.followSet[L_FACTOR_TOKEN], expectedSet);
+        ASSERT_EQ(table.followSet[R_FACTOR_TOKEN], expectedSet);
+        ASSERT_EQ(table.followSet[G_FACTOR_TOKEN], expectedSet);
+        ASSERT_EQ(table.followSet[POSVAL_TOKEN], expectedSet);
+        ASSERT_EQ(table.followSet[SPACE_NEG_VAL_TOKEN], expectedSet);
+    }
 
 //    TEST(TableTests, FirstPlusSetTest){
 //        Table table = Table();
