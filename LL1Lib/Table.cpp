@@ -280,11 +280,11 @@ void Table::GenerateRules() {
     rules.insert({6, {EXPR_PRIME_TOKEN, rhs}});
 
     //rule 7
-    rhs = {MULTIPLY_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rhs = {MULTIPLY_TOKEN, R_TERM_TOKEN, TERM_PRIME_TOKEN};
     rules.insert({7, {TERM_PRIME_TOKEN, rhs}});
 
     //rule 8
-    rhs = {DIVIDE_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rhs = {DIVIDE_TOKEN, R_TERM_TOKEN, TERM_PRIME_TOKEN};
     rules.insert({8, {TERM_PRIME_TOKEN, rhs}});
 
     //rule 9
