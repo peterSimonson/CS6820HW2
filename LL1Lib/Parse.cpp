@@ -107,8 +107,8 @@ Parser::Parser(const std::string& line, Table table) {
                 //go to next word
                 word++;
                 //go to next word on stack and pop the last
-                focus++;
                 stack.pop_back();
+                focus = stack.rbegin();
             }
             else{
                 //print an error message
