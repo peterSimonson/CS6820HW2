@@ -250,6 +250,14 @@ namespace {
             expectedSet = {i};
             ASSERT_EQ(table.firstSet[i], expectedSet);
         }
+
+        for(int i = START_TOKEN; i <= NUM_OF_TOKENS; i++){
+            std::cout << "First at " << "\t" << std::to_string(i) << ":\t";
+            for(auto & terminal : table.firstSet[i]){
+                std::cout << std::to_string(terminal) << "\t";
+            }
+            std::cout << std::endl;
+        }
     }
 
     TEST(TableTests, FollowSetTest){
@@ -290,6 +298,14 @@ namespace {
         ASSERT_EQ(table.followSet[G_FACTOR_TOKEN], expectedSet);
         ASSERT_EQ(table.followSet[POSVAL_TOKEN], expectedSet);
         ASSERT_EQ(table.followSet[SPACE_NEG_VAL_TOKEN], expectedSet);
+
+        for(int i = START_TOKEN; i < NUM_OF_NON_TERMINALS; i++){
+            std::cout << "Follow at " << "\t" << std::to_string(i) << ":\t";
+            for(auto & terminal : table.followSet[i]){
+                std::cout << std::to_string(terminal) << "\t";
+            }
+            std::cout << std::endl;
+        }
     }
 
 //    TEST(TableTests, FirstPlusSetTest){

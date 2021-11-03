@@ -253,6 +253,7 @@ void Table::GenerateFirstSet() {
 void Table::GenerateRules() {
     //rule 0
     std::vector<int> rhs{EXPR_TOKEN};
+    //          productNum      productLHS   productRHS
     rules.insert({0, {START_TOKEN, rhs}});
 
     //rule 1
@@ -405,7 +406,6 @@ void Table::BuildTable(){
         for(int w = START_TOKEN; w < NUM_OF_TOKENS - NUM_OF_NON_TERMINALS; w++){
             RuleTable[w][A] = ERROR_TOKEN;
         }
-
         //loop through all the productions
         for(auto & ruleEntry : rules){
             //get the rule number and the production
