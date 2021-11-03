@@ -315,30 +315,35 @@ namespace {
 //        }
 //    }
 
-//    TEST(TableTests, TableTest){
-//
-//        //this is what the table from the text book looks like
-//        int ExpectedRuleTable [9][6] = {
-//                {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 1
-//                {ERROR_TOKEN, ERROR_TOKEN, 2, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 2
-//                {ERROR_TOKEN, ERROR_TOKEN, 3, ERROR_TOKEN, 8, ERROR_TOKEN}, //Column 3
-//                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 6, ERROR_TOKEN}, // 4
-//                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 7, ERROR_TOKEN}, // 5
-//                {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 9}, // 6
-//                {ERROR_TOKEN, ERROR_TOKEN, 4, ERROR_TOKEN, 8, ERROR_TOKEN}, // 7
-//                {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 11}, // 8
-//                {0, 1, ERROR_TOKEN, 5, ERROR_TOKEN, 10} //9
-//        };
-//
-//        //generate the table using our code
-//        Table table = Table();
-//
-//        //check that every entry of the table is equal to the textbook's table
-//        for(int A = START_TOKEN; A < NUM_OF_NON_TERMINALS; A++){
-//            for(int w = START_TOKEN; w < NUM_OF_TOKENS - NUM_OF_NON_TERMINALS; w++){
-//                ASSERT_EQ(table.RuleTable[w][A], ExpectedRuleTable[w][A]);
-//            }
-//        }
-//
-//    }
+    TEST(TableTests, TableTest){
+
+        //this is what the table from the text book looks like
+        int ExpectedRuleTable [NUM_OF_TOKENS - NUM_OF_NON_TERMINALS][NUM_OF_NON_TERMINALS] = {
+                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 6, 10, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, //Column 1
+                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 4, 10, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, //Column 2
+                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 5, 10, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, //Column 3
+                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 7, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, // 4
+                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 8, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, // 5
+                //{ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 9, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, // exponent column
+                {0, 1, 2, 3, ERROR_TOKEN, ERROR_TOKEN, 11, 14, 15, ERROR_TOKEN, ERROR_TOKEN}, // Open Paran column
+                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 6, 10, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, // close paran column
+                {0, 1, 2, 3, ERROR_TOKEN, ERROR_TOKEN, 11, 14, 16, 19, ERROR_TOKEN}, //name column
+                {0, 1, 2, 3, ERROR_TOKEN, ERROR_TOKEN, 11, 14, 16, 18, ERROR_TOKEN}, //num column
+                {0, 1, 2, 3, ERROR_TOKEN, ERROR_TOKEN, 11, 14, 17, ERROR_TOKEN, 21}, //space neg name column
+                {0, 1, 2, 3, ERROR_TOKEN, ERROR_TOKEN, 11, 14, 17, ERROR_TOKEN, 20}, //space neg num column
+                {0, 1, 2, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 13, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, //neg name column
+                {0, 1, 2, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 12, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN} //neg num column
+        };
+
+        //generate the table using our code
+        Table table = Table();
+
+        //check that every entry of the table is equal to the textbook's table
+        for(int A = START_TOKEN; A < NUM_OF_NON_TERMINALS; A++){
+            for(int w = START_TOKEN; w < NUM_OF_TOKENS - NUM_OF_NON_TERMINALS; w++){
+                ASSERT_EQ(table.RuleTable[w][A], ExpectedRuleTable[w][A]);
+            }
+        }
+
+    }
 }
