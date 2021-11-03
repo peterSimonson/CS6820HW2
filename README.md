@@ -5,7 +5,7 @@ This is a C++ Cmake project
 ## Main Executable
 The main executable for this program is main.cpp in the root directory of the project. I personally use CLion to build, but you can use:
 
-``<path to cmake>/cmake --build "<path to project>/cmake-build-debug" --target C820Compiler -- -j 6``
+``<path to cmake>/cmake --build "<path to project>/cmake-build-debug" --target CS6820HW2 -- -j 6``
 
 In the root directory to build. You can also run the script ``buildWithCmake.sh`` to build the project.
 
@@ -17,9 +17,3 @@ To run the program enter the following
 
     ./CS6820HW2 <Expr>
        <Expr>: The string containing the mathematical expression you wish to parse
-
-## Helpful Links
-
-I found the following helpful in creating this assignment
-
-1. https://www.youtube.com/watch?v=SToUyjAsaFk. This was a very useful video that provided sudo-code on how to create the parser
