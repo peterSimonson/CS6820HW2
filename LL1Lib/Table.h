@@ -12,9 +12,9 @@
 //Define the rows of the table
 #define START_TOKEN 0
 #define EXPR_TOKEN 1
-#define EXPR_PRIME_TOKEN 2
-#define L_TERM_TOKEN 3
-#define R_TERM_TOKEN 4
+#define L_TERM_TOKEN 2
+#define R_TERM_TOKEN 3
+#define EXPR_PRIME_TOKEN 4
 #define TERM_PRIME_TOKEN 5
 #define L_FACTOR_TOKEN 6
 #define R_FACTOR_TOKEN 7
