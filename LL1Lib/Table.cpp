@@ -24,15 +24,9 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
         else if(is_name(word)){
             tokens.push_back(NAME_TOKEN);
         }
-        else if(is_Neg_Num(word)){
-            tokens.push_back(NEG_NUM_TOKEN);
-        }
-        else if(is_Neg_Name(word)){
-            tokens.push_back(NEG_NAME_TOKEN);
-        }
         //if the first char is a space check if everything else is a num
         else if(word.at(0) == ' ' && is_Neg_Num(word.substr(1, word.size()))){
-            if(is_Value_Token(tokens.back())){
+            if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
                 tokens.push_back(NUM_TOKEN);
             }
@@ -42,12 +36,32 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
         }
         //if the first char is a space check if everything else is a name
         else if(word.at(0) == ' ' && is_Neg_Name(word.substr(1, word.size()))){
-            if(is_Value_Token(tokens.back())){
+            if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
                 tokens.push_back(NAME_TOKEN);
             }
             else{
                 tokens.push_back(SPACE_NEG_NAME_TOKEN);
+            }
+        }
+        //if the first char is a space check if everything else is a num
+        else if(word.at(0) == '-' && is_number(word.substr(1, word.size()))){
+            if(!tokens.empty() && is_Value_Token(tokens.back())){
+                tokens.push_back(MINUS_TOKEN);
+                tokens.push_back(NUM_TOKEN);
+            }
+            else{
+                tokens.push_back(NEG_NUM_TOKEN);
+            }
+        }
+        //if the first char is a space check if everything else is a name
+        else if(word.at(0) == '-' && is_name(word.substr(1, word.size()))){
+            if(!tokens.empty() && is_Value_Token(tokens.back())){
+                tokens.push_back(MINUS_TOKEN);
+                tokens.push_back(NAME_TOKEN);
+            }
+            else{
+                tokens.push_back(NEG_NAME_TOKEN);
             }
         }
         else if(word == "+"){
@@ -163,7 +177,7 @@ bool is_Neg_Name(const std::string& s){
 }
 
 bool is_Value_Token(int token){
-    if(token >= NAME_TOKEN && token <=SPACE_NEG_NUM_TOKEN){
+    if(token >= NAME_TOKEN && token <=NEG_NUM_TOKEN){
         return true;
     }
     else{
