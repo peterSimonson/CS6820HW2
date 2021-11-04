@@ -17,6 +17,11 @@ namespace {
         tokens =  TranslateWordsToTokens(words);
         results = {OPEN_PARAN_TOKEN, NAME_TOKEN, MINUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(tokens, results);
+
+        words = {"(" ,"peter", "^", "12", ")", "/", "2"};
+        tokens =  TranslateWordsToTokens(words);
+        results = {OPEN_PARAN_TOKEN, NAME_TOKEN, EXPONENT_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
+        ASSERT_EQ(tokens, results);
     }
 
     TEST(TableTests, TranslateNegativeTest){

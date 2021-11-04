@@ -26,35 +26,41 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
         }
         //if the first char is a space check if everything else is a num
         else if(word.at(0) == ' ' && is_Neg_Num(word.substr(1, word.size()))){
+            //if the last token is a value token we have a subtraction operation
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
                 tokens.push_back(NUM_TOKEN);
             }
+            //otherwise, we have a negative num
             else{
                 tokens.push_back(SPACE_NEG_NUM_TOKEN);
             }
         }
         //if the first char is a space check if everything else is a name
         else if(word.at(0) == ' ' && is_Neg_Name(word.substr(1, word.size()))){
+            //if the last token is a value token we have a subtraction operation
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
                 tokens.push_back(NAME_TOKEN);
             }
+            //otherwise, we have a negative num
             else{
                 tokens.push_back(SPACE_NEG_NAME_TOKEN);
             }
         }
-        //if the first char is a space check if everything else is a num
+        //if the first char is a negative check if everything else is a num
         else if(word.at(0) == '-' && is_number(word.substr(1, word.size()))){
+            //if the last token is a value token we have a subtraction operation
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
                 tokens.push_back(NUM_TOKEN);
             }
+            //otherwise, we have a negative num
             else{
                 tokens.push_back(NEG_NUM_TOKEN);
             }
         }
-        //if the first char is a space check if everything else is a name
+        //if the first char is a negative check if everything else is a name
         else if(word.at(0) == '-' && is_name(word.substr(1, word.size()))){
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
@@ -75,6 +81,9 @@ std::vector<int> TranslateWordsToTokens(std::vector<std::string> words) {
         }
         else if(word == "/"){
             tokens.push_back(DIVIDE_TOKEN);
+        }
+        else if(word == "^"){
+            tokens.push_back(EXPONENT_TOKEN);
         }
         else if(word == "("){
             tokens.push_back(OPEN_PARAN_TOKEN);
