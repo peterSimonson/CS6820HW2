@@ -177,7 +177,7 @@ bool is_Neg_Name(const std::string& s){
 }
 
 bool is_Value_Token(int token){
-    if(token >= NAME_TOKEN && token <=NEG_NUM_TOKEN){
+    if(token >= CLOSE_PARAN_TOKEN && token <=NEG_NUM_TOKEN){
         return true;
     }
     else{
