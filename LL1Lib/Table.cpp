@@ -312,52 +312,56 @@ void Table::GenerateRules() {
     rules.insert({8, {TERM_PRIME_TOKEN, rhs}});
 
     //rule 9
-    rhs = {EPSILON_TOKEN};
+    rhs = {EXPONENT_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
     rules.insert({9, {TERM_PRIME_TOKEN, rhs}});
 
     //rule 10
-    rhs = {G_FACTOR_TOKEN};
-    rules.insert({10, {L_FACTOR_TOKEN, rhs}});
+    rhs = {EPSILON_TOKEN};
+    rules.insert({10, {TERM_PRIME_TOKEN, rhs}});
 
     //rule 11
-    rhs = {NEG_NUM_TOKEN};
+    rhs = {G_FACTOR_TOKEN};
     rules.insert({11, {L_FACTOR_TOKEN, rhs}});
 
     //rule 12
-    rhs = {NEG_NAME_TOKEN};
+    rhs = {NEG_NUM_TOKEN};
     rules.insert({12, {L_FACTOR_TOKEN, rhs}});
 
     //rule 13
-    rhs = {G_FACTOR_TOKEN};
-    rules.insert({13, {R_FACTOR_TOKEN, rhs}});
+    rhs = {NEG_NAME_TOKEN};
+    rules.insert({13, {L_FACTOR_TOKEN, rhs}});
 
     //rule 14
-    rhs = {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN};
-    rules.insert({14, {G_FACTOR_TOKEN, rhs}});
+    rhs = {G_FACTOR_TOKEN};
+    rules.insert({14, {R_FACTOR_TOKEN, rhs}});
 
     //rule 15
-    rhs = {POSVAL_TOKEN};
+    rhs = {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN};
     rules.insert({15, {G_FACTOR_TOKEN, rhs}});
 
     //rule 16
-    rhs = {SPACE_NEG_VAL_TOKEN};
+    rhs = {POSVAL_TOKEN};
     rules.insert({16, {G_FACTOR_TOKEN, rhs}});
 
     //rule 17
-    rhs = {NUM_TOKEN};
-    rules.insert({17, {POSVAL_TOKEN, rhs}});
+    rhs = {SPACE_NEG_VAL_TOKEN};
+    rules.insert({17, {G_FACTOR_TOKEN, rhs}});
 
     //rule 18
-    rhs = {NAME_TOKEN};
+    rhs = {NUM_TOKEN};
     rules.insert({18, {POSVAL_TOKEN, rhs}});
 
     //rule 19
-    rhs = {SPACE_NEG_NUM_TOKEN};
-    rules.insert({19, {SPACE_NEG_VAL_TOKEN, rhs}});
+    rhs = {NAME_TOKEN};
+    rules.insert({19, {POSVAL_TOKEN, rhs}});
 
     //rule 20
-    rhs = {SPACE_NEG_NAME_TOKEN};
+    rhs = {SPACE_NEG_NUM_TOKEN};
     rules.insert({20, {SPACE_NEG_VAL_TOKEN, rhs}});
+
+    //rule 21
+    rhs = {SPACE_NEG_NAME_TOKEN};
+    rules.insert({21, {SPACE_NEG_VAL_TOKEN, rhs}});
 }
 
 Table::Table() {
