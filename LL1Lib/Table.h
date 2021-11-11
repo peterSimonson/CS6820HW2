@@ -43,15 +43,19 @@
 //other tokens
 #define ERROR_TOKEN -1
 
+//structure for a production rule
 class rule{
 public:
     int leftHandSide;
     std::vector<int> rightHandSide;
 };
 
+//holds the data for an expression
 class Expression{
 public:
+    //the tokenized words of the expression
     std::vector<int> tokens;
+    //the text of the expression used to find postfix format
     std::vector<std::string> text;
 };
 

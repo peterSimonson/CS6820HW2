@@ -90,7 +90,7 @@ Expression TranslateWordsToTokens(std::vector<std::string> words) {
         }
         else if(word == "-" || word == " -"){
             tokens.push_back(MINUS_TOKEN);
-            text.push_back(word);
+            text.emplace_back("-");
         }
         else if(word == "*"){
             tokens.push_back(MULTIPLY_TOKEN);
