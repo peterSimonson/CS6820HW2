@@ -91,37 +91,36 @@ Parser::Parser(const std::string& line, Table table) {
     LL1Stack.push_back(START_TOKEN);
 
     //declare reverse iterators to traverse our stack and input
-    auto focus = LL1Stack.rbegin();
+    int focus = LL1Stack.back();
     auto word = expr.tokens.begin();
     //implements the pseudo-code in figure 3.11
     successfulParse = false;
     while(true){
         //if both the focus and the word are EOF then we have successfully completed a parse
-        if(*focus == END_TOKEN && *word == END_TOKEN){
+        if(focus == END_TOKEN && *word == END_TOKEN){
             LL1Stack.pop_back(); //remove end token
             std::cout << "Success Parsing: " << line << std::endl;
             successfulParse = true;
             return;
         }
         //check if focus is terminal
-        if(is_terminal(*focus)){
+        if(is_terminal(focus)){
             //if the word matches the focus
-            if(*focus == *word){
+            if(focus == *word){
                 //go to next word
                 word++;
                 //go to next word on stack and pop the last
                 LL1Stack.pop_back();
-                focus = LL1Stack.rbegin();
+                focus = LL1Stack.back();
             }
             else{
                 //print an error message
                 PrintParserError(line);
-                std::cout << "Focus = " <<std::to_string(*focus) << ". Word = " <<std::to_string(*word) << std::endl;
                 return;
             }
         }
         //if word or focus is an error
-        else if(*focus == ERROR_TOKEN || *word == ERROR_TOKEN){
+        else if(focus == ERROR_TOKEN || *word == ERROR_TOKEN){
             //print error message
             PrintParserError(line);
             return;
@@ -129,7 +128,7 @@ Parser::Parser(const std::string& line, Table table) {
         //otherwise, focus is non-terminal, and we need to swap it out
         else{
             //look up the swap rule we must perform
-            int rule = table.LookUpTable(*word, *focus);
+            int rule = table.LookUpTable(*word, focus);
             if(rule == ERROR_TOKEN){
                 //print error message
                 PrintParserError(line);
@@ -137,7 +136,7 @@ Parser::Parser(const std::string& line, Table table) {
             }
             //perform the swap
             SwapStack(rule, LL1Stack);
-            focus = LL1Stack.rbegin(); //move focus to the back of the stack
+            focus = LL1Stack.back(); //move focus to the back of the stack
         }
     }
 }
