@@ -6,7 +6,7 @@
 #include "../../LL1Lib/Expression.h"
 
 namespace{
-    TEST(TableTests, TranslateTest){
+    TEST(ExpressionTests, TranslateTest){
         std::vector<std::string> words{"(" ,"peter", "+", "12", ")", "*", "2"};
 
         auto expr =  TranslateWordsToTokens(words);
@@ -27,7 +27,7 @@ namespace{
         ASSERT_EQ(expr.text, words);
     }
 
-    TEST(TableTests, TranslateNegativeTest){
+    TEST(ExpressionTests, TranslateNegativeTest){
         std::vector<std::string> words{"-32", " -", " -32", "-",  "-testVar", "-"," -testVar"};
         auto expr =  TranslateWordsToTokens(words);
         std::vector<int> results{NEG_NUM_TOKEN, MINUS_TOKEN ,SPACE_NEG_NUM_TOKEN, MINUS_TOKEN, NEG_NAME_TOKEN, MINUS_TOKEN ,SPACE_NEG_NAME_TOKEN, END_TOKEN};
@@ -48,5 +48,24 @@ namespace{
         results = {NEG_NAME_TOKEN, MINUS_TOKEN, NAME_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.text, text);
+    }
+
+    TEST(ExpressionTests, ConvertToPostFix){
+
+        Expression expr;
+        //a+b*(c^d-e)^(f+g*h)-i
+        expr.text = {"a", "+", "b", "*", "(", "c", "^", "d", "-", "e", ")", "^", "(", "f", "+", "g", "*", "h", ")", "-", "i"};
+        std::string actual = expr.convertToPostFix();
+        std::string expected = "abcd^e-fgh*+^*+i-";
+
+        ASSERT_EQ(actual, expected);
+
+        //"x^y/(5*z)+2"
+        expr.text = {"x", "^", "y", "/", "(", "5", "*", "z", ")", "+", "2"};
+        actual = expr.convertToPostFix();
+        expected = "xy^5z*/2+";
+
+        ASSERT_EQ(actual, expected);
+
     }
 }
