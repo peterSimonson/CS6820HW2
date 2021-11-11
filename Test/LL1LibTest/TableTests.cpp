@@ -9,36 +9,36 @@ namespace {
     TEST(TableTests, TranslateTest){
         std::vector<std::string> words{"(" ,"peter", "+", "12", ")", "*", "2"};
 
-        std::vector<int> tokens =  TranslateWordsToTokens(words);
+        auto expr =  TranslateWordsToTokens(words);
         std::vector<int> results{OPEN_PARAN_TOKEN, NAME_TOKEN, PLUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, MULTIPLY_TOKEN, NUM_TOKEN, END_TOKEN};
-        ASSERT_EQ(tokens, results);
+        ASSERT_EQ(expr.tokens, results);
 
         words = {"(" ,"peter", "-", "12", ")", "/", "2"};
-        tokens =  TranslateWordsToTokens(words);
+        expr =  TranslateWordsToTokens(words);
         results = {OPEN_PARAN_TOKEN, NAME_TOKEN, MINUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
-        ASSERT_EQ(tokens, results);
+        ASSERT_EQ(expr.tokens, results);
 
         words = {"(" ,"peter", "^", "12", ")", "/", "2"};
-        tokens =  TranslateWordsToTokens(words);
+        expr =  TranslateWordsToTokens(words);
         results = {OPEN_PARAN_TOKEN, NAME_TOKEN, EXPONENT_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
-        ASSERT_EQ(tokens, results);
+        ASSERT_EQ(expr.tokens, results);
     }
 
     TEST(TableTests, TranslateNegativeTest){
         std::vector<std::string> words{"-32", " -", " -32", "-",  "-testVar", "-"," -testVar"};
-        std::vector<int> tokens =  TranslateWordsToTokens(words);
+        auto expr =  TranslateWordsToTokens(words);
         std::vector<int> results{NEG_NUM_TOKEN, MINUS_TOKEN ,SPACE_NEG_NUM_TOKEN, MINUS_TOKEN, NEG_NAME_TOKEN, MINUS_TOKEN ,SPACE_NEG_NAME_TOKEN, END_TOKEN};
-        ASSERT_EQ(tokens, results);
+        ASSERT_EQ(expr.tokens, results);
 
         words = {"-32", " -32"};
-        tokens =  TranslateWordsToTokens(words);
+        expr =  TranslateWordsToTokens(words);
         results = {NEG_NUM_TOKEN, MINUS_TOKEN, NUM_TOKEN, END_TOKEN};
-        ASSERT_EQ(tokens, results);
+        ASSERT_EQ(expr.tokens, results);
 
         words = {"-test1", " -test2"};
-        tokens =  TranslateWordsToTokens(words);
+        expr =  TranslateWordsToTokens(words);
         results = {NEG_NAME_TOKEN, MINUS_TOKEN, NAME_TOKEN, END_TOKEN};
-        ASSERT_EQ(tokens, results);
+        ASSERT_EQ(expr.tokens, results);
     }
 
     TEST(TableTests, IsNumTest){
@@ -211,162 +211,4 @@ namespace {
         ASSERT_EQ(tempSet, set1);
     }
 
-    TEST(TableTests, FirstSetTest){
-        Table table = Table();
-
-        //start, expr, term and factor should all be the same
-        std::vector<int> expectedSet{NEG_NUM_TOKEN, SPACE_NEG_NAME_TOKEN, NAME_TOKEN, NUM_TOKEN, OPEN_PARAN_TOKEN, NEG_NAME_TOKEN, SPACE_NEG_NUM_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.firstSet[START_TOKEN], expectedSet);
-        ASSERT_EQ(table.firstSet[EXPR_TOKEN], expectedSet);
-        ASSERT_EQ(table.firstSet[L_TERM_TOKEN], expectedSet);
-
-        expectedSet = {SPACE_NEG_NAME_TOKEN, NAME_TOKEN, NUM_TOKEN, OPEN_PARAN_TOKEN, SPACE_NEG_NUM_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.firstSet[R_TERM_TOKEN], expectedSet);
-
-        expectedSet = {MINUS_TOKEN, EPSILON_TOKEN, PLUS_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.firstSet[EXPR_PRIME_TOKEN], expectedSet);
-
-        expectedSet = {DIVIDE_TOKEN, EPSILON_TOKEN, MULTIPLY_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.firstSet[TERM_PRIME_TOKEN], expectedSet);
-
-        expectedSet = {NEG_NUM_TOKEN, SPACE_NEG_NAME_TOKEN, NAME_TOKEN, NUM_TOKEN, OPEN_PARAN_TOKEN, NEG_NAME_TOKEN, SPACE_NEG_NUM_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.firstSet[L_FACTOR_TOKEN], expectedSet);
-
-        expectedSet = {SPACE_NEG_NAME_TOKEN, NAME_TOKEN, NUM_TOKEN, OPEN_PARAN_TOKEN, SPACE_NEG_NUM_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.firstSet[R_FACTOR_TOKEN], expectedSet);
-        ASSERT_EQ(table.firstSet[G_FACTOR_TOKEN], expectedSet);
-
-        expectedSet = {NAME_TOKEN, NUM_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.firstSet[POSVAL_TOKEN], expectedSet);
-
-        expectedSet = {SPACE_NEG_NAME_TOKEN, SPACE_NEG_NUM_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.firstSet[SPACE_NEG_VAL_TOKEN], expectedSet);
-
-        for(int i = NUM_OF_NON_TERMINALS; i <= NUM_OF_TOKENS; i++){
-            //the first set entry for a terminal should be the same terminal
-            expectedSet = {i};
-            ASSERT_EQ(table.firstSet[i], expectedSet);
-        }
-
-        for(int i = START_TOKEN; i <= NUM_OF_TOKENS; i++){
-            std::cout << "First at " << "\t" << std::to_string(i) << ":\t";
-            for(auto & terminal : table.firstSet[i]){
-                std::cout << std::to_string(terminal) << "\t";
-            }
-            std::cout << std::endl;
-        }
-    }
-
-    TEST(TableTests, FollowSetTest){
-        Table table = Table();
-
-        //check that follow set only has non-terminals for entries
-        ASSERT_EQ(table.followSet.size(), NUM_OF_NON_TERMINALS);
-
-        //check the entries
-        std::vector<int> expectedSet = {END_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.followSet[START_TOKEN], expectedSet);
-
-        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.followSet[EXPR_TOKEN], expectedSet);
-
-        expectedSet = {CLOSE_PARAN_TOKEN, MINUS_TOKEN, PLUS_TOKEN, END_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.followSet[L_TERM_TOKEN], expectedSet);
-
-        expectedSet = {CLOSE_PARAN_TOKEN, MINUS_TOKEN, MULTIPLY_TOKEN, PLUS_TOKEN, END_TOKEN, DIVIDE_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.followSet[R_TERM_TOKEN], expectedSet);
-
-        expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.followSet[EXPR_PRIME_TOKEN], expectedSet);
-
-        expectedSet = {PLUS_TOKEN, CLOSE_PARAN_TOKEN, MINUS_TOKEN, DIVIDE_TOKEN, MULTIPLY_TOKEN, END_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.followSet[TERM_PRIME_TOKEN], expectedSet);
-
-        expectedSet = {CLOSE_PARAN_TOKEN, MINUS_TOKEN, MULTIPLY_TOKEN, PLUS_TOKEN, END_TOKEN, DIVIDE_TOKEN};
-        std::sort(expectedSet.begin(), expectedSet.end());
-        ASSERT_EQ(table.followSet[L_FACTOR_TOKEN], expectedSet);
-        ASSERT_EQ(table.followSet[R_FACTOR_TOKEN], expectedSet);
-        ASSERT_EQ(table.followSet[G_FACTOR_TOKEN], expectedSet);
-        ASSERT_EQ(table.followSet[POSVAL_TOKEN], expectedSet);
-        ASSERT_EQ(table.followSet[SPACE_NEG_VAL_TOKEN], expectedSet);
-
-        for(int i = START_TOKEN; i < NUM_OF_NON_TERMINALS; i++){
-            std::cout << "Follow at " << "\t" << std::to_string(i) << ":\t";
-            for(auto & terminal : table.followSet[i]){
-                std::cout << std::to_string(terminal) << "\t";
-            }
-            std::cout << std::endl;
-        }
-    }
-
-//    TEST(TableTests, FirstPlusSetTest){
-//        Table table = Table();
-//
-//        //productions 4 and 8 should be different from 1st. Otherwise, first+ should be the same as first
-//        for(const std::pair<const int, rule>& productionRule: table.rules){
-//
-//            rule production = productionRule.second;
-//            std::vector<int> expectedSet = table.firstSet[production.rightHandSide.front()];
-//            std::vector<int> firstPlusSet = table.findFirstPlusSet(production);
-//            if(productionRule.first == 4){
-//                expectedSet = {END_TOKEN, CLOSE_PARAN_TOKEN, EPSILON_TOKEN};
-//                ASSERT_EQ(expectedSet, firstPlusSet);
-//            }
-//            else if(productionRule.first == 8){
-//                expectedSet = {END_TOKEN, PLUS_TOKEN, MINUS_TOKEN, CLOSE_PARAN_TOKEN, EPSILON_TOKEN};
-//                ASSERT_EQ(expectedSet, firstPlusSet);
-//            }
-//            else{
-//                ASSERT_EQ(expectedSet, firstPlusSet);
-//            }
-//        }
-//    }
-
-    TEST(TableTests, TableTest){
-
-        //this is what the table from the text book looks like
-        int ExpectedRuleTable [NUM_OF_TOKENS - NUM_OF_NON_TERMINALS][NUM_OF_NON_TERMINALS] = {
-                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 6, 10, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, //Column 1
-                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 4, 10, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, //Column 2
-                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 5, 10, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, //Column 3
-                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 7, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, // 4
-                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 8, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, // 5
-                //{ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 9, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, // exponent column
-                {0, 1, 2, 3, ERROR_TOKEN, ERROR_TOKEN, 11, 14, 15, ERROR_TOKEN, ERROR_TOKEN}, // Open Paran column
-                {ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 6, 10, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, // close paran column
-                {0, 1, 2, 3, ERROR_TOKEN, ERROR_TOKEN, 11, 14, 16, 19, ERROR_TOKEN}, //name column
-                {0, 1, 2, 3, ERROR_TOKEN, ERROR_TOKEN, 11, 14, 16, 18, ERROR_TOKEN}, //num column
-                {0, 1, 2, 3, ERROR_TOKEN, ERROR_TOKEN, 11, 14, 17, ERROR_TOKEN, 21}, //space neg name column
-                {0, 1, 2, 3, ERROR_TOKEN, ERROR_TOKEN, 11, 14, 17, ERROR_TOKEN, 20}, //space neg num column
-                {0, 1, 2, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 13, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN}, //neg name column
-                {0, 1, 2, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, 12, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN, ERROR_TOKEN} //neg num column
-        };
-
-        //generate the table using our code
-        Table table = Table();
-
-        //check that every entry of the table is equal to the textbook's table
-        for(int A = START_TOKEN; A < NUM_OF_NON_TERMINALS; A++){
-            for(int w = START_TOKEN; w < NUM_OF_TOKENS - NUM_OF_NON_TERMINALS; w++){
-                //EXPECT_EQ(table.RuleTable[w][A], ExpectedRuleTable[w][A]);
-                std::cout << table.RuleTable[w][A] << "\t";
-            }
-            std::cout << std::endl;
-        }
-
-    }
 }

@@ -49,6 +49,12 @@ public:
     std::vector<int> rightHandSide;
 };
 
+class Expression{
+public:
+    std::vector<int> tokens;
+    std::vector<std::string> text;
+};
+
 class Table {
 public:
     Table();
@@ -70,7 +76,7 @@ public:
 };
 
 std::vector<int> removeEpsilonFromSet(std::vector<int> set);
-std::vector<int> TranslateWordsToTokens(std::vector<std::string> words);
+Expression TranslateWordsToTokens(std::vector<std::string> words);
 std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vector<int>& secondSet);
 bool is_number(const std::string& s);
 bool is_Neg_Num(const std::string& s);

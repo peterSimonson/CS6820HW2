@@ -13,13 +13,13 @@ class Parser{
 public:
     explicit Parser(const std::string& line, Table table);
     bool successfulParse;
-    //contains the input words as tokens
-    std::vector<int> inputTokens;
-    //contains the tokens on the stack
-    std::vector<int> stack;
+    //contains the expression
+    Expression expr;
     Table table;
+    //hold the postfix expression
+    std::string postfix;
 
-    void SwapStack(int ruleIndex);
+    void SwapStack(int ruleIndex, std::vector<int> & stack);
 };
 
 std::vector<std::string> parseWords(std::string const& line);

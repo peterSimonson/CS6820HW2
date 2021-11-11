@@ -82,20 +82,23 @@ Parser::Parser(const std::string& line, Table table) {
     //get the input strings
     std::vector<std::string> inputWords = parseWords(line);
     //translate the input from strings into tokens
-    inputTokens = TranslateWordsToTokens(inputWords);
+    expr = TranslateWordsToTokens(inputWords);
+
+    std::vector<int> LL1Stack;
+
     //initialize the stack with EOF and Goal
-    stack.push_back(END_TOKEN);
-    stack.push_back(START_TOKEN);
+    LL1Stack.push_back(END_TOKEN);
+    LL1Stack.push_back(START_TOKEN);
 
     //declare reverse iterators to traverse our stack and input
-    auto focus = stack.rbegin();
-    auto word = inputTokens.begin();
+    auto focus = LL1Stack.rbegin();
+    auto word = expr.tokens.begin();
     //implements the pseudo-code in figure 3.11
     successfulParse = false;
     while(true){
         //if both the focus and the word are EOF then we have successfully completed a parse
         if(*focus == END_TOKEN && *word == END_TOKEN){
-            stack.pop_back(); //remove end token
+            LL1Stack.pop_back(); //remove end token
             std::cout << "Success Parsing: " << line << std::endl;
             successfulParse = true;
             return;
@@ -107,8 +110,8 @@ Parser::Parser(const std::string& line, Table table) {
                 //go to next word
                 word++;
                 //go to next word on stack and pop the last
-                stack.pop_back();
-                focus = stack.rbegin();
+                LL1Stack.pop_back();
+                focus = LL1Stack.rbegin();
             }
             else{
                 //print an error message
@@ -133,8 +136,8 @@ Parser::Parser(const std::string& line, Table table) {
                 return;
             }
             //perform the swap
-            SwapStack(rule);
-            focus = stack.rbegin(); //move focus to the back of the stack
+            SwapStack(rule, LL1Stack);
+            focus = LL1Stack.rbegin(); //move focus to the back of the stack
         }
     }
 }
@@ -142,7 +145,7 @@ Parser::Parser(const std::string& line, Table table) {
 /// This function implements figure 3.4 from the text book.
 /// It will swap whatever is on the back of the stack with the whatever the table wants
 /// \param ruleIndex the swap from figure 3.4 you will perform
-void Parser::SwapStack(int ruleIndex) {
+void Parser::SwapStack(int ruleIndex, std::vector<int> & stack) {
     //get the SwapRule at the index
     rule SwapRule = table.rules[ruleIndex];
     //back of stack must match lhs
