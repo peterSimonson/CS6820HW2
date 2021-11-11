@@ -5,125 +5,11 @@
 #include "Table.h"
 #include <set>
 
-int Prec(char ch);
-
 /// Translates an array of strings into an array of tokens that correspond to each string
 /// If the string does not have a matching token it will be represented with an error token
 /// \param words The strings you wish to translate to tokens
 /// \return a list of token corresponding to the strings that were entered
-Expression TranslateWordsToTokens(std::vector<std::string> words) {
-    //used to loop through the vector of strings
-    std::vector<std::string>::iterator str;
-    //will hold all the strings we translated to int tokens
-    std::vector<int> tokens;
-    //hold all the text of the expression
-    std::vector<std::string> text;
 
-    for(str = words.begin(); str != words.end(); str++){
-        std::string word = *str;
-        //check what type of token this is
-        if(is_number(word)){
-            tokens.push_back(NUM_TOKEN);
-            text.push_back(word);
-        }
-        else if(is_name(word)){
-            tokens.push_back(NAME_TOKEN);
-            text.push_back(word);
-        }
-        //if the first char is a space check if everything else is a num
-        else if(word.at(0) == ' ' && is_Neg_Num(word.substr(1, word.size()))){
-            //if the last token is a value token we have a subtraction operation
-            if(!tokens.empty() && is_Value_Token(tokens.back())){
-                tokens.push_back(MINUS_TOKEN);
-                tokens.push_back(NUM_TOKEN);
-            }
-            //otherwise, we have a negative num
-            else{
-                tokens.push_back(SPACE_NEG_NUM_TOKEN);
-            }
-            text.emplace_back("-");
-            text.push_back(word.substr(2, word.size()));
-        }
-        //if the first char is a space check if everything else is a name
-        else if(word.at(0) == ' ' && is_Neg_Name(word.substr(1, word.size()))){
-            //if the last token is a value token we have a subtraction operation
-            if(!tokens.empty() && is_Value_Token(tokens.back())){
-                tokens.push_back(MINUS_TOKEN);
-                tokens.push_back(NAME_TOKEN);
-            }
-            //otherwise, we have a negative num
-            else{
-                tokens.push_back(SPACE_NEG_NAME_TOKEN);
-            }
-            text.emplace_back("-");
-            text.push_back(word.substr(2, word.size()));
-        }
-        //if the first char is a negative check if everything else is a num
-        else if(word.at(0) == '-' && is_number(word.substr(1, word.size()))){
-            //if the last token is a value token we have a subtraction operation
-            if(!tokens.empty() && is_Value_Token(tokens.back())){
-                tokens.push_back(MINUS_TOKEN);
-                tokens.push_back(NUM_TOKEN);
-            }
-            //otherwise, we have a negative num
-            else{
-                tokens.push_back(NEG_NUM_TOKEN);
-            }
-            text.emplace_back("-");
-            text.push_back(word.substr(1, word.size()));
-        }
-        //if the first char is a negative check if everything else is a name
-        else if(word.at(0) == '-' && is_name(word.substr(1, word.size()))){
-            if(!tokens.empty() && is_Value_Token(tokens.back())){
-                tokens.push_back(MINUS_TOKEN);
-                tokens.push_back(NAME_TOKEN);
-            }
-            else{
-                tokens.push_back(NEG_NAME_TOKEN);
-            }
-            text.emplace_back("-");
-            text.push_back(word.substr(1, word.size()));
-        }
-        else if(word == "+"){
-            tokens.push_back(PLUS_TOKEN);
-            text.push_back(word);
-        }
-        else if(word == "-" || word == " -"){
-            tokens.push_back(MINUS_TOKEN);
-            text.emplace_back("-");
-        }
-        else if(word == "*"){
-            tokens.push_back(MULTIPLY_TOKEN);
-            text.push_back(word);
-        }
-        else if(word == "/"){
-            tokens.push_back(DIVIDE_TOKEN);
-            text.push_back(word);
-        }
-        else if(word == "^"){
-            tokens.push_back(EXPONENT_TOKEN);
-            text.push_back(word);
-        }
-        else if(word == "("){
-            tokens.push_back(OPEN_PARAN_TOKEN);
-            text.push_back(word);
-        }
-        else if(word == ")"){
-            tokens.push_back(CLOSE_PARAN_TOKEN);
-            text.push_back(word);
-        }
-        //if we could not find a match than push an error token
-        else{
-            tokens.push_back(ERROR_TOKEN);
-            break;
-        }
-    }
-
-    //push the end of file to the end of the vector
-    tokens.push_back(END_TOKEN);
-
-    return {tokens, text};
-}
 
 
 //the functions is_number and is_name were taken and modified from:
@@ -261,7 +147,6 @@ void Table::GenerateFirstSet() {
             //find the left and right sides of our production
             std::vector<int> productionRHS = production.second.rightHandSide;
             int productionLHS = production.second.leftHandSide;
-            auto beta_i = productionRHS.begin();
             //save the original first set for this production
             std::vector<int> originalSet = firstSet[productionLHS];
 
@@ -526,26 +411,4 @@ std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vect
     }
 
     return {all.begin(), all.end()};
-}
-
-/// function to find the precedence level of an operator. Taken from: https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
-/// \param ch
-/// \return
-int Prec(char ch)
-{
-    switch (ch)
-    {
-        case '+':
-        case '-':
-            return 1;
-
-        case '*':
-        case '/':
-            return 2;
-
-        case '^':
-            return 3;
-        default:
-            return 0;
-    }
 }

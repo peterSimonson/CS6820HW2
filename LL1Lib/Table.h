@@ -50,14 +50,6 @@ public:
     std::vector<int> rightHandSide;
 };
 
-//holds the data for an expression
-class Expression{
-public:
-    //the tokenized words of the expression
-    std::vector<int> tokens;
-    //the text of the expression used to find postfix format
-    std::vector<std::string> text;
-};
 
 class Table {
 public:
@@ -80,7 +72,6 @@ public:
 };
 
 std::vector<int> removeEpsilonFromSet(std::vector<int> set);
-Expression TranslateWordsToTokens(std::vector<std::string> words);
 std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vector<int>& secondSet);
 bool is_number(const std::string& s);
 bool is_Neg_Num(const std::string& s);

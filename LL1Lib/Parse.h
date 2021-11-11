@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include "Table.h"
+#include "Expression.h"
 
 class Parser{
 public:
@@ -20,6 +21,8 @@ public:
     std::string postfix;
 
     void SwapStack(int ruleIndex, std::vector<int> & stack);
+
+    std::string convertToPostFix();
 };
 
 std::vector<std::string> parseWords(std::string const& line);
