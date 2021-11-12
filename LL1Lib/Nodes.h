@@ -13,6 +13,7 @@ class TreeNode {
 public:
     virtual std::string NodeToString() = 0;
     virtual int EvaluateNode() = 0;
+    virtual ~TreeNode() = default;
 
 };
 

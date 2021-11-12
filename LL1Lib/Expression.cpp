@@ -2,7 +2,6 @@
 // Created by Peter Simonson on 11/11/21.
 //
 
-#include <cmath>
 #include <stack>
 #include "Expression.h"
 #include "Nodes.h"
@@ -118,8 +117,16 @@ int evaluatePostFixExpression(const std::vector<std::string>& postFixExpression)
             //else if it is a function call
         }
     }
+    //save the result before we deallocate memory
+    int result = stack.top()->EvaluateNode();
 
-    return stack.top()->EvaluateNode();
+    //At this point there should only be one entry on the tree, but I am looping to make sure there is no leak
+    while(!stack.empty()){
+        delete stack.top();
+        stack.pop();
+    }
+    //return the result of the evaluation
+    return result;
 }
 
 Expression TranslateWordsToTokens(std::vector<std::string> words) {

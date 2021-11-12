@@ -74,11 +74,20 @@ namespace{
 
         ASSERT_EQ(actual, expected);
 
+        text = {"(", "A", "+", "B", ")", "*", "(", "C", "+", "D", ")"};
+        actual = convertTextToPostFix(text);
+        expected = {"A", "B", "+", "C", "D", "+", "*"};
 
+        ASSERT_EQ(actual, expected);
 
+        text = {"A", "*", "B", "+", "C", "*", "D"};
+        actual = convertTextToPostFix(text);
+        expected = {"A", "B", "*", "C", "D", "*", "+"};
+
+        ASSERT_EQ(actual, expected);
     }
 
-    TEST(ExpressionTests, EvaluatePostFixExpressionTest){
+    TEST(ExpressionTests, EvaluatePostFixIntExpressionTest){
         //1+2 in postfix Form
         std::vector<std::string> postFixExpr = {"1", "2", "+"};
 
@@ -112,6 +121,20 @@ namespace{
 
         actual = evaluatePostFixExpression(postFixExpr);
         expected = 2 * 2 * 2;
+
+        ASSERT_EQ(actual, expected);
+
+        postFixExpr = {"1", "3", "+", "4", "5", "+", "*"};
+
+        actual = evaluatePostFixExpression(postFixExpr);
+        expected = (1 + 3) * (4 + 5);
+
+        ASSERT_EQ(actual, expected);
+
+        postFixExpr = {"1", "3", "*", "4", "5", "*", "+"};
+
+        actual = evaluatePostFixExpression(postFixExpr);
+        expected = 1 * 3 + 4 * 5;
 
         ASSERT_EQ(actual, expected);
     }
