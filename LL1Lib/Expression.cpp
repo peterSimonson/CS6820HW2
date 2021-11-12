@@ -3,7 +3,9 @@
 //
 
 #include <cmath>
+#include <stack>
 #include "Expression.h"
+#include "Nodes.h"
 
 /// function to find the precedence level of an operator. Taken from: https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
 /// \param operation check the precedence of the operator
@@ -78,44 +80,46 @@ std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& in
 int evaluatePostFixExpression(const std::vector<std::string>& postFixExpression) {
 
     //holds the stack needed to evaluate
-    std::vector<std::string> stack;
+    std::stack<TreeNode*> stack;
     //loop through each term in the post-fix expression
     for(auto & word : postFixExpression){
         //if word is a name or number push it to stack
         if(is_name(word) || is_number(word)){
-            stack.push_back(word);
+            auto * intNode = new IntegerNode(std::stoi(word));
+            stack.push(intNode);
         }
         //otherwise, we have an operator
         else{
-            std::string value1 = stack.back();
-            stack.pop_back();
-            std::string value2 = stack.back();
-            stack.pop_back();
-
-            //let's just assume they are all ints for now
-            int integer1 = std::stoi(value1);
-            int integer2 = std::stoi(value2);
+            auto * value1 = stack.top();
+            stack.pop();
+            auto * value2 = stack.top();
+            stack.pop();
 
             if(word == "+"){
-                stack.push_back(std::to_string(integer2 + integer1));
+                auto * addNode = new AddNode(value2, value1);
+                stack.push(addNode);
             }
             else if(word == "-"){
-                stack.push_back(std::to_string(integer2 - integer1));
+                auto * subNode = new SubtractNode(value2, value1);
+                stack.push(subNode);
             }
             else if(word == "*"){
-                stack.push_back(std::to_string(integer2 * integer1));
+                auto * multiplyNode = new MultiplyNode(value2, value1);
+                stack.push(multiplyNode);
             }
             else if(word == "/"){
-                stack.push_back(std::to_string(integer2 / integer1));
+                auto * divideNode = new DivideNode(value2, value1);
+                stack.push(divideNode);
             }
             else if(word == "^"){
-                stack.push_back(std::to_string(pow(integer2, integer1)));
+                auto * exponentNode = new ExponentNode(value2, value1);
+                stack.push(exponentNode);
             }
             //else if it is a function call
         }
     }
 
-    return std::stoi(stack.back());
+    return stack.top()->EvaluateNode();
 }
 
 Expression TranslateWordsToTokens(std::vector<std::string> words) {

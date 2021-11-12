@@ -87,4 +87,13 @@ public:
     MultiplyNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
 };
 
+//multiply two integer values
+class ExponentNode : public OperationNode{
+public:
+    int EvaluateNode() override;
+    std::string NodeToString() override;
+    //We just need the constructor for Operation Node
+    ExponentNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
+};
+
 #endif //CS6820HW2_NODES_H

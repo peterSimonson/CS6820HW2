@@ -2,6 +2,7 @@
 // Created by Peter Simonson on 10/16/21.
 //
 
+#include <cmath>
 #include "Nodes.h"
 
 int IntegerNode::EvaluateNode() {
@@ -59,4 +60,12 @@ int MultiplyNode::EvaluateNode() {
 
 std::string MultiplyNode::NodeToString() {
     return left->NodeToString() + " * " + right->NodeToString();
+}
+
+std::string ExponentNode::NodeToString() {
+    return left->NodeToString() + " ^ " + right->NodeToString();
+}
+
+int ExponentNode::EvaluateNode() {
+    return pow(left->EvaluateNode(), right->EvaluateNode());
 }

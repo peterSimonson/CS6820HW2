@@ -123,4 +123,27 @@ namespace {
         ASSERT_EQ(negIntNode.EvaluateNode(), -8);
         ASSERT_EQ(negVarNode.EvaluateNode(), -12);
     }
+
+    TEST(NodeTest, ExponentNodeTest){
+        //these will be the left and right nodes for our add nodes
+        IntegerNode a = IntegerNode(8);
+        VariableNode var = VariableNode(8, "Test");
+
+        auto node1 = ExponentNode(&a, &var);
+        auto node2 = ExponentNode(&var, &a);
+        auto node3 = ExponentNode(&a, &a);
+        auto node4 = ExponentNode(&var, &var);
+
+        //test NodeToString
+        ASSERT_EQ(node1.NodeToString(), "8 ^ Test");
+        ASSERT_EQ(node2.NodeToString(), "Test ^ 8");
+        ASSERT_EQ(node3.NodeToString(), "8 ^ 8");
+        ASSERT_EQ(node4.NodeToString(), "Test ^ Test");
+
+        //test evaluate node
+        ASSERT_EQ(node1.EvaluateNode() , 16777216);
+        ASSERT_EQ(node2.EvaluateNode() , 16777216);
+        ASSERT_EQ(node3.EvaluateNode() , 16777216);
+        ASSERT_EQ(node4.EvaluateNode() , 16777216);
+    }
 }
