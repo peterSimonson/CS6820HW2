@@ -2,14 +2,15 @@
 // Created by Peter Simonson on 11/11/21.
 //
 
+#include <cmath>
 #include "Expression.h"
 
 /// function to find the precedence level of an operator. Taken from: https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
-/// \param opeartor
+/// \param operation check the precedence of the operator
 /// \return
-int precedenceOfOperator(std::string opeartor)
+int precedenceOfOperator(std::string operation)
 {
-    switch (opeartor.at(0))
+    switch (operation.at(0))
     {
         case '+':
         case '-':
@@ -24,19 +25,19 @@ int precedenceOfOperator(std::string opeartor)
     }
 }
 
-/// Converts the strings in text to a post-fix string
+/// Converts the infix vector of strings in text into a post-fix vector of string
 /// Function was taken and modified from: https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
-/// \return post-fix string created from strings in text
-std::string Expression::convertToPostFix(){
-    std::string postFixExpression;
+/// \return post-fix vector of strings created from strings in text
+std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& infixExpression) {
+    std::vector<std::string> postFixExpression;
     std::vector<std::string> stack;
 
     //loop through all words in the expression
-    for(auto & word : text){
+    for(auto & word : infixExpression){
 
         //if it is a variable, put it on the expression
         if(is_name(word) || is_number(word)){
-            postFixExpression += word;
+            postFixExpression.push_back(word);
         }
             //add the open paran to the stack. We will look for it once we encounter the close paran
         else if(word == "("){
@@ -46,7 +47,7 @@ std::string Expression::convertToPostFix(){
         else if(word == ")"){
             while(!stack.empty() && stack.back() != "("){
                 //add the operator to the postfix expression
-                postFixExpression += stack.back();
+                postFixExpression.push_back(stack.back());
                 stack.pop_back();
             }
             //remove the open paran
@@ -57,7 +58,7 @@ std::string Expression::convertToPostFix(){
             int precedenceOfWord = precedenceOfOperator(word);
             //take all operators off the stack that have a precedence equal to or greater than word
             while(!stack.empty() && precedenceOfWord <= precedenceOfOperator(stack.back())){
-                postFixExpression += stack.back();
+                postFixExpression.push_back(stack.back());
                 stack.pop_back();
             }
             //put word onto the stack
@@ -67,11 +68,54 @@ std::string Expression::convertToPostFix(){
 
     //take all remaining operators off the stack
     while(!stack.empty()){
-        postFixExpression += stack.back();
+        postFixExpression.push_back(stack.back());
         stack.pop_back();
     }
 
     return postFixExpression;
+}
+
+int evaluatePostFixExpression(const std::vector<std::string>& postFixExpression) {
+
+    //holds the stack needed to evaluate
+    std::vector<std::string> stack;
+    //loop through each term in the post-fix expression
+    for(auto & word : postFixExpression){
+        //if word is a name or number push it to stack
+        if(is_name(word) || is_number(word)){
+            stack.push_back(word);
+        }
+        //otherwise, we have an operator
+        else{
+            std::string value1 = stack.back();
+            stack.pop_back();
+            std::string value2 = stack.back();
+            stack.pop_back();
+
+            //let's just assume they are all ints for now
+            int integer1 = std::stoi(value1);
+            int integer2 = std::stoi(value2);
+
+            if(word == "+"){
+                stack.push_back(std::to_string(integer2 + integer1));
+            }
+            else if(word == "-"){
+                stack.push_back(std::to_string(integer2 - integer1));
+            }
+            else if(word == "*"){
+                stack.push_back(std::to_string(integer2 * integer1));
+            }
+            else if(word == "/"){
+                stack.push_back(std::to_string(integer2 / integer1));
+            }
+            else if(word == "^"){
+                stack.push_back(std::to_string(pow(integer2, integer1)));
+            }
+            //else if it is a function call
+        }
+    }
+
+    return std::stoi(stack.back());
 }
 
 Expression TranslateWordsToTokens(std::vector<std::string> words) {
