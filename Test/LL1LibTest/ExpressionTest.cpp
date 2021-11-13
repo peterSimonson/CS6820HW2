@@ -91,50 +91,103 @@ namespace{
         //1+2 in postfix Form
         std::vector<std::string> postFixExpr = {"1", "2", "+"};
 
-        int actual = evaluatePostFixExpression(postFixExpr);
+        int actual = (int) evaluatePostFixExpression(postFixExpr);
         int expected = 1+2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2", "2", "-"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        actual = (int) evaluatePostFixExpression(postFixExpr);
         expected = 2-2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2", "2", "*"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        actual = (int) evaluatePostFixExpression(postFixExpr);
         expected = 2*2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2", "2", "/"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        actual = (int) evaluatePostFixExpression(postFixExpr);
         expected = 2/2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2", "3", "^"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        actual = (int) evaluatePostFixExpression(postFixExpr);
         expected = 2 * 2 * 2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"1", "3", "+", "4", "5", "+", "*"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        actual = (int) evaluatePostFixExpression(postFixExpr);
         expected = (1 + 3) * (4 + 5);
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"1", "3", "*", "4", "5", "*", "+"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        actual = (int) evaluatePostFixExpression(postFixExpr);
         expected = 1 * 3 + 4 * 5;
+
+        ASSERT_EQ(actual, expected);
+    }
+
+    TEST(ExpressionTests, EvaluatePostFixDecExpressionTest){
+
+        //1+2 in postfix Form
+        std::vector<std::string> postFixExpr = {"1.5", "2", "+"};
+
+        double actual = evaluatePostFixExpression(postFixExpr);
+        double expected = 1.5+2;
+
+        ASSERT_EQ(actual, expected);
+
+        postFixExpr = {"2.5", "2", "-"};
+
+        actual = evaluatePostFixExpression(postFixExpr);
+        expected = 2.5-2;
+
+        ASSERT_EQ(actual, expected);
+
+        postFixExpr = {"2", "2.75", "*"};
+
+        actual = evaluatePostFixExpression(postFixExpr);
+        expected = 2*2.75;
+
+        ASSERT_EQ(actual, expected);
+
+        postFixExpr = {"2", "2.75", "/"};
+
+        actual = evaluatePostFixExpression(postFixExpr);
+        expected = 2/2.75;
+
+        ASSERT_EQ(actual, expected);
+
+        postFixExpr = {"2.5", "3", "^"};
+
+        actual = evaluatePostFixExpression(postFixExpr);
+        expected = 2.5 * 2.5 * 2.5;
+
+        ASSERT_EQ(actual, expected);
+
+        postFixExpr = {"1", "3.6", "+", "4", "5.7", "+", "*"};
+
+        actual = evaluatePostFixExpression(postFixExpr);
+        expected = (1 + 3.6) * (4 + 5.7);
+
+        ASSERT_EQ(actual, expected);
+
+        postFixExpr = {"1.8", "3", "*", "4.7", "5", "*", "+"};
+
+        actual = evaluatePostFixExpression(postFixExpr);
+        expected = 1.8 * 3 + 4.7 * 5;
 
         ASSERT_EQ(actual, expected);
     }

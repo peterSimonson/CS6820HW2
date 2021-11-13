@@ -76,16 +76,28 @@ std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& in
     return postFixExpression;
 }
 
-int evaluatePostFixExpression(const std::vector<std::string>& postFixExpression) {
+double evaluatePostFixExpression(const std::vector<std::string>& postFixExpression) {
 
     //holds the stack needed to evaluate
     std::stack<TreeNode*> stack;
     //loop through each term in the post-fix expression
     for(auto & word : postFixExpression){
-        //if word is a name or number push it to stack
-        if(is_name(word) || is_number(word)){
-            auto * intNode = new IntegerNode(std::stoi(word));
-            stack.push(intNode);
+        //if word is a number, create an int node and push it to the stack
+        if(is_number(word)){
+            if(is_decimal_number(word)){
+                auto * decimalNode = new DecimalNode(std::stod(word));
+                stack.push(decimalNode);
+            }
+            //if it isn't a decimal it is an integer
+            else{
+                auto * intNode = new IntegerNode(std::stoi(word));
+                stack.push(intNode);
+            }
+
+        }
+        //if it is a variable
+        else if(is_name(word)){
+
         }
         //otherwise, we have an operator
         else{
@@ -118,7 +130,7 @@ int evaluatePostFixExpression(const std::vector<std::string>& postFixExpression)
         }
     }
     //save the result before we deallocate memory
-    int result = stack.top()->EvaluateNode();
+    double result = stack.top()->EvaluateNode();
 
     //At this point there should only be one entry on the tree, but I am looping to make sure there is no leak
     while(!stack.empty()){

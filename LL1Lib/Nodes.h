@@ -12,19 +12,30 @@ class TreeNode {
 
 public:
     virtual std::string NodeToString() = 0;
-    virtual int EvaluateNode() = 0;
+    virtual double EvaluateNode() = 0;
     virtual ~TreeNode() = default;
 
 };
 
-//represents a constant value
+//represents a constant integer value
 class IntegerNode : public TreeNode{
 public:
     int value;
 
     explicit IntegerNode(int valueOfNode);
 
-    int EvaluateNode() override;
+    double EvaluateNode() override;
+    std::string NodeToString() override;
+};
+
+//represents a constant float value
+class DecimalNode : public TreeNode{
+public:
+    double value;
+
+    explicit DecimalNode(double valueOfNode);
+
+    double EvaluateNode() override;
     std::string NodeToString() override;
 };
 
@@ -55,7 +66,7 @@ public:
 //add two integer values
 class AddNode : public OperationNode{
 public:
-    int EvaluateNode() override;
+    double EvaluateNode() override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
     AddNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
@@ -64,7 +75,7 @@ public:
 //subtract two integer values
 class SubtractNode : public OperationNode{
 public:
-    int EvaluateNode() override;
+    double EvaluateNode() override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
     SubtractNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
@@ -73,7 +84,7 @@ public:
 //Divide two integer values
 class DivideNode : public OperationNode{
 public:
-    int EvaluateNode() override;
+    double EvaluateNode() override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
     DivideNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
@@ -82,7 +93,7 @@ public:
 //multiply two integer values
 class MultiplyNode : public OperationNode{
 public:
-    int EvaluateNode() override;
+    double EvaluateNode() override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
     MultiplyNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
@@ -91,7 +102,7 @@ public:
 //multiply two integer values
 class ExponentNode : public OperationNode{
 public:
-    int EvaluateNode() override;
+    double EvaluateNode() override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
     ExponentNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}

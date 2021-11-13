@@ -55,6 +55,19 @@ bool is_number(const std::string& s)
     return !s.empty() && it == s.end();
 }
 
+/// Check if a number is a decimal or not
+/// Note: the string must have returned true from is_number
+/// \param number string containing a number
+/// \return true if the number is a decimal number. false if it is an integer
+bool is_decimal_number(const std::string& number){
+    if(number.find('.') != std::string::npos){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 /// Check if a string is a name or not
 /// We check that the first char is a letter and the rest are alphanumeric
 /// \param s string we want to check if it is a name

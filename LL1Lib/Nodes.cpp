@@ -5,7 +5,7 @@
 #include <cmath>
 #include "Nodes.h"
 
-int IntegerNode::EvaluateNode() {
+double IntegerNode::EvaluateNode() {
     return value;
 }
 
@@ -30,7 +30,7 @@ OperationNode::OperationNode(TreeNode *leftNode, TreeNode *rightNode) {
     right = rightNode;
 }
 
-int AddNode::EvaluateNode() {
+double AddNode::EvaluateNode() {
     return left->EvaluateNode() + right->EvaluateNode();
 }
 
@@ -38,7 +38,7 @@ std::string AddNode::NodeToString() {
     return left->NodeToString() + " + " + right->NodeToString();
 }
 
-int SubtractNode::EvaluateNode() {
+double SubtractNode::EvaluateNode() {
     return left->EvaluateNode() - right->EvaluateNode();
 }
 
@@ -46,7 +46,7 @@ std::string SubtractNode::NodeToString() {
     return left->NodeToString() + " - " + right->NodeToString();
 }
 
-int DivideNode::EvaluateNode() {
+double DivideNode::EvaluateNode() {
     return left->EvaluateNode() / right->EvaluateNode();
 }
 
@@ -54,7 +54,7 @@ std::string DivideNode::NodeToString() {
     return left->NodeToString() + " / " + right->NodeToString();
 }
 
-int MultiplyNode::EvaluateNode() {
+double MultiplyNode::EvaluateNode() {
     return left->EvaluateNode() * right->EvaluateNode();
 }
 
@@ -66,6 +66,18 @@ std::string ExponentNode::NodeToString() {
     return left->NodeToString() + " ^ " + right->NodeToString();
 }
 
-int ExponentNode::EvaluateNode() {
+double ExponentNode::EvaluateNode() {
     return pow(left->EvaluateNode(), right->EvaluateNode());
+}
+
+DecimalNode::DecimalNode(double valueOfNode) {
+    value = valueOfNode;
+}
+
+double DecimalNode::EvaluateNode() {
+    return value;
+}
+
+std::string DecimalNode::NodeToString() {
+    return std::to_string(value);
 }

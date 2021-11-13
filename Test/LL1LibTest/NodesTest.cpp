@@ -13,6 +13,13 @@ namespace {
         ASSERT_EQ(a.NodeToString(), "8");
     }
 
+    TEST(NodeTests, DecimalNodeTests){
+        DecimalNode a = DecimalNode(8.5);
+
+        ASSERT_EQ(a.EvaluateNode(), 8.5);
+        ASSERT_EQ(a.NodeToString(), "8.500000");
+    }
+
     TEST(NodeTests, VariableNodeTests){
         VariableNode var = VariableNode(8, "Test");
 
@@ -145,5 +152,31 @@ namespace {
         ASSERT_EQ(node2.EvaluateNode() , 16777216);
         ASSERT_EQ(node3.EvaluateNode() , 16777216);
         ASSERT_EQ(node4.EvaluateNode() , 16777216);
+    }
+
+    TEST(NodeTest, DecimalOperationTest){
+        IntegerNode a = IntegerNode(8);
+        DecimalNode b = DecimalNode(2.5);
+
+        AddNode add = AddNode(&a, &b);
+
+        ASSERT_EQ(add.EvaluateNode(), 10.5);
+        ASSERT_EQ(add.NodeToString(), "8 + 2.500000");
+
+        SubtractNode sub = SubtractNode(&a, &b);
+        ASSERT_EQ(sub.EvaluateNode(), 5.5);
+        ASSERT_EQ(sub.NodeToString(), "8 - 2.500000");
+
+        MultiplyNode multiply = MultiplyNode(&a, &b);
+        ASSERT_EQ(multiply.EvaluateNode(), 20);
+        ASSERT_EQ(multiply.NodeToString(), "8 * 2.500000");
+
+        DivideNode divide = DivideNode(&a, &b);
+        ASSERT_EQ(divide.EvaluateNode(), 3.2);
+        ASSERT_EQ(divide.NodeToString(), "8 / 2.500000");
+
+        ExponentNode exponent = ExponentNode(&a, &b);
+        ASSERT_EQ(exponent.EvaluateNode(), 181.019335983756166);
+        ASSERT_EQ(exponent.NodeToString(), "8 ^ 2.500000");
     }
 }
