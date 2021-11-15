@@ -24,21 +24,23 @@
 //Define Columns of our table
 #define NUM_OF_NON_TERMINALS 11
 #define END_TOKEN 11
-#define PLUS_TOKEN 12
-#define MINUS_TOKEN 13
-#define MULTIPLY_TOKEN 14
-#define DIVIDE_TOKEN 15
-#define EXPONENT_TOKEN 16
-#define OPEN_PARAN_TOKEN 17
-#define CLOSE_PARAN_TOKEN 18
-#define NAME_TOKEN 19
-#define NUM_TOKEN 20
-#define SPACE_NEG_NAME_TOKEN 21
-#define SPACE_NEG_NUM_TOKEN 22
-#define NEG_NAME_TOKEN 23
-#define NEG_NUM_TOKEN 24
-#define EPSILON_TOKEN 25
-#define NUM_OF_TOKENS 25
+#define EQUALS_TOKEN 12
+#define PLUS_TOKEN 13
+#define MINUS_TOKEN 14
+#define MULTIPLY_TOKEN 15
+#define DIVIDE_TOKEN 16
+#define EXPONENT_TOKEN 17
+#define OPEN_PARAN_TOKEN 18
+#define CLOSE_PARAN_TOKEN 19
+#define NAME_TOKEN 20
+#define NUM_TOKEN 21
+#define SPACE_NEG_NAME_TOKEN 22
+#define SPACE_NEG_NUM_TOKEN 23
+#define NEG_NAME_TOKEN 24
+#define NEG_NUM_TOKEN 25
+#define DATA_TYPE_TOKEN 26
+#define EPSILON_TOKEN 27
+#define NUM_OF_TOKENS 27
 
 //other tokens
 #define ERROR_TOKEN -1
@@ -60,6 +62,8 @@ public:
     std::map<int, std::vector<int>> followSet;
     //holds the productions
     std::map<int, rule> rules;
+    //holds the data types
+    std::vector<std::string> dataTypes;
     //holds the table
     int RuleTable [NUM_OF_TOKENS - NUM_OF_NON_TERMINALS][NUM_OF_NON_TERMINALS]{};
 
@@ -81,5 +85,6 @@ bool is_Neg_Name(const std::string& s);
 bool is_terminal(const int& token);
 bool is_Value_Token(int token);
 bool set_contains_epsilon(std::vector<int> set);
+bool is_data_type(const std::string& word, const std::vector<std::string>& dataTypes);
 
 #endif //CS6820HW2_TABLE_H

@@ -8,42 +8,62 @@
 namespace{
     TEST(ExpressionTests, TranslateTest){
         std::vector<std::string> words{"(" ,"peter", "+", "12", ")", "*", "2"};
-
-        auto expr =  TranslateWordsToTokens(words);
+        std::vector<std::string> dataTypes = {"ish", "num"};
+        auto expr =  TranslateWordsToTokens(words, dataTypes);
         std::vector<int> results{OPEN_PARAN_TOKEN, NAME_TOKEN, PLUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, MULTIPLY_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.infix, words);
 
         words = {"(" ,"peter", "-", "12", ")", "/", "2"};
-        expr =  TranslateWordsToTokens(words);
+        expr =  TranslateWordsToTokens(words, dataTypes);
         results = {OPEN_PARAN_TOKEN, NAME_TOKEN, MINUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.infix, words);
 
         words = {"(" ,"peter", "^", "12", ")", "/", "2"};
-        expr =  TranslateWordsToTokens(words);
+        expr =  TranslateWordsToTokens(words, dataTypes);
         results = {OPEN_PARAN_TOKEN, NAME_TOKEN, EXPONENT_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
+        ASSERT_EQ(expr.tokens, results);
+        ASSERT_EQ(expr.infix, words);
+
+        words = {"ish", "peter", "=", "2",  "+", "2"};
+        expr =  TranslateWordsToTokens(words, dataTypes);
+        results = {DATA_TYPE_TOKEN, NAME_TOKEN, EQUALS_TOKEN, NUM_TOKEN, PLUS_TOKEN, NUM_TOKEN, END_TOKEN};
+        ASSERT_EQ(expr.tokens, results);
+        ASSERT_EQ(expr.infix, words);
+
+        words = {"num", "peter", "=", "2",  "+", "2"};
+        expr =  TranslateWordsToTokens(words, dataTypes);
+        results = {DATA_TYPE_TOKEN, NAME_TOKEN, EQUALS_TOKEN, NUM_TOKEN, PLUS_TOKEN, NUM_TOKEN, END_TOKEN};
+        ASSERT_EQ(expr.tokens, results);
+        ASSERT_EQ(expr.infix, words);
+
+        words = {"num", "num3", "=", "2",  "+", "2"};
+        expr =  TranslateWordsToTokens(words, dataTypes);
+        results = {DATA_TYPE_TOKEN, NAME_TOKEN, EQUALS_TOKEN, NUM_TOKEN, PLUS_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.infix, words);
     }
 
     TEST(ExpressionTests, TranslateNegativeTest){
         std::vector<std::string> words{"-32", " -", " -32", "-",  "-testVar", "-"," -testVar"};
-        auto expr =  TranslateWordsToTokens(words);
+        std::vector<std::string> dataTypes = {"ish", "num"};
+
+        auto expr =  TranslateWordsToTokens(words, dataTypes);
         std::vector<int> results{NEG_NUM_TOKEN, MINUS_TOKEN ,SPACE_NEG_NUM_TOKEN, MINUS_TOKEN, NEG_NAME_TOKEN, MINUS_TOKEN ,SPACE_NEG_NAME_TOKEN, END_TOKEN};
         std::vector<std::string> text{"-", "32", "-", "-", "32", "-", "-", "testVar", "-", "-", "testVar"};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.infix, text);
 
         words = {"-32", " -32"};
-        expr =  TranslateWordsToTokens(words);
+        expr =  TranslateWordsToTokens(words, dataTypes);
         results = {NEG_NUM_TOKEN, MINUS_TOKEN, NUM_TOKEN, END_TOKEN};
         text = {"-", "32", "-", "32"};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.infix, text);
 
         words = {"-test1", " -test2"};
-        expr =  TranslateWordsToTokens(words);
+        expr =  TranslateWordsToTokens(words, dataTypes);
         text = {"-", "test1", "-", "test2"};
         results = {NEG_NAME_TOKEN, MINUS_TOKEN, NAME_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);

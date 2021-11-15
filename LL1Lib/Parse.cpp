@@ -78,11 +78,14 @@ std::vector<std::string> parseWords(std::string const& line){
     return words;
 }
 
+/// Parse a expression. Will check for validity and store result in successfulParse
+/// \param line the expression you wish to parse for validity
+/// \param table the table containing information about our language
 Parser::Parser(const std::string& line, Table table) {
     //get the input strings
     std::vector<std::string> inputWords = parseWords(line);
     //translate the input from strings into tokens
-    expr = TranslateWordsToTokens(inputWords);
+    expr = TranslateWordsToTokens(inputWords, table.dataTypes);
 
     std::vector<int> LL1Stack;
 
@@ -166,6 +169,8 @@ void Parser::SwapStack(int ruleIndex, std::vector<int> & stack) {
 
 }
 
+/// Print an error message when you fail to parse an expression
+/// \param expr the expression you failed to parse
 void PrintParserError(const std::string& expr){
     std::cout << "Error Parsing: " << expr << std::endl;
 }

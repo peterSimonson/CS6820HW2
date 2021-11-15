@@ -76,6 +76,9 @@ std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& in
     return postFixExpression;
 }
 
+/// Evalutates a postfix expression
+/// \param postFixExpression the post-fix expression you wish to evaluate
+/// \return the value of the post-fix expression
 double evaluatePostFixExpression(const std::vector<std::string>& postFixExpression) {
 
     //holds the stack needed to evaluate
@@ -141,7 +144,11 @@ double evaluatePostFixExpression(const std::vector<std::string>& postFixExpressi
     return result;
 }
 
-Expression TranslateWordsToTokens(std::vector<std::string> words) {
+/// Takes the parsed words and translates them into a collection of tokens that the LL1 parser understands
+/// \param words the words you wish to translate to an understandable format
+/// \param dataTypes the data types that could occur in words
+/// \return An expression object with all the tokens and all the words for the expression
+Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vector<std::string>& dataTypes) {
     //used to loop through the vector of strings
     std::vector<std::string>::iterator str;
     //will hold all the strings we translated to int tokens
@@ -154,6 +161,10 @@ Expression TranslateWordsToTokens(std::vector<std::string> words) {
         //check what type of token this is
         if(is_number(word)){
             tokens.push_back(NUM_TOKEN);
+            text.push_back(word);
+        }
+        else if(is_data_type(word, dataTypes)){
+            tokens.push_back(DATA_TYPE_TOKEN);
             text.push_back(word);
         }
         else if(is_name(word)){
@@ -232,6 +243,10 @@ Expression TranslateWordsToTokens(std::vector<std::string> words) {
         }
         else if(word == "^"){
             tokens.push_back(EXPONENT_TOKEN);
+            text.push_back(word);
+        }
+        else if(word == "="){
+            tokens.push_back(EQUALS_TOKEN);
             text.push_back(word);
         }
         else if(word == "("){

@@ -5,13 +5,6 @@
 #include "Table.h"
 #include <set>
 
-/// Translates an array of strings into an array of tokens that correspond to each string
-/// If the string does not have a matching token it will be represented with an error token
-/// \param words The strings you wish to translate to tokens
-/// \return a list of token corresponding to the strings that were entered
-
-
-
 //the functions is_number and is_name were taken and modified from:
 //https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
 
@@ -128,6 +121,22 @@ bool is_terminal(const int &token) {
     }
 }
 
+/// Check if the string is a datatype
+/// \param word string you want to check if it is a datatype
+/// \param dataTypes the list of data types the user can declare
+/// \return true if word matches one of the data types. Otherwise, we return false.
+bool is_data_type(const std::string& word, const std::vector<std::string>& dataTypes){
+
+    if(std::find(dataTypes.begin(), dataTypes.end(), word) != dataTypes.end()){
+        //if we find a match return true
+        return true;
+    }
+    else{
+        //otherwise, return false
+        return false;
+    }
+}
+
 /// Looks up the rule in figure 3.11 b
 /// \param column the token corresponding to the table column you wish to look up
 /// \param row the token corresponding to the table row you wish to look up
@@ -136,6 +145,7 @@ int Table::LookUpTable(int column, int row) {
     return RuleTable[column - NUM_OF_NON_TERMINALS][row];
 }
 
+/// Creates the first set for our language
 void Table::GenerateFirstSet() {
     //set to true when we are finished finding the set
     bool finishedFindingSet = false;
@@ -193,6 +203,7 @@ void Table::GenerateFirstSet() {
     }
 }
 
+///Generates the production rules for our language
 void Table::GenerateRules() {
     //rule 0
     std::vector<int> rhs{EXPR_TOKEN};
@@ -284,7 +295,10 @@ void Table::GenerateRules() {
     rules.insert({21, {SPACE_NEG_VAL_TOKEN, rhs}});
 }
 
+///Generates the data for our language needed to parse expressions
 Table::Table() {
+    //add our built-in data types
+    dataTypes = {"ish", "num"};
     GenerateRules();
     GenerateFirstSet();
     GenerateFollowSet();
@@ -292,6 +306,7 @@ Table::Table() {
     BuildTable();
 }
 
+///Creates the follow set. Note: This function requires that the first set has already been generated
 void Table::GenerateFollowSet() {
     //loop through the non-terminals
     for (int currentToken = START_TOKEN; currentToken < NUM_OF_NON_TERMINALS; currentToken++){
@@ -346,6 +361,7 @@ void Table::GenerateFollowSet() {
     }
 }
 
+///Build the table once you have generated first and follow set. note: we use findFirstPlusSet for the first plus set
 void Table::BuildTable(){
     //loop through the non-terminals
     for(int A = START_TOKEN; A < NUM_OF_NON_TERMINALS; A++){
@@ -371,6 +387,9 @@ void Table::BuildTable(){
     }
 }
 
+/// Finds the first plus set. This requires first and follow set have already been generated
+/// \param production the production you wish to find the first plus set for
+/// \return the tokens in the first plus set for production
 std::vector<int> Table::findFirstPlusSet(rule production){
     //find the first beta on the right-hand side of the production
     int beta_1 = production.rightHandSide.front();

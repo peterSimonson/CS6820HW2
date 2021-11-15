@@ -17,12 +17,8 @@ public:
     //contains the expression
     Expression expr;
     Table table;
-    //hold the postfix expression
-    std::string postfix;
 
     void SwapStack(int ruleIndex, std::vector<int> & stack);
-
-    std::string convertToPostFix();
 };
 
 std::vector<std::string> parseWords(std::string const& line);

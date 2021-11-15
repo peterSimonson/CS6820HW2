@@ -223,6 +223,12 @@ namespace {
         ASSERT_EQ(words[6], "*");
         ASSERT_EQ(words[7], "altVar");
         ASSERT_EQ(words.size(), 8);
+
+        expr = "ish peter = 2 + chai";
+
+        words = parseWords(expr);
+        std::vector<std::string> result = {"ish", "peter", "=", "2", "+", "chai"};
+        ASSERT_EQ(words, result);
     }
 
 
