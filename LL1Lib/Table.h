@@ -11,36 +11,38 @@
 #include <map>
 //Define the rows of the table
 #define START_TOKEN 0
-#define EXPR_TOKEN 1
-#define L_TERM_TOKEN 2
-#define R_TERM_TOKEN 3
-#define EXPR_PRIME_TOKEN 4
-#define TERM_PRIME_TOKEN 5
-#define L_FACTOR_TOKEN 6
-#define R_FACTOR_TOKEN 7
-#define G_FACTOR_TOKEN 8
-#define POSVAL_TOKEN 9
-#define SPACE_NEG_VAL_TOKEN 10
+#define ASSIGNMENT_TOKEN 1
+#define EXPR_TOKEN 2
+#define L_TERM_TOKEN 3
+#define R_TERM_TOKEN 4
+#define EXPR_PRIME_TOKEN 5
+#define TERM_PRIME_TOKEN 6
+#define L_FACTOR_TOKEN 7
+#define R_FACTOR_TOKEN 8
+#define G_FACTOR_TOKEN 9
+#define POSVAL_TOKEN 10
+#define SPACE_NEG_VAL_TOKEN 11
 //Define Columns of our table
-#define NUM_OF_NON_TERMINALS 11
-#define END_TOKEN 11
-#define EQUALS_TOKEN 12
-#define PLUS_TOKEN 13
-#define MINUS_TOKEN 14
-#define MULTIPLY_TOKEN 15
-#define DIVIDE_TOKEN 16
-#define EXPONENT_TOKEN 17
-#define OPEN_PARAN_TOKEN 18
-#define CLOSE_PARAN_TOKEN 19
-#define NAME_TOKEN 20
-#define NUM_TOKEN 21
-#define SPACE_NEG_NAME_TOKEN 22
-#define SPACE_NEG_NUM_TOKEN 23
-#define NEG_NAME_TOKEN 24
-#define NEG_NUM_TOKEN 25
-#define DATA_TYPE_TOKEN 26
-#define EPSILON_TOKEN 27
-#define NUM_OF_TOKENS 27
+#define NUM_OF_NON_TERMINALS 12
+#define END_TOKEN 12
+#define EQUALS_TOKEN 13
+#define PLUS_TOKEN 14
+#define MINUS_TOKEN 15
+#define MULTIPLY_TOKEN 16
+#define DIVIDE_TOKEN 17
+#define EXPONENT_TOKEN 18
+#define OPEN_PARAN_TOKEN 19
+#define CLOSE_PARAN_TOKEN 20
+#define NAME_TOKEN 21
+#define NUM_TOKEN 22
+#define SPACE_NEG_NAME_TOKEN 23
+#define SPACE_NEG_NUM_TOKEN 24
+#define NEG_NAME_TOKEN 25
+#define NEG_NUM_TOKEN 26
+#define DATA_TYPE_TOKEN 27
+#define EPSILON_TOKEN 28
+//TODO: Change where this is used so it is the number of tokens not number of tokens - 1
+#define NUM_OF_TOKENS 28
 
 //other tokens
 #define ERROR_TOKEN -1

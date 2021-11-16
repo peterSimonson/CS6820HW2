@@ -206,93 +206,78 @@ void Table::GenerateFirstSet() {
 ///Generates the production rules for our language
 void Table::GenerateRules() {
     //rule 0
-    std::vector<int> rhs{EXPR_TOKEN};
+    std::vector<int> rhs{ASSIGNMENT_TOKEN, EXPR_TOKEN};
     //          productNum      productLHS   productRHS
     rules.insert({0, {START_TOKEN, rhs}});
 
-    //rule 1
+    rhs = {NAME_TOKEN, EQUALS_TOKEN};
+    rules.insert({1, {ASSIGNMENT_TOKEN, rhs}});
+
+    rhs = {DATA_TYPE_TOKEN , NAME_TOKEN, EQUALS_TOKEN};
+    rules.insert({2, {ASSIGNMENT_TOKEN, rhs}});
+
     rhs = {L_TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({1, {EXPR_TOKEN, rhs}});
+    rules.insert({3, {EXPR_TOKEN, rhs}});
 
-    //rule 2
     rhs = {L_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({2, {L_TERM_TOKEN, rhs}});
+    rules.insert({4, {L_TERM_TOKEN, rhs}});
 
-    //rule 3
     rhs = {R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({3, {R_TERM_TOKEN, rhs}});
+    rules.insert({5, {R_TERM_TOKEN, rhs}});
 
-    //rule 4
     rhs = {PLUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({4, {EXPR_PRIME_TOKEN, rhs}});
-
-    //rule 5
-    rhs = {MINUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({5, {EXPR_PRIME_TOKEN, rhs}});
-
-    //rule 6
-    rhs = {EPSILON_TOKEN};
     rules.insert({6, {EXPR_PRIME_TOKEN, rhs}});
 
-    //rule 7
+    rhs = {MINUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rules.insert({7, {EXPR_PRIME_TOKEN, rhs}});
+
+    rhs = {EPSILON_TOKEN};
+    rules.insert({8, {EXPR_PRIME_TOKEN, rhs}});
+
     rhs = {MULTIPLY_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({7, {TERM_PRIME_TOKEN, rhs}});
-
-    //rule 8
-    rhs = {DIVIDE_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({8, {TERM_PRIME_TOKEN, rhs}});
-
-    //rule 9
-    rhs = {EXPONENT_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
     rules.insert({9, {TERM_PRIME_TOKEN, rhs}});
 
-    //rule 10
-    rhs = {EPSILON_TOKEN};
+    rhs = {DIVIDE_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
     rules.insert({10, {TERM_PRIME_TOKEN, rhs}});
 
-    //rule 11
+    rhs = {EXPONENT_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
+    rules.insert({11, {TERM_PRIME_TOKEN, rhs}});
+
+    rhs = {EPSILON_TOKEN};
+    rules.insert({12, {TERM_PRIME_TOKEN, rhs}});
+
     rhs = {G_FACTOR_TOKEN};
-    rules.insert({11, {L_FACTOR_TOKEN, rhs}});
-
-    //rule 12
-    rhs = {NEG_NUM_TOKEN};
-    rules.insert({12, {L_FACTOR_TOKEN, rhs}});
-
-    //rule 13
-    rhs = {NEG_NAME_TOKEN};
     rules.insert({13, {L_FACTOR_TOKEN, rhs}});
 
-    //rule 14
+    rhs = {NEG_NUM_TOKEN};
+    rules.insert({14, {L_FACTOR_TOKEN, rhs}});
+
+    rhs = {NEG_NAME_TOKEN};
+    rules.insert({15, {L_FACTOR_TOKEN, rhs}});
+
     rhs = {G_FACTOR_TOKEN};
-    rules.insert({14, {R_FACTOR_TOKEN, rhs}});
+    rules.insert({16, {R_FACTOR_TOKEN, rhs}});
 
-    //rule 15
     rhs = {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN};
-    rules.insert({15, {G_FACTOR_TOKEN, rhs}});
-
-    //rule 16
-    rhs = {POSVAL_TOKEN};
-    rules.insert({16, {G_FACTOR_TOKEN, rhs}});
-
-    //rule 17
-    rhs = {SPACE_NEG_VAL_TOKEN};
     rules.insert({17, {G_FACTOR_TOKEN, rhs}});
 
-    //rule 18
+    rhs = {POSVAL_TOKEN};
+    rules.insert({18, {G_FACTOR_TOKEN, rhs}});
+
+    rhs = {SPACE_NEG_VAL_TOKEN};
+    rules.insert({19, {G_FACTOR_TOKEN, rhs}});
+
     rhs = {NUM_TOKEN};
-    rules.insert({18, {POSVAL_TOKEN, rhs}});
+    rules.insert({20, {POSVAL_TOKEN, rhs}});
 
-    //rule 19
     rhs = {NAME_TOKEN};
-    rules.insert({19, {POSVAL_TOKEN, rhs}});
+    rules.insert({21, {POSVAL_TOKEN, rhs}});
 
-    //rule 20
     rhs = {SPACE_NEG_NUM_TOKEN};
-    rules.insert({20, {SPACE_NEG_VAL_TOKEN, rhs}});
+    rules.insert({22, {SPACE_NEG_VAL_TOKEN, rhs}});
 
-    //rule 21
     rhs = {SPACE_NEG_NAME_TOKEN};
-    rules.insert({21, {SPACE_NEG_VAL_TOKEN, rhs}});
+    rules.insert({23, {SPACE_NEG_VAL_TOKEN, rhs}});
 }
 
 ///Generates the data for our language needed to parse expressions
