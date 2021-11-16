@@ -21,16 +21,17 @@ namespace {
     }
 
     TEST(NodeTests, VariableNodeTests){
-        VariableNode var = VariableNode(8, "Test");
+        DecimalNode a = DecimalNode(8.5);
+        VariableNode var = VariableNode(&a, "Test");
 
-        ASSERT_EQ(var.EvaluateNode(), 8);
+        ASSERT_EQ(var.EvaluateNode(), 8.5);
         ASSERT_EQ(var.NodeToString(), "Test");
     }
 
     TEST(NodeTests, AddNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(8, "Test");
+        VariableNode var = VariableNode(&a, "Test");
 
         AddNode node1 = AddNode(&a, &var);
         AddNode node2 = AddNode(&var, &a);
@@ -53,7 +54,7 @@ namespace {
     TEST(NodeTest, SubtractNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(8, "Test");
+        VariableNode var = VariableNode(&a, "Test");
 
         SubtractNode node1 = SubtractNode(&a, &var);
         SubtractNode node2 = SubtractNode(&var, &a);
@@ -76,7 +77,7 @@ namespace {
     TEST(NodeTest, DivideNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(8, "Test");
+        VariableNode var = VariableNode(&a, "Test");
 
         DivideNode node1 = DivideNode(&a, &var);
         DivideNode node2 = DivideNode(&var, &a);
@@ -97,8 +98,8 @@ namespace {
 
         //try to divide by zero
         try {
-            var = VariableNode(0, "test2");
-            DivideNode errorNode = DivideNode(&a, &var);
+            IntegerNode zero = IntegerNode(0);
+            DivideNode errorNode = DivideNode(&a, &zero);
             errorNode.EvaluateNode();
 
             FAIL() << "Expected runtime error";
@@ -114,7 +115,7 @@ namespace {
     TEST(NodeTest, MultiplyNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(8, "Test");
+        VariableNode var = VariableNode(&a, "Test");
 
         MultiplyNode node1 = MultiplyNode(&a, &var);
         MultiplyNode node2 = MultiplyNode(&var, &a);
@@ -137,19 +138,19 @@ namespace {
     TEST(NodeTest, NegateNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(12, "Test");
+        VariableNode var = VariableNode(&a, "Test");
 
-        NegateNode negIntNode = NegateNode(a.EvaluateNode());
-        NegateNode negVarNode = NegateNode(var.EvaluateNode());
+        NegateNode negIntNode = NegateNode((int)a.EvaluateNode());
+        NegateNode negVarNode = NegateNode((int)var.EvaluateNode());
 
         ASSERT_EQ(negIntNode.EvaluateNode(), -8);
-        ASSERT_EQ(negVarNode.EvaluateNode(), -12);
+        ASSERT_EQ(negVarNode.EvaluateNode(), -8);
     }
 
     TEST(NodeTest, ExponentNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(8, "Test");
+        VariableNode var = VariableNode(&a, "Test");
 
         auto node1 = ExponentNode(&a, &var);
         auto node2 = ExponentNode(&var, &a);

@@ -17,12 +17,17 @@ IntegerNode::IntegerNode(int valueOfNode) {
     value = valueOfNode;
 }
 
-VariableNode::VariableNode(int valueOfVar, std::string const& nameOfVar) : IntegerNode{valueOfVar} {
+VariableNode::VariableNode(TreeNode * valueOfVar, std::string const& nameOfVar){
     variableName = nameOfVar;
+    valueOfVariable = valueOfVar;
 }
 
 std::string VariableNode::NodeToString() {
     return variableName;
+}
+
+double VariableNode::EvaluateNode() {
+    return valueOfVariable->EvaluateNode();
 }
 
 OperationNode::OperationNode(TreeNode *leftNode, TreeNode *rightNode) {

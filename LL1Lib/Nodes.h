@@ -46,11 +46,13 @@ public:
 };
 
 //represents a variable value
-class VariableNode : public IntegerNode{
+class VariableNode : public TreeNode{
 public:
     std::string variableName;
+    TreeNode * valueOfVariable;
 
-    explicit VariableNode(int valueOfVar, std::string const& nameOfVar);
+    explicit VariableNode(TreeNode * valueOfVar, std::string const& nameOfVar);
+    double EvaluateNode() override;
     std::string NodeToString() override;
 };
 
