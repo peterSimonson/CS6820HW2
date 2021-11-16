@@ -177,4 +177,35 @@ namespace {
         ASSERT_EQ(tempSet, set1);
     }
 
+    TEST(TableTests, AddVariableTest){
+        Table table = Table();
+
+        IntegerNode eight = IntegerNode(8);
+        VariableNode var1 = VariableNode(&eight, "var1");
+
+        ASSERT_TRUE(table.AddVariable(var1));
+        ASSERT_FALSE(table.AddVariable(var1));
+
+        VariableNode var2 = VariableNode(&eight, "var2");
+
+        ASSERT_TRUE(table.AddVariable(var2));
+        ASSERT_FALSE(table.AddVariable(var2));
+    }
+
+    TEST(TableTests, GetVariableTest){
+        Table table = Table();
+        std::string varName = "var1";
+        ASSERT_EQ(table.GetVariable(varName), nullptr);
+
+        IntegerNode eight = IntegerNode(8);
+        VariableNode var1 = VariableNode(&eight, varName);
+
+        table.AddVariable(var1);
+
+        VariableNode * result = table.GetVariable(varName);
+
+        ASSERT_EQ(result->variableName, var1.variableName);
+        ASSERT_EQ(result->EvaluateNode(), var1.EvaluateNode());
+    }
+
 }

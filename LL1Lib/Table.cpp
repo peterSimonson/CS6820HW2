@@ -391,6 +391,47 @@ std::vector<int> Table::findFirstPlusSet(rule production){
     }
 }
 
+/// Checks if string corresponds to an already declared variable name
+/// \param nameOfVariable The name you wish to check
+/// \return True if a variable has that name. False if their is no variable with the name
+bool Table::is_already_a_var(const std::string& nameOfVariable) {
+
+    for(auto & variable : variables){
+        if(nameOfVariable == variable.variableName){
+            return true;
+        }
+    }
+    return false;
+}
+
+/// Get the variable corresponding to the name you just passed
+/// \param nameOfVariableToReturn the name of the variable you want to get
+/// \return The variable corresponding to the name you entered. Returns nullptr if their is no variable by that name
+VariableNode * Table::GetVariable(const std::string &nameOfVariableToReturn) {
+    VariableNode *varToReturn = nullptr;
+    for(auto & variable : variables){
+        if(nameOfVariableToReturn == variable.variableName){
+            varToReturn = &variable;
+            break;
+        }
+    }
+    return varToReturn;
+}
+
+/// Add a variable to the list of declared variables
+/// Note: this function checks if there is already a variable by the same name
+/// \param varToAdd the variable you wish to declare
+/// \return True if we added the variable. False if we were unable to add the variable
+bool Table::AddVariable(const VariableNode& varToAdd) {
+    bool isNotCurrentlyAVar = !is_already_a_var(varToAdd.variableName);
+    //if the variable name is not already used add it to the variables
+    if(isNotCurrentlyAVar){
+        variables.push_back(varToAdd);
+    }
+
+    return isNotCurrentlyAVar;
+}
+
 /// Removes epsilon from a set if it exists in the set
 /// \param set the set of integers you wish to remove EPSILON_TOKEN from
 /// \return set without EPSILON_TOKEN

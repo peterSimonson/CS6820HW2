@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include "Nodes.h"
 //Define the rows of the table
 #define START_TOKEN 0
 #define ASSIGNMENT_TOKEN 1
@@ -66,6 +67,8 @@ public:
     std::map<int, rule> rules;
     //holds the data types
     std::vector<std::string> dataTypes;
+    //holds the variables
+    std::vector<VariableNode> variables;
     //holds the table
     int RuleTable [NUM_OF_TOKENS - NUM_OF_NON_TERMINALS][NUM_OF_NON_TERMINALS]{};
 
@@ -75,6 +78,9 @@ public:
     void GenerateFollowSet();
     void BuildTable();
     std::vector<int> findFirstPlusSet(rule production);
+    bool is_already_a_var(const std::string& nameOfVariable);
+    VariableNode * GetVariable(const std::string& nameOfVariableToReturn);
+    bool AddVariable(const VariableNode& varToAdd);
 };
 
 std::vector<int> removeEpsilonFromSet(std::vector<int> set);
