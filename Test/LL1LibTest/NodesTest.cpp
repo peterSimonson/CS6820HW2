@@ -94,6 +94,21 @@ namespace {
         ASSERT_EQ(node2.EvaluateNode() , 1);
         ASSERT_EQ(node3.EvaluateNode() , 1);
         ASSERT_EQ(node4.EvaluateNode() , 1);
+
+        //try to divide by zero
+        try {
+            var = VariableNode(0, "test2");
+            DivideNode errorNode = DivideNode(&a, &var);
+            errorNode.EvaluateNode();
+
+            FAIL() << "Expected runtime error";
+        }
+        catch(std::runtime_error const & err) {
+            EXPECT_EQ(err.what(),std::string("Error: Attempted to divide by zero\n"));
+        }
+        catch(...) {
+            FAIL() << "Expected runtime error";
+        }
     }
 
     TEST(NodeTest, MultiplyNodeTest){

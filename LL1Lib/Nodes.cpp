@@ -47,7 +47,14 @@ std::string SubtractNode::NodeToString() {
 }
 
 double DivideNode::EvaluateNode() {
-    return left->EvaluateNode() / right->EvaluateNode();
+    double rightNode = right->EvaluateNode();
+    if(rightNode!=0){
+        return left->EvaluateNode() / rightNode;
+    }
+    else{
+        throw std::runtime_error("Error: Attempted to divide by zero\n");
+    }
+
 }
 
 std::string DivideNode::NodeToString() {
