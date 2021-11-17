@@ -208,4 +208,38 @@ namespace {
         ASSERT_EQ(result->EvaluateNode(), var1.EvaluateNode());
     }
 
+    TEST(TableTests, PrintSets){
+        Table table = Table();
+
+        std::cout << "Writing First Set" << std::endl;
+
+        for(int i = START_TOKEN; i <= NUM_OF_TOKENS; i++){
+            std::cout << "First at " << "\t" << std::to_string(i) << ":\t";
+            for(auto & terminal : table.firstSet[i]){
+                std::cout << std::to_string(terminal) << "\t";
+            }
+            std::cout << std::endl;
+        }
+
+        std::cout << std::endl << "Writing Follow Set" << std::endl;
+
+        for(int i = START_TOKEN; i < NUM_OF_NON_TERMINALS; i++){
+            std::cout << "Follow at " << "\t" << std::to_string(i) << ":\t";
+            for(auto & terminal : table.followSet[i]){
+                std::cout << std::to_string(terminal) << "\t";
+            }
+            std::cout << std::endl;
+        }
+
+        std::cout << std::endl << "Writing First+ Set" << std::endl;
+
+        for(int i = START_TOKEN; i < NUM_OF_NON_TERMINALS; i++){
+            std::cout << "Follow at " << "\t" << std::to_string(i) << ":\t";
+            for(auto & terminal : table.followSet[i]){
+                std::cout << std::to_string(terminal) << "\t";
+            }
+            std::cout << std::endl;
+        }
+    }
+
 }

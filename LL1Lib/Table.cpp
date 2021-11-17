@@ -4,6 +4,7 @@
 
 #include "Table.h"
 #include <set>
+#include <iostream>
 
 //the functions is_number and is_name were taken and modified from:
 //https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
@@ -210,83 +211,83 @@ void Table::GenerateRules() {
     //          productNum      productLHS   productRHS
     rules.insert({0, {START_TOKEN, rhs}});
 
-    rhs = {LHS_TOKEN};
-    rules.insert({1, {LINE_TOKEN, rhs}});
+//    rhs = {LHS_TOKEN};
+//    rules.insert({1, {LINE_TOKEN, rhs}});
 
     rhs = {EXPR_TOKEN};
-    rules.insert({2, {LINE_TOKEN, rhs}});
+    rules.insert({1, {LINE_TOKEN, rhs}});
 
     rhs = {LHS_TOKEN, EQUALS_TOKEN, EXPR_TOKEN};
-    rules.insert({3, {LINE_TOKEN, rhs}});
+    rules.insert({2, {LINE_TOKEN, rhs}});
 
     rhs = {NAME_TOKEN};
-    rules.insert({4, {LHS_TOKEN, rhs}});
+    rules.insert({3, {LHS_TOKEN, rhs}});
 
     rhs = {DATA_TYPE_TOKEN , NAME_TOKEN};
-    rules.insert({5, {LHS_TOKEN, rhs}});
+    rules.insert({4, {LHS_TOKEN, rhs}});
 
     rhs = {L_TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({6, {EXPR_TOKEN, rhs}});
+    rules.insert({5, {EXPR_TOKEN, rhs}});
 
     rhs = {L_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({7, {L_TERM_TOKEN, rhs}});
+    rules.insert({6, {L_TERM_TOKEN, rhs}});
 
     rhs = {R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({8, {R_TERM_TOKEN, rhs}});
+    rules.insert({7, {R_TERM_TOKEN, rhs}});
 
     rhs = {PLUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({9, {EXPR_PRIME_TOKEN, rhs}});
+    rules.insert({8, {EXPR_PRIME_TOKEN, rhs}});
 
     rhs = {MINUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rules.insert({9, {EXPR_PRIME_TOKEN, rhs}});
+
+    rhs = {EPSILON_TOKEN};
     rules.insert({10, {EXPR_PRIME_TOKEN, rhs}});
 
-    rhs = {EPSILON_TOKEN};
-    rules.insert({11, {EXPR_PRIME_TOKEN, rhs}});
-
     rhs = {MULTIPLY_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({12, {TERM_PRIME_TOKEN, rhs}});
+    rules.insert({11, {TERM_PRIME_TOKEN, rhs}});
 
     rhs = {DIVIDE_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({13, {TERM_PRIME_TOKEN, rhs}});
+    rules.insert({12, {TERM_PRIME_TOKEN, rhs}});
 
     rhs = {EXPONENT_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({14, {TERM_PRIME_TOKEN, rhs}});
+    rules.insert({13, {TERM_PRIME_TOKEN, rhs}});
 
     rhs = {EPSILON_TOKEN};
-    rules.insert({15, {TERM_PRIME_TOKEN, rhs}});
+    rules.insert({14, {TERM_PRIME_TOKEN, rhs}});
 
     rhs = {G_FACTOR_TOKEN};
-    rules.insert({16, {L_FACTOR_TOKEN, rhs}});
+    rules.insert({15, {L_FACTOR_TOKEN, rhs}});
 
     rhs = {NEG_NUM_TOKEN};
-    rules.insert({17, {L_FACTOR_TOKEN, rhs}});
+    rules.insert({16, {L_FACTOR_TOKEN, rhs}});
 
     rhs = {NEG_NAME_TOKEN};
-    rules.insert({18, {L_FACTOR_TOKEN, rhs}});
+    rules.insert({17, {L_FACTOR_TOKEN, rhs}});
 
     rhs = {G_FACTOR_TOKEN};
-    rules.insert({19, {R_FACTOR_TOKEN, rhs}});
+    rules.insert({18, {R_FACTOR_TOKEN, rhs}});
 
     rhs = {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN};
-    rules.insert({20, {G_FACTOR_TOKEN, rhs}});
+    rules.insert({19, {G_FACTOR_TOKEN, rhs}});
 
     rhs = {POSVAL_TOKEN};
-    rules.insert({21, {G_FACTOR_TOKEN, rhs}});
+    rules.insert({20, {G_FACTOR_TOKEN, rhs}});
 
     rhs = {SPACE_NEG_VAL_TOKEN};
-    rules.insert({22, {G_FACTOR_TOKEN, rhs}});
+    rules.insert({21, {G_FACTOR_TOKEN, rhs}});
 
     rhs = {NUM_TOKEN};
-    rules.insert({23, {POSVAL_TOKEN, rhs}});
+    rules.insert({22, {POSVAL_TOKEN, rhs}});
 
     rhs = {NAME_TOKEN};
-    rules.insert({24, {POSVAL_TOKEN, rhs}});
+    rules.insert({23, {POSVAL_TOKEN, rhs}});
 
     rhs = {SPACE_NEG_NUM_TOKEN};
-    rules.insert({25, {SPACE_NEG_VAL_TOKEN, rhs}});
+    rules.insert({24, {SPACE_NEG_VAL_TOKEN, rhs}});
 
     rhs = {SPACE_NEG_NAME_TOKEN};
-    rules.insert({26, {SPACE_NEG_VAL_TOKEN, rhs}});
+    rules.insert({25, {SPACE_NEG_VAL_TOKEN, rhs}});
 }
 
 ///Generates the data for our language needed to parse expressions
@@ -373,7 +374,22 @@ void Table::BuildTable(){
                 //first plus should only have terminals in it
                 for(auto & terminal : firstPlusSet){
                     if(terminal!= EPSILON_TOKEN){
-                        RuleTable[terminal - NUM_OF_NON_TERMINALS][A] = ruleNumber;
+                        //if we have the default error token we can write to this cell of the table
+                        if(RuleTable[terminal - NUM_OF_NON_TERMINALS][A] == ERROR_TOKEN){
+                            RuleTable[terminal - NUM_OF_NON_TERMINALS][A] = ruleNumber;
+                        }
+                        //else there is a previously initialized variable which we are overwriting
+                        else{
+                            //THIS IS UNACCEPTABLE!
+                            std::string errorMessage = "Value of (" + std::to_string(terminal)
+                                    + "," + std::to_string(A) + ") is already " +
+                                    std::to_string(RuleTable[terminal - NUM_OF_NON_TERMINALS][A]) +
+                                    " but you are trying to change it to " + std::to_string(ruleNumber) + "\n";
+                            //throw std::logic_error(errorMessage);
+                            std::cout << errorMessage;
+                            RuleTable[terminal - NUM_OF_NON_TERMINALS][A] = ruleNumber;
+                        }
+
                     }
                 }
             }
