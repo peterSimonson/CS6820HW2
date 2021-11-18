@@ -4,6 +4,7 @@
 
 #include "Table.h"
 #include <set>
+#include <iostream>
 
 //the functions is_number and is_name were taken and modified from:
 //https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
@@ -364,7 +365,19 @@ void Table::BuildTable(){
                 //first plus should only have terminals in it
                 for(auto & terminal : firstPlusSet){
                     if(terminal!= EPSILON_TOKEN){
-                        RuleTable[terminal - NUM_OF_NON_TERMINALS][A] = ruleNumber;
+                        //if we have the default error token we can write to this cell of the table
+                        if(RuleTable[terminal - NUM_OF_NON_TERMINALS][A] == ERROR_TOKEN){
+                            RuleTable[terminal - NUM_OF_NON_TERMINALS][A] = ruleNumber;
+                        }
+                            //else there is a previously initialized variable which we are overwriting
+                        else{
+                            //THIS IS UNACCEPTABLE!
+                            std::string errorMessage = "Value of (" + std::to_string(terminal)
+                                                       + "," + std::to_string(A) + ") is already " +
+                                                       std::to_string(RuleTable[terminal - NUM_OF_NON_TERMINALS][A]) +
+                                                       " but you are trying to change it to " + std::to_string(ruleNumber) + "\n";
+                            throw std::logic_error(errorMessage);
+                        }
                     }
                 }
             }
