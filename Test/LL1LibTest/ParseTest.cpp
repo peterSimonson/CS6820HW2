@@ -271,4 +271,33 @@ namespace {
         //close input file
         file.close();
     }
+
+    TEST(ParseTests, LeftMidAndRightTest){
+        Table table = Table();
+
+        Parser parser = Parser("4 * 5", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("num var = 4 * 5", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("var = 4 * 5", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("var", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("num var", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("num", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("num var 4 * 5", table);
+        EXPECT_FALSE(parser.successfulParse);
+
+        parser = Parser("var 4 * 5", table);
+        EXPECT_FALSE(parser.successfulParse);
+
+    }
 }

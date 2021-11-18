@@ -217,10 +217,10 @@ void Table::GenerateRules() {
     rhs = {L_FACTOR_TOKEN, TERM_PRIME_TOKEN};
     rules.insert({2, {L_TERM_TOKEN, rhs}});
 
-    rhs = {R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({3, {R_TERM_TOKEN, rhs}});
-
     rhs = {DATA_TYPE_TOKEN};
+    rules.insert({3, {L_TERM_TOKEN, rhs}});
+
+    rhs = {R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
     rules.insert({4, {R_TERM_TOKEN, rhs}});
 
     rhs = {PLUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
