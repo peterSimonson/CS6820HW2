@@ -16,9 +16,8 @@ public:
     bool successfulParse;
     //contains the expression
     Expression expr;
-    Table table;
 
-    void SwapStack(int ruleIndex, std::vector<int> & stack);
+    void SwapStack(int ruleIndex, std::vector<int> & stack, Table table);
 };
 
 std::vector<std::string> parseWords(std::string const& line);

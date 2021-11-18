@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
     std::string expression = argv[1];
 
     //holds our table
-    Table table = Table();
+    Table table;
 
     //initialize a parser with the expression the user entered
     Parser parser = Parser(expression, table);

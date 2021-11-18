@@ -138,7 +138,7 @@ Parser::Parser(const std::string& line, Table table) {
                 return;
             }
             //perform the swap
-            SwapStack(rule, LL1Stack);
+            SwapStack(rule, LL1Stack, table);
             focus = LL1Stack.back(); //move focus to the back of the stack
         }
     }
@@ -147,7 +147,7 @@ Parser::Parser(const std::string& line, Table table) {
 /// This function implements figure 3.4 from the text book.
 /// It will swap whatever is on the back of the stack with the whatever the table wants
 /// \param ruleIndex the swap from figure 3.4 you will perform
-void Parser::SwapStack(int ruleIndex, std::vector<int> & stack) {
+void Parser::SwapStack(int ruleIndex, std::vector<int> & stack, Table table) {
     //get the SwapRule at the index
     rule SwapRule = table.rules[ruleIndex];
     //back of stack must match lhs

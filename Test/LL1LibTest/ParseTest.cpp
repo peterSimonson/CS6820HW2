@@ -276,28 +276,28 @@ namespace {
         Table table = Table();
 
         Parser parser = Parser("4 * 5", table);
-        ASSERT_TRUE(parser.successfulParse);
+        EXPECT_TRUE(parser.successfulParse);
 
         parser = Parser("num var = 4 * 5", table);
-        ASSERT_TRUE(parser.successfulParse);
+        EXPECT_TRUE(parser.successfulParse);
 
         parser = Parser("var = 4 * 5", table);
-        ASSERT_TRUE(parser.successfulParse);
+        EXPECT_TRUE(parser.successfulParse);
 
         parser = Parser("var", table);
-        ASSERT_TRUE(parser.successfulParse);
+        EXPECT_TRUE(parser.successfulParse);
 
         parser = Parser("num var", table);
-        ASSERT_TRUE(parser.successfulParse);
+        EXPECT_TRUE(parser.successfulParse);
 
         parser = Parser("num", table);
-        ASSERT_TRUE(parser.successfulParse);
+        EXPECT_TRUE(parser.successfulParse);
 
         parser = Parser("num var 4 * 5", table);
-        ASSERT_FALSE(parser.successfulParse);
+        EXPECT_FALSE(parser.successfulParse);
 
         parser = Parser("var 4 * 5", table);
-        ASSERT_FALSE(parser.successfulParse);
+        EXPECT_FALSE(parser.successfulParse);
 
     }
 }

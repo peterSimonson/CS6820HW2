@@ -12,39 +12,42 @@
 #include "Nodes.h"
 //Define the rows of the table
 #define START_TOKEN 0
-#define LINE_TOKEN 1
-#define LHS_TOKEN 2
-#define EXPR_TOKEN 3
-#define L_TERM_TOKEN 4
-#define R_TERM_TOKEN 5
-#define EXPR_PRIME_TOKEN 6
-#define TERM_PRIME_TOKEN 7
-#define L_FACTOR_TOKEN 8
-#define R_FACTOR_TOKEN 9
-#define G_FACTOR_TOKEN 10
-#define POSVAL_TOKEN 11
-#define SPACE_NEG_VAL_TOKEN 12
+#define LINE_FULL_TOKEN 1
+#define LINE_VAR_NAME 2
+#define LINE_VAR_NAME_REMAINING 3
+#define LINE_NUM_REMAINING 4
+#define EXPR_TOKEN 5
+#define L_TERM_TOKEN 6
+#define R_TERM_TOKEN 7
+#define EXPR_PRIME_TOKEN 8
+#define TERM_PRIME_TOKEN 9
+#define L_FACTOR_TOKEN 10
+#define R_FACTOR_TOKEN 11
+#define G_FACTOR_TOKEN 12
+#define POSVAL_TOKEN 13
+#define SPACE_NEG_VAL_TOKEN 14
+#define VAR_TYPE 15
 //Define Columns of our table
-#define NUM_OF_NON_TERMINALS 13
-#define END_TOKEN 13
-#define EQUALS_TOKEN 14
-#define PLUS_TOKEN 15
-#define MINUS_TOKEN 16
-#define MULTIPLY_TOKEN 17
-#define DIVIDE_TOKEN 18
-#define EXPONENT_TOKEN 19
-#define OPEN_PARAN_TOKEN 20
-#define CLOSE_PARAN_TOKEN 21
-#define NAME_TOKEN 22
-#define NUM_TOKEN 23
-#define SPACE_NEG_NAME_TOKEN 24
-#define SPACE_NEG_NUM_TOKEN 25
-#define NEG_NAME_TOKEN 26
-#define NEG_NUM_TOKEN 27
-#define DATA_TYPE_TOKEN 28
-#define EPSILON_TOKEN 29
+#define NUM_OF_NON_TERMINALS 16
+#define END_TOKEN 16
+#define EQUALS_TOKEN 17
+#define PLUS_TOKEN 18
+#define MINUS_TOKEN 19
+#define MULTIPLY_TOKEN 20
+#define DIVIDE_TOKEN 21
+#define EXPONENT_TOKEN 22
+#define OPEN_PARAN_TOKEN 23
+#define CLOSE_PARAN_TOKEN 24
+#define NAME_TOKEN 25
+#define NUM_TOKEN 26
+#define SPACE_NEG_NAME_TOKEN 27
+#define SPACE_NEG_NUM_TOKEN 28
+#define NEG_NAME_TOKEN 29
+#define NEG_NUM_TOKEN 30
+#define DATA_TYPE_TOKEN 31
+#define EPSILON_TOKEN 32
 //TODO: Change where this is used so it is the number of tokens not number of tokens - 1
-#define NUM_OF_TOKENS 29
+#define NUM_OF_TOKENS 32
 
 //other tokens
 #define ERROR_TOKEN -1
