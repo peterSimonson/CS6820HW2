@@ -206,29 +206,29 @@ void Table::GenerateFirstSet() {
 ///Generates the production rules for our language
 void Table::GenerateRules() {
     //rule 0
-    std::vector<int> rhs{ASSIGNMENT_TOKEN, EXPR_TOKEN};
+    std::vector<int> rhs{EXPR_TOKEN};
     //          productNum      productLHS   productRHS
     rules.insert({0, {START_TOKEN, rhs}});
 
-    rhs = {NAME_TOKEN, EQUALS_TOKEN};
-    rules.insert({1, {ASSIGNMENT_TOKEN, rhs}});
-
-    rhs = {DATA_TYPE_TOKEN , NAME_TOKEN, EQUALS_TOKEN};
-    rules.insert({2, {ASSIGNMENT_TOKEN, rhs}});
-
     rhs = {L_TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({3, {EXPR_TOKEN, rhs}});
+    rules.insert({1, {EXPR_TOKEN, rhs}});
 
     rhs = {L_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({4, {L_TERM_TOKEN, rhs}});
+    rules.insert({2, {L_TERM_TOKEN, rhs}});
 
     rhs = {R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({5, {R_TERM_TOKEN, rhs}});
+    rules.insert({3, {R_TERM_TOKEN, rhs}});
+
+    rhs = {DATA_TYPE_TOKEN};
+    rules.insert({4, {R_TERM_TOKEN, rhs}});
 
     rhs = {PLUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({6, {EXPR_PRIME_TOKEN, rhs}});
+    rules.insert({5, {EXPR_PRIME_TOKEN, rhs}});
 
     rhs = {MINUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
+    rules.insert({6, {EXPR_PRIME_TOKEN, rhs}});
+
+    rhs = {EQUALS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
     rules.insert({7, {EXPR_PRIME_TOKEN, rhs}});
 
     rhs = {EPSILON_TOKEN};
