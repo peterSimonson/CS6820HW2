@@ -299,5 +299,13 @@ namespace {
         parser = Parser("var 4 * 5", table);
         EXPECT_FALSE(parser.successfulParse);
 
+        parser = Parser("num = 4 * 5", table);
+        EXPECT_FALSE(parser.successfulParse);
+
+        parser = Parser("num var = num var + 4 * 5", table);
+        EXPECT_FALSE(parser.successfulParse);
+
+        parser = Parser("num var1 =  4 * (num var2) + 5", table);
+        EXPECT_FALSE(parser.successfulParse);
     }
 }
