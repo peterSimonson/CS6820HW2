@@ -217,6 +217,7 @@ void Table::GenerateRules() {
     addRule(LINE_FULL_TOKEN,         {VAR_TYPE, LINE_VAR_NAME});
     addRule(LINE_FULL_TOKEN,         {LINE_VAR_NAME});
     addRule(LINE_FULL_TOKEN,         {NUM_TOKEN, TERM_PRIME_TOKEN, EXPR_PRIME_TOKEN});
+    addRule(LINE_FULL_TOKEN,         {NEG_NUM_TOKEN, TERM_PRIME_TOKEN, EXPR_PRIME_TOKEN});
     addRule(LINE_FULL_TOKEN,         {PARENS_EXPR_TOKEN});
     //addRule(LINE_FULL_TOKEN,         {
     addRule(LINE_VAR_NAME,           {NAME_TOKEN, LINE_VAR_NAME_REMAINING});
