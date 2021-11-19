@@ -1,0 +1,219 @@
+var = a
+var = a + b
+var = b * c
+var = c - d
+var = e / f
+var = a + b * c
+var = z-y
+var = 3*4
+var = 12 / 6
+var = 12/6
+var = 5 + 4 * 3
+var = 12 + 34 * 45
+var = (4 / 5)
+var = 2 * 2 + 5 * 5
+var = 5 / 0
+var = 42
+var = (42)
+var = ((42))
+var = ( ( 42 ) )
+var = var
+var = var + another_var
+var = var1 + var2
+var = foo * bar
+var = a+b*c
+var = x-y
+var = 1234*5678
+var = one + two * three / four
+var = 100000/a_long_variable_name
+var = ((12-8)-3)
+var = (5*(8/4))
+var = (1+2) * 3
+var = ((a/b)+(c*d))
+var = a_
+var = (a_)
+var = (v_____2 + v__3__)
+var = 3.5
+var = (3.5)
+var = ((3.55))
+var = 3.14159+2.718218
+var = (((2+3)*4)+(7+(8/2)))
+var = ((((   300 + var1   ))))
+var = ( myObject1 -MyObject2) + 18
+var = (((((9+(2*(110-(30/2))))*8)+1000)/2)+(((3*3*3*3)+1)/2))
+var = - 42
+var = (-42)
+var = ( -42)
+var = - var
+var = - 1 * var / -1
+var = 2-3
+var = 2 - 3
+var = 2 - -3
+var = 2- -3
+var = - 2-3
+var = - 2- -3
+var = - 2 - -3
+var = (-2 - -3)
+var = ( -2 - -3)
+var = - 2-(-3)
+var = - 2-( -3)
+var = - 2 - (-3)
+var = - 2 - (-3 - (4))
+var = - 2 - (-3 - (4))
+var = - 2 - ( -3 -( -4))
+var = - 2-(-2-(-2-2))
+var = - 2 - (-2 - (-2 - 2))
+var = - 11-(-22 - (-33-(-44 - (-55 - (-66)))))
+var = g^h
+var = g ^ h
+var = 3^3
+var = 4 ^ 4
+var = 3^3^3
+var = 3^(3^3)
+var = 5 + 4 * 3 ^ 2
+num var = a
+num var = a + b
+num var = b * c
+num var = c - d
+num var = e / f
+num var = a + b * c
+num var = z-y
+num var = 3*4
+num var = 12 / 6
+num var = 12/6
+num var = 5 + 4 * 3
+num var = 12 + 34 * 45
+num var = (4 / 5)
+num var = 2 * 2 + 5 * 5
+num var = 5 / 0
+num var = 42
+num var = (42)
+num var = ((42))
+num var = ( ( 42 ) )
+num var = var
+num var = var + another_var
+num var = var1 + var2
+num var = foo * bar
+num var = a+b*c
+num var = x-y
+num var = 1234*5678
+num var = one + two * three / four
+num var = 100000/a_long_variable_name
+num var = ((12-8)-3)
+num var = (5*(8/4))
+num var = (1+2) * 3
+num var = ((a/b)+(c*d))
+num var = a_
+num var = (a_)
+num var = (v_____2 + v__3__)
+num var = 3.5
+num var = (3.5)
+num var = ((3.55))
+num var = 3.14159+2.718218
+num var = (((2+3)*4)+(7+(8/2)))
+num var = ((((   300 + var1   ))))
+num var = ( myObject1 -MyObject2) + 18
+num var = (((((9+(2*(110-(30/2))))*8)+1000)/2)+(((3*3*3*3)+1)/2))
+num var = - 42
+num var = (-42)
+num var = ( -42)
+num var = - var
+num var = - 1 * var / -1
+num var = 2-3
+num var = 2 - 3
+num var = 2 - -3
+num var = 2- -3
+num var = - 2-3
+num var = - 2- -3
+num var = - 2 - -3
+num var = (-2 - -3)
+num var = ( -2 - -3)
+num var = - 2-(-3)
+num var = - 2-( -3)
+num var = - 2 - (-3)
+num var = - 2 - (-3 - (4))
+num var = - 2 - (-3 - (4))
+num var = - 2 - ( -3 -( -4))
+num var = - 2-(-2-(-2-2))
+num var = - 2 - (-2 - (-2 - 2))
+num var = - 11-(-22 - (-33-(-44 - (-55 - (-66)))))
+num var = g^h
+num var = g ^ h
+num var = 3^3
+num var = 4 ^ 4
+num var = 3^3^3
+num var = 3^(3^3)
+num var = 5 + 4 * 3 ^ 2
+a
+a + b
+b * c
+c - d
+e / f
+a + b * c
+z-y
+3*4
+12 / 6
+12/6
+5 + 4 * 3
+12 + 34 * 45
+(4 / 5)
+2 * 2 + 5 * 5
+5 / 0
+42
+(42)
+((42))
+( ( 42 ) )
+var
+var + another_var
+var1 + var2
+foo * bar
+a+b*c
+x-y
+1234*5678
+one + two * three / four
+100000/a_long_variable_name
+((12-8)-3)
+(5*(8/4))
+(1+2) * 3
+((a/b)+(c*d))
+a_
+(a_)
+(v_____2 + v__3__)
+3.5
+(3.5)
+((3.55))
+3.14159+2.718218
+(((2+3)*4)+(7+(8/2)))
+((((   300 + var1   ))))
+( myObject1 -MyObject2) + 18
+(((((9+(2*(110-(30/2))))*8)+1000)/2)+(((3*3*3*3)+1)/2))
+- 42
+(-42)
+( -42)
+- var
+- 1 * var / -1
+2-3
+2 - 3
+2 - -3
+2- -3
+- 2-3
+- 2- -3
+- 2 - -3
+(-2 - -3)
+( -2 - -3)
+- 2-(-3)
+- 2-( -3)
+- 2 - (-3)
+- 2 - (-3 - (4))
+- 2 - (-3 - (4))
+- 2 - ( -3 -( -4))
+- 2-(-2-(-2-2))
+- 2 - (-2 - (-2 - 2))
+- 11-(-22 - (-33-(-44 - (-55 - (-66)))))
+g^h
+g ^ h
+3^3
+4 ^ 4
+3^3^3
+3^(3^3)
+5 + 4 * 3 ^ 2

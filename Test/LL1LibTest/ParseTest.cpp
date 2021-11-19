@@ -245,7 +245,7 @@ namespace {
         while (std::getline(file, line)){
             Parser parse = Parser(line, table);
             //each one of these parses should fail
-            ASSERT_FALSE(parse.successfulParse);
+            EXPECT_FALSE(parse.successfulParse);
         }
 
         //close input file
@@ -265,7 +265,7 @@ namespace {
         while (std::getline(file, line)){
             Parser parse = Parser(line, table);
             //each one of these parses should fail
-            ASSERT_TRUE(parse.successfulParse);
+            EXPECT_TRUE(parse.successfulParse);
         }
 
         //close input file
@@ -291,7 +291,7 @@ namespace {
         EXPECT_TRUE(parser.successfulParse);
 
         parser = Parser("num", table);
-        EXPECT_TRUE(parser.successfulParse);
+        EXPECT_FALSE(parser.successfulParse);
 
         parser = Parser("num var 4 * 5", table);
         EXPECT_FALSE(parser.successfulParse);
@@ -299,5 +299,13 @@ namespace {
         parser = Parser("var 4 * 5", table);
         EXPECT_FALSE(parser.successfulParse);
 
+        parser = Parser("num = 4 * 5", table);
+        EXPECT_FALSE(parser.successfulParse);
+
+        parser = Parser("num var = num var + 4 * 5", table);
+        EXPECT_FALSE(parser.successfulParse);
+
+        parser = Parser("num var1 =  4 * (num var2) + 5", table);
+        EXPECT_FALSE(parser.successfulParse);
     }
 }

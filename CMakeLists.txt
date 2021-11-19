@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(${TARGET_NAME} main.cpp)
 
 add_subdirectory(${LL1_Lib_Name}) #Contains our library
-#add_subdirectory(Test)
+add_subdirectory(Test)
 
 #linke the libraries
 target_link_libraries(${TARGET_NAME} ${LL1_Lib_Name})
