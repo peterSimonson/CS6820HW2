@@ -217,6 +217,8 @@ void Table::GenerateRules() {
     addRule(LINE_FULL_TOKEN,         {VAR_TYPE, LINE_VAR_NAME});
     addRule(LINE_FULL_TOKEN,         {LINE_VAR_NAME});
     addRule(LINE_FULL_TOKEN,         {NUM_TOKEN, TERM_PRIME_TOKEN, EXPR_PRIME_TOKEN});
+    addRule(LINE_FULL_TOKEN,         {PARENS_EXPR_TOKEN});
+    //addRule(LINE_FULL_TOKEN,         {
     addRule(LINE_VAR_NAME,           {NAME_TOKEN, LINE_VAR_NAME_REMAINING});
     addRule(LINE_VAR_NAME_REMAINING, {EQUALS_TOKEN, EXPR_TOKEN});
     addRule(LINE_VAR_NAME_REMAINING, {MULTIPLY_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN, EXPR_PRIME_TOKEN});
@@ -225,63 +227,26 @@ void Table::GenerateRules() {
     addRule(VAR_TYPE,                {DATA_TYPE_TOKEN});
     addRule(EXPR_TOKEN,              {L_TERM_TOKEN, EXPR_PRIME_TOKEN});
     addRule(L_TERM_TOKEN,            {L_FACTOR_TOKEN, TERM_PRIME_TOKEN});
-
-    rhs = {R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({15, {R_TERM_TOKEN, rhs}});
-
-    rhs = {PLUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({16, {EXPR_PRIME_TOKEN, rhs}});
-
-    rhs = {MINUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({17, {EXPR_PRIME_TOKEN, rhs}});
-
-    rhs = {EPSILON_TOKEN};
-    rules.insert({18, {EXPR_PRIME_TOKEN, rhs}});
-
-    rhs = {MULTIPLY_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({19, {TERM_PRIME_TOKEN, rhs}});
-
-    rhs = {DIVIDE_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({20, {TERM_PRIME_TOKEN, rhs}});
-
-    rhs = {EXPONENT_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({21, {TERM_PRIME_TOKEN, rhs}});
-
-    rhs = {EPSILON_TOKEN};
-    rules.insert({22, {TERM_PRIME_TOKEN, rhs}});
-
-    rhs = {G_FACTOR_TOKEN};
-    rules.insert({23, {L_FACTOR_TOKEN, rhs}});
-
-    rhs = {NEG_NUM_TOKEN};
-    rules.insert({24, {L_FACTOR_TOKEN, rhs}});
-
-    rhs = {NEG_NAME_TOKEN};
-    rules.insert({25, {L_FACTOR_TOKEN, rhs}});
-
-    rhs = {G_FACTOR_TOKEN};
-    rules.insert({26, {R_FACTOR_TOKEN, rhs}});
-
-    rhs = {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN};
-    rules.insert({27, {G_FACTOR_TOKEN, rhs}});
-
-    rhs = {POSVAL_TOKEN};
-    rules.insert({28, {G_FACTOR_TOKEN, rhs}});
-
-    rhs = {SPACE_NEG_VAL_TOKEN};
-    rules.insert({29, {G_FACTOR_TOKEN, rhs}});
-
-    rhs = {NUM_TOKEN};
-    rules.insert({30, {POSVAL_TOKEN, rhs}});
-
-    rhs = {NAME_TOKEN};
-    rules.insert({31, {POSVAL_TOKEN, rhs}});
-
-    rhs = {SPACE_NEG_NUM_TOKEN};
-    rules.insert({32, {SPACE_NEG_VAL_TOKEN, rhs}});
-
-    rhs = {SPACE_NEG_NAME_TOKEN};
-    rules.insert({33, {SPACE_NEG_VAL_TOKEN, rhs}});
+    addRule(R_TERM_TOKEN,            {R_FACTOR_TOKEN, TERM_PRIME_TOKEN});
+    addRule(EXPR_PRIME_TOKEN,        {PLUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN}); 
+    addRule(EXPR_PRIME_TOKEN,        {MINUS_TOKEN, R_TERM_TOKEN, EXPR_PRIME_TOKEN});
+    addRule(EXPR_PRIME_TOKEN,        {EPSILON_TOKEN});
+    addRule(TERM_PRIME_TOKEN,        {MULTIPLY_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN});    
+    addRule(TERM_PRIME_TOKEN,        {DIVIDE_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN});    
+    addRule(TERM_PRIME_TOKEN,        {EXPONENT_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN});    
+    addRule(TERM_PRIME_TOKEN,        {EPSILON_TOKEN});
+    addRule(L_FACTOR_TOKEN,          {G_FACTOR_TOKEN});
+    addRule(L_FACTOR_TOKEN,          {NEG_NUM_TOKEN});
+    addRule(L_FACTOR_TOKEN,          {NEG_NAME_TOKEN});
+    addRule(R_FACTOR_TOKEN,          {G_FACTOR_TOKEN});
+    addRule(G_FACTOR_TOKEN,          {PARENS_EXPR_TOKEN});
+    addRule(G_FACTOR_TOKEN,          {POSVAL_TOKEN});
+    addRule(G_FACTOR_TOKEN,          {SPACE_NEG_VAL_TOKEN});
+    addRule(PARENS_EXPR_TOKEN,       {OPEN_PARAN_TOKEN, EXPR_TOKEN, CLOSE_PARAN_TOKEN});
+    addRule(POSVAL_TOKEN,            {NUM_TOKEN});
+    addRule(POSVAL_TOKEN,            {NAME_TOKEN});
+    addRule(SPACE_NEG_VAL_TOKEN,     {SPACE_NEG_NUM_TOKEN});    
+    addRule(SPACE_NEG_VAL_TOKEN,     {SPACE_NEG_NAME_TOKEN});    
 }
 
 ///Generates the data for our language needed to parse expressions
