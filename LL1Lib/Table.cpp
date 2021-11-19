@@ -4,6 +4,7 @@
 
 #include "Table.h"
 #include <set>
+#include <algorithm>
 #include <iostream>
 
 //the functions is_number and is_name were taken and modified from:
@@ -204,54 +205,30 @@ void Table::GenerateFirstSet() {
     }
 }
 
+void Table::addRule(int lhs, std::vector<int>&& rhs){
+    
+    rules.insert({rules.size(), {lhs, rhs}}); 
+}
 ///Generates the production rules for our language
 void Table::GenerateRules() {
     //rule 0
-    std::vector<int> rhs{LINE_FULL_TOKEN};
-    //          productNum      productLHS   productRHS
-    rules.insert({0, {START_TOKEN, rhs}});
+    std::vector<int> rhs;
+    
+    addRule(START_TOKEN,             {LINE_FULL_TOKEN});
+    addRule(LINE_FULL_TOKEN,         {VAR_TYPE, LINE_VAR_NAME});
+    addRule(LINE_FULL_TOKEN,         {LINE_VAR_NAME});
+    addRule(LINE_FULL_TOKEN,         {NUM_TOKEN, TERM_PRIME_TOKEN, EXPR_PRIME_TOKEN});
+    //addRule(LINE_FULL_TOKEN,         {NUM_TOKEN, LINE_NUM_REMAINING, TERM_PRIME_TOKEN});
+    //addRule(LINE_FULL_TOKEN,         {NUM_TOKEN, LINE_NUM_REMAINING, EPSILON_TOKEN});
+    addRule(LINE_VAR_NAME,           {NAME_TOKEN, LINE_VAR_NAME_REMAINING});
+    addRule(LINE_VAR_NAME_REMAINING, {EQUALS_TOKEN, EXPR_TOKEN});
+    addRule(LINE_VAR_NAME_REMAINING, {TERM_PRIME_TOKEN, EXPR_PRIME_TOKEN});
+    
+    addRule(VAR_TYPE,                {DATA_TYPE_TOKEN});
+    //addRule(VAR_TYPE,                {EPSILON_TOKEN});
 
-    rhs = {VAR_TYPE, LINE_VAR_NAME};
-    rules.insert({1, {LINE_FULL_TOKEN, rhs}});
-
-    rhs = {NUM_TOKEN, LINE_NUM_REMAINING};
-    rules.insert({2, {LINE_FULL_TOKEN, rhs}});
-
-    rhs = {NAME_TOKEN, LINE_VAR_NAME_REMAINING};
-    rules.insert({3, {LINE_VAR_NAME, rhs}});
-
-    rhs = {EQUALS_TOKEN, EXPR_TOKEN};
-    rules.insert({4, {LINE_VAR_NAME_REMAINING, rhs}});
-
-    rhs = {EXPR_PRIME_TOKEN};
-    rules.insert({5, {LINE_VAR_NAME_REMAINING, rhs}});
-
-    rhs = {TERM_PRIME_TOKEN};
-    rules.insert({6, {LINE_VAR_NAME_REMAINING, rhs}});
-
-    rhs = {EPSILON_TOKEN};
-    rules.insert({7, {LINE_VAR_NAME_REMAINING, rhs}});
-
-    rhs = {EXPR_PRIME_TOKEN};
-    rules.insert({8, {LINE_NUM_REMAINING, rhs}});
-
-    rhs = {TERM_PRIME_TOKEN};
-    rules.insert({9, {LINE_NUM_REMAINING, rhs}});
-
-    rhs = {EPSILON_TOKEN};
-    rules.insert({10, {LINE_NUM_REMAINING, rhs}});
-
-    rhs = {DATA_TYPE_TOKEN};
-    rules.insert({11, {VAR_TYPE, rhs}});
-
-    rhs = {EPSILON_TOKEN};
-    rules.insert({12, {VAR_TYPE, rhs}});
-
-    rhs = {L_TERM_TOKEN, EXPR_PRIME_TOKEN};
-    rules.insert({13, {EXPR_TOKEN, rhs}});
-
-    rhs = {L_FACTOR_TOKEN, TERM_PRIME_TOKEN};
-    rules.insert({14, {L_TERM_TOKEN, rhs}});
+    addRule(EXPR_TOKEN,              {L_TERM_TOKEN, EXPR_PRIME_TOKEN});
+    addRule(L_TERM_TOKEN,            {L_FACTOR_TOKEN, TERM_PRIME_TOKEN});
 
     rhs = {R_FACTOR_TOKEN, TERM_PRIME_TOKEN};
     rules.insert({15, {R_TERM_TOKEN, rhs}});

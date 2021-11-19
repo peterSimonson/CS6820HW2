@@ -3,6 +3,7 @@
 //
 
 #include <cmath>
+#include <stdexcept>
 #include "Nodes.h"
 
 double IntegerNode::EvaluateNode() {

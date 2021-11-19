@@ -1,0 +1,9 @@
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/bpeterson/6820/CS6820HW2/cmake-build-debug
+Scanning dependencies of target LL1Lib
+[ 14%] Building CXX object LL1Lib/CMakeFiles/LL1Lib.dir/Table.cpp.o
+[ 28%] Linking CXX static library libLL1Lib.a
+[ 71%] Built target LL1Lib
+[ 85%] Linking CXX executable CS6820HW2
+[100%] Built target CS6820HW2
