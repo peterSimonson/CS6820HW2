@@ -5,6 +5,7 @@
 #include <stack>
 #include "Expression.h"
 #include "Nodes.h"
+#include <iostream>
 
 /// function to find the precedence level of an operator. Taken from: https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
 /// \param operation check the precedence of the operator
@@ -159,12 +160,17 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
     for(str = words.begin(); str != words.end(); str++){
         std::string word = *str;
         //check what type of token this is
+
+        std::cout << "Processing --->" << word << "<---" << std::endl;
         if(is_number(word)){
             tokens.push_back(NUM_TOKEN);
             text.push_back(word);
         }
         else if(is_data_type(word, dataTypes)){
             tokens.push_back(DATA_TYPE_TOKEN);
+            text.push_back(word);
+        } else if(word == "procedure") {
+            tokens.push_back(PROCEDURE_TOKEN);
             text.push_back(word);
         }
         else if(is_name(word)){
@@ -248,13 +254,25 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
         else if(word == "="){
             tokens.push_back(EQUALS_TOKEN);
             text.push_back(word);
-        }
+        } 
         else if(word == "("){
             tokens.push_back(OPEN_PARAN_TOKEN);
             text.push_back(word);
         }
         else if(word == ")"){
             tokens.push_back(CLOSE_PARAN_TOKEN);
+            text.push_back(word);
+        }
+        else if(word == "{"){
+            tokens.push_back(OPEN_CURLY_TOKEN);
+            text.push_back(word);
+        }
+        else if(word == "}"){
+            tokens.push_back(CLOSE_CURLY_TOKEN);
+            text.push_back(word);
+        }
+        else if(word == ","){
+            tokens.push_back(COMMA_TOKEN);
             text.push_back(word);
         }
             //if we could not find a match than push an error token
