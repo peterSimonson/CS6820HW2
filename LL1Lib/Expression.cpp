@@ -242,7 +242,7 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             text.push_back(word);
         }
         else if(word == "^"){
-            tokens.push_back(EXPONENT_TOKEN);
+            tokens.push_back(POWER_TOKEN);
             text.push_back(word);
         }
         else if(word == "="){
