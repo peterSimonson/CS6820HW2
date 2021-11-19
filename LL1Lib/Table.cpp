@@ -213,20 +213,16 @@ void Table::addRule(int lhs, std::vector<int>&& rhs){
 void Table::GenerateRules() {
     //rule 0
     std::vector<int> rhs;
-    
     addRule(START_TOKEN,             {LINE_FULL_TOKEN});
     addRule(LINE_FULL_TOKEN,         {VAR_TYPE, LINE_VAR_NAME});
     addRule(LINE_FULL_TOKEN,         {LINE_VAR_NAME});
     addRule(LINE_FULL_TOKEN,         {NUM_TOKEN, TERM_PRIME_TOKEN, EXPR_PRIME_TOKEN});
-    //addRule(LINE_FULL_TOKEN,         {NUM_TOKEN, LINE_NUM_REMAINING, TERM_PRIME_TOKEN});
-    //addRule(LINE_FULL_TOKEN,         {NUM_TOKEN, LINE_NUM_REMAINING, EPSILON_TOKEN});
     addRule(LINE_VAR_NAME,           {NAME_TOKEN, LINE_VAR_NAME_REMAINING});
     addRule(LINE_VAR_NAME_REMAINING, {EQUALS_TOKEN, EXPR_TOKEN});
-    addRule(LINE_VAR_NAME_REMAINING, {TERM_PRIME_TOKEN, EXPR_PRIME_TOKEN});
-    
+    addRule(LINE_VAR_NAME_REMAINING, {MULTIPLY_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN, EXPR_PRIME_TOKEN});
+    addRule(LINE_VAR_NAME_REMAINING, {DIVIDE_TOKEN, R_FACTOR_TOKEN, TERM_PRIME_TOKEN, EXPR_PRIME_TOKEN});
+    addRule(LINE_VAR_NAME_REMAINING, {EXPR_PRIME_TOKEN});
     addRule(VAR_TYPE,                {DATA_TYPE_TOKEN});
-    //addRule(VAR_TYPE,                {EPSILON_TOKEN});
-
     addRule(EXPR_TOKEN,              {L_TERM_TOKEN, EXPR_PRIME_TOKEN});
     addRule(L_TERM_TOKEN,            {L_FACTOR_TOKEN, TERM_PRIME_TOKEN});
 
