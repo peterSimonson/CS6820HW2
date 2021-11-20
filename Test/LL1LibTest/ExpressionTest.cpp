@@ -22,7 +22,7 @@ namespace{
 
         words = {"(" ,"peter", "^", "12", ")", "/", "2"};
         expr =  TranslateWordsToTokens(words, dataTypes);
-        results = {OPEN_PARAN_TOKEN, NAME_TOKEN, EXPONENT_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
+        results = {OPEN_PARAN_TOKEN, NAME_TOKEN, POWER_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.infix, words);
 

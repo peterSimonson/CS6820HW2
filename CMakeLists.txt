@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 
 set(TARGET_NAME CS6820HW2 CACHE INTERNAL "")      # program name
 set(LL1_Lib_Name LL1Lib CACHE INTERNAL "") # set the name of the parser library
