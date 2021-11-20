@@ -18,8 +18,9 @@ IntegerNode::IntegerNode(int valueOfNode) {
     value = valueOfNode;
 }
 
-VariableNode::VariableNode(TreeNode * valueOfVar, std::string const& nameOfVar){
+VariableNode::VariableNode(TreeNode *valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) {
     variableName = nameOfVar;
+    variableType = typeOfVar;
     valueOfVariable = valueOfVar;
 }
 
@@ -28,7 +29,17 @@ std::string VariableNode::NodeToString() {
 }
 
 double VariableNode::EvaluateNode() {
-    return valueOfVariable->EvaluateNode();
+    if(valueOfVariable != nullptr){
+        return valueOfVariable->EvaluateNode();
+    }
+    else{
+        throw std::runtime_error("Error: Attempted to evaluate unassigned variable\n");
+    }
+
+}
+
+void VariableNode::AssignValue(TreeNode *valueOfVar) {
+    valueOfVariable = valueOfVar;
 }
 
 OperationNode::OperationNode(TreeNode *leftNode, TreeNode *rightNode) {

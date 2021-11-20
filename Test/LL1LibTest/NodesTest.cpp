@@ -22,16 +22,22 @@ namespace {
 
     TEST(NodeTests, VariableNodeTests){
         DecimalNode a = DecimalNode(8.5);
-        VariableNode var = VariableNode(&a, "Test");
+        VariableNode var = VariableNode(&a, "Test", "ish");
 
         ASSERT_EQ(var.EvaluateNode(), 8.5);
+        ASSERT_EQ(var.NodeToString(), "Test");
+
+        DecimalNode b = DecimalNode(10.5);
+        var.AssignValue(&b);
+
+        ASSERT_EQ(var.EvaluateNode(), 10.5);
         ASSERT_EQ(var.NodeToString(), "Test");
     }
 
     TEST(NodeTests, AddNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(&a, "Test");
+        VariableNode var = VariableNode(&a, "Test", "num");
 
         AddNode node1 = AddNode(&a, &var);
         AddNode node2 = AddNode(&var, &a);
@@ -54,7 +60,7 @@ namespace {
     TEST(NodeTest, SubtractNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(&a, "Test");
+        VariableNode var = VariableNode(&a, "Test", "num");
 
         SubtractNode node1 = SubtractNode(&a, &var);
         SubtractNode node2 = SubtractNode(&var, &a);
@@ -77,7 +83,7 @@ namespace {
     TEST(NodeTest, DivideNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(&a, "Test");
+        VariableNode var = VariableNode(&a, "Test", "num");
 
         DivideNode node1 = DivideNode(&a, &var);
         DivideNode node2 = DivideNode(&var, &a);
@@ -112,10 +118,27 @@ namespace {
         }
     }
 
+    TEST(NodeTest, UnassignedVariableTest){
+        VariableNode variable = VariableNode(nullptr, "test", "ish");
+
+        //try to evaluate an unassigned node
+        try {
+            variable.EvaluateNode();
+
+            FAIL() << "Expected runtime error when evaluating an unassigned node";
+        }
+        catch(std::runtime_error const & err) {
+            EXPECT_EQ(err.what(),std::string("Error: Attempted to evaluate unassigned variable\n"));
+        }
+        catch(...) {
+            FAIL() << "Expected runtime error but got a different kind of error";
+        }
+    }
+
     TEST(NodeTest, MultiplyNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(&a, "Test");
+        VariableNode var = VariableNode(&a, "Test", "num");
 
         MultiplyNode node1 = MultiplyNode(&a, &var);
         MultiplyNode node2 = MultiplyNode(&var, &a);
@@ -138,7 +161,7 @@ namespace {
     TEST(NodeTest, NegateNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(&a, "Test");
+        VariableNode var = VariableNode(&a, "Test", "num");
 
         NegateNode negIntNode = NegateNode((int)a.EvaluateNode());
         NegateNode negVarNode = NegateNode((int)var.EvaluateNode());
@@ -150,7 +173,7 @@ namespace {
     TEST(NodeTest, ExponentNodeTest){
         //these will be the left and right nodes for our add nodes
         IntegerNode a = IntegerNode(8);
-        VariableNode var = VariableNode(&a, "Test");
+        VariableNode var = VariableNode(&a, "Test", "num");
 
         auto node1 = ExponentNode(&a, &var);
         auto node2 = ExponentNode(&var, &a);

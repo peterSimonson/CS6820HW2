@@ -181,12 +181,12 @@ namespace {
         Table table = Table();
 
         IntegerNode eight = IntegerNode(8);
-        VariableNode var1 = VariableNode(&eight, "var1");
+        VariableNode var1 = VariableNode(&eight, "var1", "num");
 
         ASSERT_TRUE(table.AddVariable(var1));
         ASSERT_FALSE(table.AddVariable(var1));
 
-        VariableNode var2 = VariableNode(&eight, "var2");
+        VariableNode var2 = VariableNode(&eight, "var2", "num");
 
         ASSERT_TRUE(table.AddVariable(var2));
         ASSERT_FALSE(table.AddVariable(var2));
@@ -198,7 +198,7 @@ namespace {
         ASSERT_EQ(table.GetVariable(varName), nullptr);
 
         IntegerNode eight = IntegerNode(8);
-        VariableNode var1 = VariableNode(&eight, varName);
+        VariableNode var1 = VariableNode(&eight, varName, "num");
 
         table.AddVariable(var1);
 

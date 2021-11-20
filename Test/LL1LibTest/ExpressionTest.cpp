@@ -12,37 +12,37 @@ namespace{
         auto expr =  TranslateWordsToTokens(words, dataTypes);
         std::vector<int> results{OPEN_PAREN_TOKEN, NAME_TOKEN, PLUS_TOKEN, NUM_TOKEN, CLOSE_PAREN_TOKEN, MULTIPLY_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
-        ASSERT_EQ(expr.infix, words);
+        ASSERT_EQ(expr.words, words);
 
         words = {"(" ,"peter", "-", "12", ")", "/", "2"};
         expr =  TranslateWordsToTokens(words, dataTypes);
         results = {OPEN_PAREN_TOKEN, NAME_TOKEN, MINUS_TOKEN, NUM_TOKEN, CLOSE_PAREN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
-        ASSERT_EQ(expr.infix, words);
+        ASSERT_EQ(expr.words, words);
 
         words = {"(" ,"peter", "^", "12", ")", "/", "2"};
         expr =  TranslateWordsToTokens(words, dataTypes);
         results = {OPEN_PAREN_TOKEN, NAME_TOKEN, POWER_TOKEN, NUM_TOKEN, CLOSE_PAREN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
-        ASSERT_EQ(expr.infix, words);
+        ASSERT_EQ(expr.words, words);
 
         words = {"ish", "peter", "=", "2",  "+", "2"};
         expr =  TranslateWordsToTokens(words, dataTypes);
         results = {DATA_TYPE_TOKEN, NAME_TOKEN, EQUALS_TOKEN, NUM_TOKEN, PLUS_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
-        ASSERT_EQ(expr.infix, words);
+        ASSERT_EQ(expr.words, words);
 
         words = {"num", "peter", "=", "2",  "+", "2"};
         expr =  TranslateWordsToTokens(words, dataTypes);
         results = {DATA_TYPE_TOKEN, NAME_TOKEN, EQUALS_TOKEN, NUM_TOKEN, PLUS_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
-        ASSERT_EQ(expr.infix, words);
+        ASSERT_EQ(expr.words, words);
 
         words = {"num", "num3", "=", "2",  "+", "2"};
         expr =  TranslateWordsToTokens(words, dataTypes);
         results = {DATA_TYPE_TOKEN, NAME_TOKEN, EQUALS_TOKEN, NUM_TOKEN, PLUS_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
-        ASSERT_EQ(expr.infix, words);
+        ASSERT_EQ(expr.words, words);
 
         words = { "num", "result6", "=", "add", "(", "a", ",", "b", ")", " -mult", "(", "a", ",", "b", ")" };
         expr =  TranslateWordsToTokens(words, dataTypes);
@@ -51,7 +51,7 @@ namespace{
                    NAME_TOKEN, CLOSE_PAREN_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         words = { "num", "result6", "=", "add", "(", "a", ",", "b", ")", "-", "mult", "(", "a", ",", "b", ")" };
-        ASSERT_EQ(expr.infix, words);
+        ASSERT_EQ(expr.words, words);
     }
 
     TEST(ExpressionTests, TranslateNegativeTest){
@@ -62,21 +62,21 @@ namespace{
         std::vector<int> results{NEG_NUM_TOKEN, MINUS_TOKEN ,SPACE_NEG_NUM_TOKEN, MINUS_TOKEN, NEG_NAME_TOKEN, MINUS_TOKEN ,SPACE_NEG_NAME_TOKEN, END_TOKEN};
         std::vector<std::string> text{"-", "32", "-", "-", "32", "-", "-", "testVar", "-", "-", "testVar"};
         ASSERT_EQ(expr.tokens, results);
-        ASSERT_EQ(expr.infix, text);
+        ASSERT_EQ(expr.words, text);
 
         words = {"-32", " -32"};
         expr =  TranslateWordsToTokens(words, dataTypes);
         results = {NEG_NUM_TOKEN, MINUS_TOKEN, NUM_TOKEN, END_TOKEN};
         text = {"-", "32", "-", "32"};
         ASSERT_EQ(expr.tokens, results);
-        ASSERT_EQ(expr.infix, text);
+        ASSERT_EQ(expr.words, text);
 
         words = {"-test1", " -test2"};
         expr =  TranslateWordsToTokens(words, dataTypes);
         text = {"-", "test1", "-", "test2"};
         results = {NEG_NAME_TOKEN, MINUS_TOKEN, NAME_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
-        ASSERT_EQ(expr.infix, text);
+        ASSERT_EQ(expr.words, text);
     }
 
     TEST(ExpressionTests, ConvertToPostFixTest){
@@ -120,49 +120,56 @@ namespace{
         //1+2 in postfix Form
         std::vector<std::string> postFixExpr = {"1", "2", "+"};
 
-        int actual = (int) evaluatePostFixExpression(postFixExpr);
+        TreeNode * node = evaluatePostFix(postFixExpr);
+        int actual = (int) node->EvaluateNode();
         int expected = 1+2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2", "2", "-"};
 
-        actual = (int) evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = (int) node->EvaluateNode();
         expected = 2-2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2", "2", "*"};
 
-        actual = (int) evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = (int) node->EvaluateNode();
         expected = 2*2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2", "2", "/"};
 
-        actual = (int) evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = (int) node->EvaluateNode();
         expected = 2/2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2", "3", "^"};
 
-        actual = (int) evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = (int) node->EvaluateNode();
         expected = 2 * 2 * 2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"1", "3", "+", "4", "5", "+", "*"};
 
-        actual = (int) evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = (int) node->EvaluateNode();
         expected = (1 + 3) * (4 + 5);
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"1", "3", "*", "4", "5", "*", "+"};
 
-        actual = (int) evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = (int) node->EvaluateNode();
         expected = 1 * 3 + 4 * 5;
 
         ASSERT_EQ(actual, expected);
@@ -173,49 +180,56 @@ namespace{
         //1+2 in postfix Form
         std::vector<std::string> postFixExpr = {"1.5", "2", "+"};
 
-        double actual = evaluatePostFixExpression(postFixExpr);
+        TreeNode * node = evaluatePostFix(postFixExpr);
+        double actual = node->EvaluateNode();
         double expected = 1.5+2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2.5", "2", "-"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = node->EvaluateNode();
         expected = 2.5-2;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2", "2.75", "*"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = node->EvaluateNode();
         expected = 2*2.75;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2", "2.75", "/"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = node->EvaluateNode();
         expected = 2/2.75;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"2.5", "3", "^"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = node->EvaluateNode();
         expected = 2.5 * 2.5 * 2.5;
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"1", "3.6", "+", "4", "5.7", "+", "*"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = node->EvaluateNode();
         expected = (1 + 3.6) * (4 + 5.7);
 
         ASSERT_EQ(actual, expected);
 
         postFixExpr = {"1.8", "3", "*", "4.7", "5", "*", "+"};
 
-        actual = evaluatePostFixExpression(postFixExpr);
+        node = evaluatePostFix(postFixExpr);
+        actual = node->EvaluateNode();
         expected = 1.8 * 3 + 4.7 * 5;
 
         ASSERT_EQ(actual, expected);

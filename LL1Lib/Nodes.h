@@ -49,9 +49,11 @@ public:
 class VariableNode : public TreeNode{
 public:
     std::string variableName;
+    std::string variableType;
     TreeNode * valueOfVariable;
 
-    explicit VariableNode(TreeNode * valueOfVar, std::string const& nameOfVar);
+    explicit VariableNode(TreeNode *valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar);
+    void AssignValue(TreeNode *valueOfVar);
     double EvaluateNode() override;
     std::string NodeToString() override;
 };

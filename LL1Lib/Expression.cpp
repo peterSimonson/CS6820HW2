@@ -3,8 +3,10 @@
 //
 
 #include <stack>
+#include <algorithm>
 #include "Expression.h"
 #include "Nodes.h"
+#include <stdexcept>
 
 /// function to find the precedence level of an operator. Taken from: https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
 /// \param operation check the precedence of the operator
@@ -76,10 +78,10 @@ std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& in
     return postFixExpression;
 }
 
-/// Evalutates a postfix expression
+/// Evaluates a postfix expression
 /// \param postFixExpression the post-fix expression you wish to evaluate
 /// \return the value of the post-fix expression
-double evaluatePostFixExpression(const std::vector<std::string>& postFixExpression) {
+TreeNode * evaluatePostFix(const std::vector<std::string>& postFixExpression) {
 
     //holds the stack needed to evaluate
     std::stack<TreeNode*> stack;
@@ -132,16 +134,8 @@ double evaluatePostFixExpression(const std::vector<std::string>& postFixExpressi
             //else if it is a function call
         }
     }
-    //save the result before we deallocate memory
-    double result = stack.top()->EvaluateNode();
-
-    //At this point there should only be one entry on the tree, but I am looping to make sure there is no leak
-    while(!stack.empty()){
-        delete stack.top();
-        stack.pop();
-    }
     //return the result of the evaluation
-    return result;
+    return stack.top();
 }
 
 /// Takes the parsed words and translates them into a collection of tokens that the LL1 parser understands
@@ -189,7 +183,7 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             text.emplace_back("-");
             text.push_back(word.substr(2, word.size()));
         }
-            //if the first char is a space check if everything else is a name
+        //if the first char is a space check if everything else is a name
         else if(word.at(0) == ' ' && is_Neg_Name(word.substr(1, word.size()))){
             //if the last token is a value token we have a subtraction operation
             if(!tokens.empty() && is_Value_Token(tokens.back())){
@@ -286,3 +280,54 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
     return {tokens, text};
 }
 
+void Expression::EvaluateExpression(Table table) {
+
+    //are we declaring a new variable
+    if(tokens.front() == DATA_TYPE_TOKEN){
+        DeclareNewVariable(table);
+    }
+    //look for a equals sign
+    auto it = std::find(tokens.begin(), tokens.end(), EQUALS_TOKEN);
+    //if we have an equals sign we are performing an assignment operation
+    if( it != tokens.end()){
+        int indexOfEqualsSign = (int)(it - tokens.begin());
+        PerformAssignmentOperation(table, indexOfEqualsSign);
+    }
+}
+
+void Expression::PerformAssignmentOperation(Table table, int indexOfEquals) {
+    std::string variableName;
+    VariableNode * variable;
+
+    //the variable name is the first word
+    variableName = words[0];
+    //look up the variable name
+    variable = table.GetVariable(variableName);
+    //check if we were able to look up the variable
+    if(variable == nullptr){
+        //if it is not previously declared throw an error
+        throw std::logic_error(variableName + " is an undeclared or out of scope variable being assigned to\n");
+    }
+    //get words after the equals sign. This is our infix expression
+    std::vector<std::string> infix(words.begin() + (indexOfEquals + 1), words.end());
+    //convert infix to postfix
+    std::vector<std::string> postfix  = convertTextToPostFix(infix);
+    //evaluate the expression in postfix form
+    TreeNode * valueOfVariable = evaluatePostFix(postfix);
+    //assign the evaluated value to the variable
+    variable->AssignValue(valueOfVariable);
+}
+
+void Expression::DeclareNewVariable(Table table) {
+    std::string variableName;
+    //variable type is the first word
+    std::string variableType = words[0];
+    //the variable name is the second word
+    variableName = words[1];
+    //create the unassigned variable
+    VariableNode variable = VariableNode(nullptr, variableName, variableType);
+
+    if(!table.AddVariable(variable)){
+        throw std::logic_error(variableName + " is being declared multiple times\n");
+    }
+}
