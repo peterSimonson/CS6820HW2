@@ -120,7 +120,7 @@ namespace{
         //1+2 in postfix Form
         std::vector<std::string> postFixExpr = {"1", "2", "+"};
 
-        TreeNode * node = evaluatePostFix(postFixExpr);
+        TreeNode * node = evaluatePostFix(postFixExpr, Table());
         int actual = (int) node->EvaluateNode();
         int expected = 1+2;
 
@@ -128,7 +128,7 @@ namespace{
 
         postFixExpr = {"2", "2", "-"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = (int) node->EvaluateNode();
         expected = 2-2;
 
@@ -136,7 +136,7 @@ namespace{
 
         postFixExpr = {"2", "2", "*"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = (int) node->EvaluateNode();
         expected = 2*2;
 
@@ -144,7 +144,7 @@ namespace{
 
         postFixExpr = {"2", "2", "/"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = (int) node->EvaluateNode();
         expected = 2/2;
 
@@ -152,7 +152,7 @@ namespace{
 
         postFixExpr = {"2", "3", "^"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = (int) node->EvaluateNode();
         expected = 2 * 2 * 2;
 
@@ -160,7 +160,7 @@ namespace{
 
         postFixExpr = {"1", "3", "+", "4", "5", "+", "*"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = (int) node->EvaluateNode();
         expected = (1 + 3) * (4 + 5);
 
@@ -168,7 +168,7 @@ namespace{
 
         postFixExpr = {"1", "3", "*", "4", "5", "*", "+"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = (int) node->EvaluateNode();
         expected = 1 * 3 + 4 * 5;
 
@@ -180,7 +180,7 @@ namespace{
         //1+2 in postfix Form
         std::vector<std::string> postFixExpr = {"1.5", "2", "+"};
 
-        TreeNode * node = evaluatePostFix(postFixExpr);
+        TreeNode * node = evaluatePostFix(postFixExpr, Table());
         double actual = node->EvaluateNode();
         double expected = 1.5+2;
 
@@ -188,7 +188,7 @@ namespace{
 
         postFixExpr = {"2.5", "2", "-"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = node->EvaluateNode();
         expected = 2.5-2;
 
@@ -196,7 +196,7 @@ namespace{
 
         postFixExpr = {"2", "2.75", "*"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = node->EvaluateNode();
         expected = 2*2.75;
 
@@ -204,7 +204,7 @@ namespace{
 
         postFixExpr = {"2", "2.75", "/"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = node->EvaluateNode();
         expected = 2/2.75;
 
@@ -212,7 +212,7 @@ namespace{
 
         postFixExpr = {"2.5", "3", "^"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = node->EvaluateNode();
         expected = 2.5 * 2.5 * 2.5;
 
@@ -220,7 +220,7 @@ namespace{
 
         postFixExpr = {"1", "3.6", "+", "4", "5.7", "+", "*"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = node->EvaluateNode();
         expected = (1 + 3.6) * (4 + 5.7);
 
@@ -228,10 +228,104 @@ namespace{
 
         postFixExpr = {"1.8", "3", "*", "4.7", "5", "*", "+"};
 
-        node = evaluatePostFix(postFixExpr);
+        node = evaluatePostFix(postFixExpr, Table());
         actual = node->EvaluateNode();
         expected = 1.8 * 3 + 4.7 * 5;
 
         ASSERT_EQ(actual, expected);
+    }
+
+    TEST(ExpressionTests, EvaluateExpressionTest){
+        Table table = Table();
+
+        std::vector<std::string> line = {"num", "var1"};
+        Expression expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        ASSERT_EQ(table.variables.size(), 1);
+        ASSERT_EQ(table.variables.back().variableName, "var1");
+        ASSERT_EQ(table.variables.back().variableType, "num");
+
+        line = {"var1", "=", "42"};
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        ASSERT_EQ(table.variables.size(), 1);
+        ASSERT_EQ(table.variables.back().variableName, "var1");
+        ASSERT_EQ(table.variables.back().variableType, "num");
+        ASSERT_EQ(table.variables.back().EvaluateNode(), 42);
+
+        line = {"ish", "var2", "=", "42.5"};
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        ASSERT_EQ(table.variables.size(), 2);
+        ASSERT_EQ(table.variables.back().variableName, "var2");
+        ASSERT_EQ(table.variables.back().variableType, "ish");
+        ASSERT_EQ(table.variables.back().EvaluateNode(), 42.5);
+
+        line = {"ish", "var3", "=", "var2", "+", "var2"};
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+        ASSERT_EQ(table.variables.size(), 3);
+        ASSERT_EQ(table.variables.back().variableName, "var3");
+        ASSERT_EQ(table.variables.back().variableType, "ish");
+        ASSERT_EQ(table.variables.back().EvaluateNode(), 85);
+
+    }
+
+    TEST(ExpressionTests, EvaluateExpressionErrorTest){
+        Table table = Table();
+
+        std::vector<std::string> line = {"var1", "=", "2"};
+        Expression expr = TranslateWordsToTokens(line, table.dataTypes);
+        //try assigning an unassigned variable
+        try {
+            expr.EvaluateExpression(table);
+            FAIL() << "Expected logic error when evaluating";
+        }
+        catch(std::logic_error const & err) {
+            ASSERT_EQ(table.variables.size(), 0);
+        }
+        catch(...) {
+            FAIL() << "Expected logic error but got a different kind of error";
+        }
+
+        //create a good variable
+        line = {"num", "test"};
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+        ASSERT_EQ(table.variables.size(), 1);
+
+        //try to reference a variable that does not exist
+        line = {"test", "=", "doesNotExist"};
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        try {
+            expr.EvaluateExpression(table);
+            FAIL() << "Expected logic error when evaluating";
+        }
+        catch(std::logic_error const & err) {
+            //ensure we have not set the variable to anything
+            ASSERT_EQ(table.variables.back().valueOfVariable, nullptr);
+        }
+        catch(...) {
+            FAIL() << "Expected logic error but got a different kind of error";
+        }
+
+        //try to redeclare test
+        line = {"num", "test"};
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        try {
+            expr.EvaluateExpression(table);
+            FAIL() << "Expected logic error when evaluating";
+        }
+        catch(std::logic_error const & err) {
+            //ensure we did not declare it again
+            ASSERT_EQ(table.variables.size(), 1);
+        }
+        catch(...) {
+            FAIL() << "Expected logic error but got a different kind of error";
+        }
+
     }
 }

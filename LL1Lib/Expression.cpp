@@ -81,7 +81,7 @@ std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& in
 /// Evaluates a postfix expression
 /// \param postFixExpression the post-fix expression you wish to evaluate
 /// \return the value of the post-fix expression
-TreeNode * evaluatePostFix(const std::vector<std::string>& postFixExpression) {
+TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table) {
 
     //holds the stack needed to evaluate
     std::stack<TreeNode*> stack;
@@ -102,7 +102,12 @@ TreeNode * evaluatePostFix(const std::vector<std::string>& postFixExpression) {
         }
         //if it is a variable
         else if(is_name(word)){
-
+            auto * variableNode = table.GetVariable(word);
+            //if the variable is not declared throw an error
+            if(variableNode == nullptr){
+                throw std::logic_error(word + " is an undeclared or out of scope variable being referenced\n");
+            }
+            stack.push(variableNode);
         }
         //otherwise, we have an operator
         else{
@@ -280,7 +285,7 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
     return {tokens, text};
 }
 
-void Expression::EvaluateExpression(Table table) {
+void Expression::EvaluateExpression(Table& table) {
 
     //are we declaring a new variable
     if(tokens.front() == DATA_TYPE_TOKEN){
@@ -295,12 +300,12 @@ void Expression::EvaluateExpression(Table table) {
     }
 }
 
-void Expression::PerformAssignmentOperation(Table table, int indexOfEquals) {
+void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
     std::string variableName;
     VariableNode * variable;
 
-    //the variable name is the first word
-    variableName = words[0];
+    //the variable name is one before the equals
+    variableName = words[indexOfEquals - 1];
     //look up the variable name
     variable = table.GetVariable(variableName);
     //check if we were able to look up the variable
@@ -313,12 +318,12 @@ void Expression::PerformAssignmentOperation(Table table, int indexOfEquals) {
     //convert infix to postfix
     std::vector<std::string> postfix  = convertTextToPostFix(infix);
     //evaluate the expression in postfix form
-    TreeNode * valueOfVariable = evaluatePostFix(postfix);
+    TreeNode * valueOfVariable = evaluatePostFix(postfix, table);
     //assign the evaluated value to the variable
     variable->AssignValue(valueOfVariable);
 }
 
-void Expression::DeclareNewVariable(Table table) {
+void Expression::DeclareNewVariable(Table& table) {
     std::string variableName;
     //variable type is the first word
     std::string variableType = words[0];

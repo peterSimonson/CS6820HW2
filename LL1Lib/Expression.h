@@ -17,12 +17,12 @@ public:
     //the text of the expression used to find postfix format
     std::vector<std::string> words;
     //Function to evaluate expression
-    void EvaluateExpression(Table table);
-    void PerformAssignmentOperation(Table table, int indexOfEquals);
-    void DeclareNewVariable(Table table);
+    void EvaluateExpression(Table& table);
+    void PerformAssignmentOperation(Table& table, int indexOfEquals);
+    void DeclareNewVariable(Table& table);
 };
 std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& infixExpression);
 Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vector<std::string>& dataTypes);
-TreeNode * evaluatePostFix(const std::vector<std::string>& postFixExpression);
+TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table);
 
 #endif //CS6820HW2_EXPRESSION_H
