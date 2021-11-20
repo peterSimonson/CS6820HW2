@@ -254,11 +254,11 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             text.push_back(word);
         } 
         else if(word == "("){
-            tokens.push_back(OPEN_PARAN_TOKEN);
+            tokens.push_back(OPEN_PAREN_TOKEN);
             text.push_back(word);
         }
         else if(word == ")"){
-            tokens.push_back(CLOSE_PARAN_TOKEN);
+            tokens.push_back(CLOSE_PAREN_TOKEN);
             text.push_back(word);
         }
         else if(word == "{"){

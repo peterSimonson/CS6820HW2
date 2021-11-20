@@ -10,19 +10,19 @@ namespace{
         std::vector<std::string> words{"(" ,"peter", "+", "12", ")", "*", "2"};
         std::vector<std::string> dataTypes = {"ish", "num"};
         auto expr =  TranslateWordsToTokens(words, dataTypes);
-        std::vector<int> results{OPEN_PARAN_TOKEN, NAME_TOKEN, PLUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, MULTIPLY_TOKEN, NUM_TOKEN, END_TOKEN};
+        std::vector<int> results{OPEN_PAREN_TOKEN, NAME_TOKEN, PLUS_TOKEN, NUM_TOKEN, CLOSE_PAREN_TOKEN, MULTIPLY_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.infix, words);
 
         words = {"(" ,"peter", "-", "12", ")", "/", "2"};
         expr =  TranslateWordsToTokens(words, dataTypes);
-        results = {OPEN_PARAN_TOKEN, NAME_TOKEN, MINUS_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
+        results = {OPEN_PAREN_TOKEN, NAME_TOKEN, MINUS_TOKEN, NUM_TOKEN, CLOSE_PAREN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.infix, words);
 
         words = {"(" ,"peter", "^", "12", ")", "/", "2"};
         expr =  TranslateWordsToTokens(words, dataTypes);
-        results = {OPEN_PARAN_TOKEN, NAME_TOKEN, POWER_TOKEN, NUM_TOKEN, CLOSE_PARAN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
+        results = {OPEN_PAREN_TOKEN, NAME_TOKEN, POWER_TOKEN, NUM_TOKEN, CLOSE_PAREN_TOKEN, DIVIDE_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.infix, words);
 
@@ -46,9 +46,9 @@ namespace{
 
         words = { "num", "result6", "=", "add", "(", "a", ",", "b", ")", " -mult", "(", "a", ",", "b", ")" };
         expr =  TranslateWordsToTokens(words, dataTypes);
-        results = {DATA_TYPE_TOKEN, NAME_TOKEN, EQUALS_TOKEN, NAME_TOKEN, OPEN_PARAN_TOKEN, NAME_TOKEN, COMMA_TOKEN,
-                   NAME_TOKEN, CLOSE_PARAN_TOKEN, MINUS_TOKEN, NAME_TOKEN, OPEN_PARAN_TOKEN, NAME_TOKEN, COMMA_TOKEN,
-                   NAME_TOKEN, CLOSE_PARAN_TOKEN, END_TOKEN};
+        results = {DATA_TYPE_TOKEN, NAME_TOKEN, EQUALS_TOKEN, NAME_TOKEN, OPEN_PAREN_TOKEN, NAME_TOKEN, COMMA_TOKEN,
+                   NAME_TOKEN, CLOSE_PAREN_TOKEN, MINUS_TOKEN, NAME_TOKEN, OPEN_PAREN_TOKEN, NAME_TOKEN, COMMA_TOKEN,
+                   NAME_TOKEN, CLOSE_PAREN_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         words = { "num", "result6", "=", "add", "(", "a", ",", "b", ")", "-", "mult", "(", "a", ",", "b", ")" };
         ASSERT_EQ(expr.infix, words);

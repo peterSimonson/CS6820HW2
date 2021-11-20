@@ -66,8 +66,8 @@ namespace {
         ASSERT_TRUE(is_terminal(MINUS_TOKEN));
         ASSERT_TRUE(is_terminal(MULTIPLY_TOKEN));
         ASSERT_TRUE(is_terminal(DIVIDE_TOKEN));
-        ASSERT_TRUE(is_terminal(OPEN_PARAN_TOKEN));
-        ASSERT_TRUE(is_terminal(CLOSE_PARAN_TOKEN));
+        ASSERT_TRUE(is_terminal(OPEN_PAREN_TOKEN));
+        ASSERT_TRUE(is_terminal(CLOSE_PAREN_TOKEN));
         ASSERT_TRUE(is_terminal(NAME_TOKEN));
         ASSERT_TRUE(is_terminal(NUM_TOKEN));
         ASSERT_TRUE(is_terminal(EPSILON_TOKEN));
