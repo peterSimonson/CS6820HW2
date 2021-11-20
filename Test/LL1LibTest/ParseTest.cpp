@@ -352,5 +352,17 @@ namespace {
 
         parser = Parser("var1 = -(var + 3) + 2", table);
         EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("var1 = 2 -(var + 3) + 2", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("var1 = -var1 -(var + 3) + 2", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("var1 = -(var + 3) - (var + 3) + 2", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("(1 + 2)", table);
+        EXPECT_TRUE(parser.successfulParse);
     }
 }
