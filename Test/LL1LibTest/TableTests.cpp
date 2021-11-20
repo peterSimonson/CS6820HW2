@@ -75,8 +75,8 @@ namespace {
         //check the non-terminals
         ASSERT_FALSE(is_terminal(START_TOKEN));
         ASSERT_FALSE(is_terminal(EXPR_TOKEN));
-        ASSERT_FALSE(is_terminal(MULTDIV_PRIME_TOKEN));
-        ASSERT_FALSE(is_terminal(DIV_AND_RIGHTOP_TOKEN));
+        ASSERT_FALSE(is_terminal(MULT_DIV_PRIME_TOKEN));
+        ASSERT_FALSE(is_terminal(DIV_AND_RIGHT_OP_TOKEN));
     }
 
 //    TEST(TableTests, LookUpTableTest){
@@ -132,9 +132,9 @@ namespace {
         ASSERT_EQ(set, postRemoveSet);
 
         //do not remove an element
-        set = {R_TERM_ADDSUB_TOKEN, NAME_TOKEN, NUM_TOKEN};
+        set = {R_TERM_ADD_SUB_TOKEN, NAME_TOKEN, NUM_TOKEN};
         set = removeEpsilonFromSet(set);
-        postRemoveSet = {R_TERM_ADDSUB_TOKEN, NAME_TOKEN, NUM_TOKEN};
+        postRemoveSet = {R_TERM_ADD_SUB_TOKEN, NAME_TOKEN, NUM_TOKEN};
         ASSERT_EQ(set, postRemoveSet);
     }
 
@@ -165,12 +165,12 @@ namespace {
         ASSERT_EQ(set1, set2);
 
         //test adding factor token
-        set2.push_back(L_TERM_MULTDIV_TOKEN);
+        set2.push_back(L_TERM_MULT_DIV_TOKEN);
         std::sort(set2.begin(), set2.end());
         set1 = unionize_sets(set1, set2);
         ASSERT_EQ(set1, set2);
 
-        set1 = {L_TERM_ADDSUB_TOKEN, G_FACTOR_TOKEN, EXPR_TOKEN};
+        set1 = {L_TERM_ADD_SUB_TOKEN, G_FACTOR_TOKEN, EXPR_TOKEN};
         std::vector<int> tempSet = unionize_sets(set1, {EPSILON_TOKEN});
         set1.push_back(EPSILON_TOKEN);
         std::sort(set1.begin(), set1.end());
