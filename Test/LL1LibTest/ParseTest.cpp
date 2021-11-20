@@ -331,4 +331,26 @@ namespace {
         parser = Parser("num var1 =  4 * (num var2) + 5", table);
         EXPECT_FALSE(parser.successfulParse);
     }
+
+    TEST(ParserTest, UpdatedEdgeParseCases){
+        Table table = Table();
+
+        Parser parser = Parser("-var1", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("(var + 3) * 2", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("-(var + 3)", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("var1 = -(var + 3)", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("-(var + 3) + 2", table);
+        EXPECT_TRUE(parser.successfulParse);
+
+        parser = Parser("var1 = -(var + 3) + 2", table);
+        EXPECT_TRUE(parser.successfulParse);
+    }
 }
