@@ -43,6 +43,15 @@ namespace{
         results = {DATA_TYPE_TOKEN, NAME_TOKEN, EQUALS_TOKEN, NUM_TOKEN, PLUS_TOKEN, NUM_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.infix, words);
+
+        words = { "num", "result6", "=", "add", "(", "a", ",", "b", ")", " -mult", "(", "a", ",", "b", ")" };
+        expr =  TranslateWordsToTokens(words, dataTypes);
+        results = {DATA_TYPE_TOKEN, NAME_TOKEN, EQUALS_TOKEN, NAME_TOKEN, OPEN_PARAN_TOKEN, NAME_TOKEN, COMMA_TOKEN,
+                   NAME_TOKEN, CLOSE_PARAN_TOKEN, MINUS_TOKEN, NAME_TOKEN, OPEN_PARAN_TOKEN, NAME_TOKEN, COMMA_TOKEN,
+                   NAME_TOKEN, CLOSE_PARAN_TOKEN, END_TOKEN};
+        ASSERT_EQ(expr.tokens, results);
+        words = { "num", "result6", "=", "add", "(", "a", ",", "b", ")", "-", "mult", "(", "a", ",", "b", ")" };
+        ASSERT_EQ(expr.infix, words);
     }
 
     TEST(ExpressionTests, TranslateNegativeTest){

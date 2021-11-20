@@ -250,7 +250,7 @@ namespace {
 
         expr = "num result6 = add(a, b) - mult(a, b)";
         words = parseWords(expr);
-        result = {"num", "result6", "=", "add", "(", "a", ",", "b", ")", "-", "mult", "(", "a", ",", "b", ")"};
+        result = {"num", "result6", "=", "add", "(", "a", ",", "b", ")", " -mult", "(", "a", ",", "b", ")"};
         ASSERT_EQ(words, result);
     }
 
