@@ -18,7 +18,7 @@ std::vector<std::string> parseWords(std::string const& line){
     //whitespace chars that separate words
     const std::string whitespace = " \n\r\t\f\v";
     //these reserved chars also separate words
-    const std::string keyChar = "=+-()*^/";
+    const std::string keyChar = "=+-()*^/,{}";
 
     auto it = line.begin();
     std::string word; //holds a word we are parsing

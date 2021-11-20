@@ -231,6 +231,29 @@ namespace {
         ASSERT_EQ(words, result);
     }
 
+    TEST(ParseTests, ParseProcedureTest){
+        std::string expr = "num procedure add(num a, num b) {";
+
+        std::vector<std::string> words = parseWords(expr);
+        std::vector<std::string> result = {"num", "procedure", "add", "(", "num", "a", ",", "num", "b", ")","{"};
+        ASSERT_EQ(words, result);
+
+        expr = "}";
+        words = parseWords(expr);
+        result = {"}"};
+        ASSERT_EQ(words, result);
+
+        expr = "}";
+        words = parseWords(expr);
+        result = {"}"};
+        ASSERT_EQ(words, result);
+
+        expr = "num result6 = add(a, b) - mult(a, b)";
+        words = parseWords(expr);
+        result = {"num", "result6", "=", "add", "(", "a", ",", "b", ")", "-", "mult", "(", "a", ",", "b", ")"};
+        ASSERT_EQ(words, result);
+    }
+
 
     TEST(ParseTests, InvalidParseTest){
         std::ifstream file("../TestResources/BadExpressions.txt");//holds file we are opening
