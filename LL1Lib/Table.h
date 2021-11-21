@@ -87,6 +87,8 @@ public:
     std::vector<std::string> dataTypes;
     //Vector of vectors that holds the variable scopes
     std::vector<std::vector<VariableNode>> variableScopes;
+    //holds the procedures
+    std::vector<ProcedureNode> procedures;
     //holds the table
     int RuleTable [NUM_OF_TOKENS - NUM_OF_NON_TERMINALS][NUM_OF_NON_TERMINALS]{};
 
@@ -100,6 +102,7 @@ public:
     bool is_already_a_var(const std::string& nameOfVariable);
     VariableNode * GetVariable(const std::string& nameOfVariableToReturn);
     bool AddVariable(const VariableNode& varToAdd);
+    bool AddProcedure(const ProcedureNode& procedureToAdd);
     void AddVariableScope();
     void RemoveVariableScope();
 };

@@ -6,6 +6,7 @@
 #define CS6820HW2_NODES_H
 
 #include <string>
+#include <vector>
 
 //Super class for all nodes in our tree
 class TreeNode {
@@ -50,10 +51,24 @@ class VariableNode : public TreeNode{
 public:
     std::string variableName;
     std::string variableType;
-    TreeNode * valueOfVariable;
+    TreeNode * valueOfVariable = nullptr;
 
     explicit VariableNode(TreeNode *valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar);
     void AssignValue(TreeNode *valueOfVar);
+    double EvaluateNode() override;
+    std::string NodeToString() override;
+};
+
+class ProcedureNode : public TreeNode{
+public:
+    std::string procedureName;
+    std::string procedureReturnType;
+    //holds the parameters
+    std::vector<VariableNode> procedureParameters;
+    //holds the operation the procedure performs
+    TreeNode * procedureOperation = nullptr;
+
+    explicit ProcedureNode(std::string name, std::string returnType, std::vector<VariableNode> parameters);
     double EvaluateNode() override;
     std::string NodeToString() override;
 };

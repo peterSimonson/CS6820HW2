@@ -20,6 +20,8 @@ public:
     void EvaluateExpression(Table& table);
     void PerformAssignmentOperation(Table& table, int indexOfEquals);
     void DeclareNewVariable(Table& table);
+    void DeclareNewProcedure(Table& table);
+    std::vector<VariableNode> DeclareNewParams(Table& table);
 };
 std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& infixExpression);
 Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vector<std::string>& dataTypes);

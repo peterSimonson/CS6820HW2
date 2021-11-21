@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <stdexcept>
+#include <utility>
 #include "Nodes.h"
 
 double IntegerNode::EvaluateNode() {
@@ -21,7 +22,7 @@ IntegerNode::IntegerNode(int valueOfNode) {
 VariableNode::VariableNode(TreeNode *valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) {
     variableName = nameOfVar;
     variableType = typeOfVar;
-    valueOfVariable = valueOfVar;
+    AssignValue(valueOfVar);
 }
 
 std::string VariableNode::NodeToString() {
@@ -104,4 +105,36 @@ double DecimalNode::EvaluateNode() {
 
 std::string DecimalNode::NodeToString() {
     return std::to_string(value);
+}
+
+ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vector<VariableNode> parameters) {
+
+    procedureName = std::move(name);
+    procedureReturnType = std::move(returnType);
+    procedureParameters = std::move(parameters);
+}
+
+double ProcedureNode::EvaluateNode() {
+    if(procedureOperation != nullptr){
+        return procedureOperation->EvaluateNode();
+    }
+    else{
+        throw std::runtime_error("Error: Attempted to evaluate undefined procedure\n");
+    }
+}
+
+std::string ProcedureNode::NodeToString() {
+    std::string returnVal = procedureName + "(";
+
+    for(int i = 0; i < procedureParameters.size(); i++){
+        returnVal += procedureParameters[i].variableName;
+
+        if(i + 1 != procedureParameters.size()){
+            returnVal += ", ";
+        }
+    }
+
+    returnVal += ")";
+
+    return returnVal;
 }

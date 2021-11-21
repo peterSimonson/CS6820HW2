@@ -275,6 +275,51 @@ namespace{
 
     }
 
+    TEST(ExpressionTests, EvaluateProceduresTest){
+        Table table = Table();
+
+        std::vector<std::string> line = {"num", "procedure", "add", "(", "num", "a", ",", "num", "b", ")", "{"} ;
+        Expression expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        std::vector<VariableNode> * currentScope = & table.variableScopes.back();
+        //2 variable scopes
+        ASSERT_EQ(table.variableScopes.size(), 2);
+        //two variables in the current scope
+        ASSERT_EQ(currentScope->size(), 2);
+        //1 procedure declared
+        ASSERT_EQ(table.procedures.size(), 1);
+
+        ProcedureNode declaredProcedure = table.procedures.back();
+        ASSERT_EQ(declaredProcedure.procedureName, "add");
+        ASSERT_EQ(declaredProcedure.procedureParameters.size(), 2);
+
+        //line in the procedure
+        line = {"num", "result", "=", "a", "+", "b"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        ASSERT_EQ(table.variableScopes.size(), 2);
+        //two variables in the current scope
+        ASSERT_EQ(currentScope->size(), 3);
+
+        //return statement in the procedure
+        line = {"return", "result"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        //end the procedure
+        line = {"}"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+        currentScope = & table.variableScopes.back();
+
+        //1 variable scope
+        ASSERT_EQ(table.variableScopes.size(), 1);
+        //zero variables in the current scope
+        ASSERT_EQ(currentScope->size(), 0);
+    }
+
     TEST(ExpressionTests, EvaluateExpressionErrorTest){
         Table table = Table();
         std::vector<VariableNode> * currentScope = & table.variableScopes.back();

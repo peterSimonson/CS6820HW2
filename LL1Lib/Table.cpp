@@ -455,6 +455,45 @@ void Table::RemoveVariableScope() {
     variableScopes.pop_back();
 }
 
+bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
+    //check to make sure we do not have any matching procedures
+    for(auto it = procedures.begin(); it !=procedures.end(); it++){
+
+        //get the names of the new and old procedures
+        std::string newProcedureName = procedureToAdd.procedureName;
+        std::string oldProcedureName = it->procedureName;
+
+        //get the number of parameters for each procedure
+        int newProcedureParamsSize = (int)procedureToAdd.procedureParameters.size();
+        int oldProcedureParamsSize = (int)it->procedureParameters.size();
+
+        //if the names match, and we have the same number of parameters
+        if(oldProcedureName == newProcedureName && oldProcedureParamsSize == newProcedureParamsSize){
+            //holds whether all the parameter types match
+            bool paramsMatch = true;
+
+            //loop through to ensure all the params do not match
+            for(int paramIndex = 0; paramIndex != it->procedureParameters.size(); paramIndex++){
+                std::string newParamType = procedureToAdd.procedureParameters[paramIndex].variableType;
+                std::string oldParamType = it->procedureParameters[paramIndex].variableType;
+
+                //if at any point the params datatype does not match we can stop checking
+                if(oldParamType != newParamType){
+                    paramsMatch = false;
+                    break;
+                }
+            }
+            //at this point the name and all the params match, so we cannot declare a new function
+            if(paramsMatch){
+                return false;
+            }
+        }
+    }
+
+    procedures.push_back(procedureToAdd);
+    return true;
+}
+
 /// Removes epsilon from a set if it exists in the set
 /// \param set the set of integers you wish to remove EPSILON_TOKEN from
 /// \return set without EPSILON_TOKEN

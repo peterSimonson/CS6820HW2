@@ -292,17 +292,38 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
 
 void Expression::EvaluateExpression(Table& table) {
 
-    //are we declaring a new variable
-    if(tokens.front() == DATA_TYPE_TOKEN){
+    bool startsWithDataType = tokens.front() == DATA_TYPE_TOKEN;
+    bool isProcedureDeclaration = tokens[1] == PROCEDURE_TOKEN;
+    //if we start with a datatype and are not declaring a procedure
+    if(startsWithDataType && !isProcedureDeclaration){
         DeclareNewVariable(table);
     }
-    //look for a equals sign
+    //look for an equals sign
     auto it = std::find(tokens.begin(), tokens.end(), EQUALS_TOKEN);
     //if we have an equals sign we are performing an assignment operation
     if( it != tokens.end()){
         int indexOfEqualsSign = (int)(it - tokens.begin());
         PerformAssignmentOperation(table, indexOfEqualsSign);
     }
+    //if we have an open bracket
+    else if(std::find(tokens.begin(), tokens.end(), OPEN_CURLY_TOKEN) != tokens.end()){
+        //add a new variable scope
+        table.AddVariableScope();
+        //if we are starting a new procedure
+        if(isProcedureDeclaration){
+            DeclareNewProcedure(table);
+        }
+    }
+    //if the line is a return statement
+    else if(tokens.front() == RETURN_TOKEN){
+
+    }
+    //if we have an open bracket
+    else if(std::find(tokens.begin(), tokens.end(), CLOSE_CURLY_TOKEN) != tokens.end()){
+        //remove the old scope
+        table.RemoveVariableScope();
+    }
+
 }
 
 void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
@@ -340,4 +361,47 @@ void Expression::DeclareNewVariable(Table& table) {
     if(!table.AddVariable(variable)){
         throw std::logic_error(variableName + " is being declared multiple times\n");
     }
+}
+
+std::vector<VariableNode> Expression::DeclareNewParams(Table &table) {
+
+    std::vector<VariableNode> parameters;
+    //find where the parameters start
+    auto it = std::find(tokens.begin(), tokens.end(), OPEN_PAREN_TOKEN);
+    int indexOfOpenParen = (int)(it - tokens.begin());
+    //loop through all the params. The params start after
+    for(int i = indexOfOpenParen + 1; i < words.size(); i++){
+        //if we hit the close parenthesis stop adding parameters
+        if(tokens[i] == CLOSE_PAREN_TOKEN){
+            break;
+        }
+        //otherwise, add a parameter
+        else{
+            std::string variableType = words[i]; //get the datatype
+            i++;//move onto the variable name
+            std::string variableName = words[i]; //get the datatype
+            VariableNode procedureParameter = VariableNode(nullptr, variableName, variableType);
+            //add the parameter to the current scope
+            table.AddVariable(procedureParameter);
+            //add the parameter to the list of parameters
+            parameters.push_back(procedureParameter);
+            //if we have a comma next, skip it
+            if(tokens[i+1] == COMMA_TOKEN){
+                i++;
+            }
+        }
+    }
+
+    return parameters;
+}
+
+void Expression::DeclareNewProcedure(Table &table) {
+    //get the return type
+    std::string returnType = words[0];
+    //get the procedure name
+    std::string procedureName = words[2];
+    //get the parameters
+    std::vector<VariableNode> procedureParams = DeclareNewParams(table);
+    ProcedureNode newProcedure = ProcedureNode(procedureName, returnType, procedureParams);
+    table.AddProcedure(newProcedure);
 }
