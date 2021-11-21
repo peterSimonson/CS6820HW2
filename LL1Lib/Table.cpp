@@ -5,7 +5,7 @@
 #include "Table.h"
 #include <set>
 #include <algorithm>
-#include <iostream>
+#include <stdexcept>
 
 //the functions is_number and is_name were taken and modified from:
 //https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
@@ -212,7 +212,7 @@ void Table::addRule(int lhs, std::vector<int>&& rhs){
 ///Generates the production rules for our language
 void Table::GenerateRules() {
     addRule(START_TOKEN,             {LINE_FULL_TOKEN});//0
-    addRule(LINE_FULL_TOKEN,         {VAR_TYPE, VAR_TYPE_TOKEN}); //1
+    addRule(LINE_FULL_TOKEN,         {DATA_TYPE_TOKEN, VAR_TYPE_TOKEN}); //1
     addRule(LINE_FULL_TOKEN,         {LINE_VAR_NAME});//2
     addRule(LINE_FULL_TOKEN,         {NUM_TOKEN, POWER_PRIME_TOKEN, MULT_DIV_PRIME_TOKEN, ADD_SUB_PRIME_TOKEN});//3
     addRule(LINE_FULL_TOKEN,         {NEG_NUM_TOKEN, POWER_PRIME_TOKEN, MULT_DIV_PRIME_TOKEN, ADD_SUB_PRIME_TOKEN});//4
@@ -229,40 +229,39 @@ void Table::GenerateRules() {
     addRule(LINE_VAR_NAME_REMAINING, {DIV_AND_RIGHT_OP_TOKEN, ADD_SUB_PRIME_TOKEN});//15
     addRule(LINE_VAR_NAME_REMAINING, {ADD_SUB_PRIME_TOKEN});//16
     addRule(PROCEDURE_PARAMS_TOKEN,  {OPEN_PAREN_TOKEN, PARAMS_TOKEN, CLOSE_PAREN_TOKEN});//17
-    addRule(PARAMS_TOKEN,            {VAR_TYPE, NAME_TOKEN, MORE_PARAMS_TOKEN});//18
+    addRule(PARAMS_TOKEN,            {DATA_TYPE_TOKEN, NAME_TOKEN, MORE_PARAMS_TOKEN});//18
     addRule(PARAMS_TOKEN,            {EPSILON_TOKEN});//19
-    addRule(MORE_PARAMS_TOKEN,       {COMMA_TOKEN, VAR_TYPE, NAME_TOKEN, MORE_PARAMS_TOKEN});//20
+    addRule(MORE_PARAMS_TOKEN,       {COMMA_TOKEN, DATA_TYPE_TOKEN, NAME_TOKEN, MORE_PARAMS_TOKEN});//20
     addRule(MORE_PARAMS_TOKEN,       {EPSILON_TOKEN});//21
-    addRule(VAR_TYPE,                {DATA_TYPE_TOKEN});//22
-    addRule(EXPR_TOKEN,              {L_TERM_ADD_SUB_TOKEN, ADD_SUB_PRIME_TOKEN});//23
-    addRule(L_TERM_ADD_SUB_TOKEN,    {L_TERM_MULT_DIV_TOKEN, MULT_DIV_PRIME_TOKEN});//24
-    addRule(L_TERM_MULT_DIV_TOKEN,   {L_TERM_POWER_TOKEN, POWER_PRIME_TOKEN});//25
-    addRule(R_TERM_ADD_SUB_TOKEN,    {R_TERM_MULT_DIV_TOKEN, MULT_DIV_PRIME_TOKEN});//26
-    addRule(R_TERM_MULT_DIV_TOKEN,   {R_TERM_POWER_TOKEN, POWER_PRIME_TOKEN});//27
-    addRule(ADD_SUB_PRIME_TOKEN,     {PLUS_TOKEN, R_TERM_ADD_SUB_TOKEN, ADD_SUB_PRIME_TOKEN});//28
-    addRule(ADD_SUB_PRIME_TOKEN,     {MINUS_TOKEN, R_TERM_ADD_SUB_TOKEN, ADD_SUB_PRIME_TOKEN});//29
-    addRule(ADD_SUB_PRIME_TOKEN,     {EPSILON_TOKEN});//30
-    addRule(MULT_DIV_PRIME_TOKEN,    {MULT_AND_RIGHT_OP_TOKEN});//31
-    addRule(MULT_DIV_PRIME_TOKEN,    {DIV_AND_RIGHT_OP_TOKEN});//32
-    addRule(MULT_DIV_PRIME_TOKEN,    {EPSILON_TOKEN});//33
-    addRule(POWER_PRIME_TOKEN,       {POWER_AND_RIGHT_OP_TOKEN});//34
-    addRule(POWER_PRIME_TOKEN,       {EPSILON_TOKEN});//35
-    addRule(MULT_AND_RIGHT_OP_TOKEN, {MULTIPLY_TOKEN, R_TERM_MULT_DIV_TOKEN, MULT_DIV_PRIME_TOKEN});//36
-    addRule(DIV_AND_RIGHT_OP_TOKEN,  {DIVIDE_TOKEN, R_TERM_MULT_DIV_TOKEN, MULT_DIV_PRIME_TOKEN});//37
-    addRule(POWER_AND_RIGHT_OP_TOKEN,{POWER_TOKEN, R_TERM_POWER_TOKEN, POWER_PRIME_TOKEN});//38
-    addRule(L_TERM_POWER_TOKEN,      {G_FACTOR_TOKEN});//39
-    addRule(L_TERM_POWER_TOKEN,      {NEG_NUM_TOKEN});//40
-    addRule(L_TERM_POWER_TOKEN,      {NEG_NAME_TOKEN});//41
-    addRule(R_TERM_POWER_TOKEN,      {G_FACTOR_TOKEN});//42
-    addRule(G_FACTOR_TOKEN,          {PARENS_EXPR_TOKEN});//43
-    addRule(G_FACTOR_TOKEN,          {POSVAL_TOKEN});//44
-    addRule(G_FACTOR_TOKEN,          {SPACE_NEG_VAL_TOKEN});//45
-    addRule(PARENS_EXPR_TOKEN,       {OPEN_PAREN_TOKEN, EXPR_TOKEN, CLOSE_PAREN_TOKEN});//46
-    addRule(PARENS_EXPR_TOKEN,       {MINUS_TOKEN, OPEN_PAREN_TOKEN, EXPR_TOKEN, CLOSE_PAREN_TOKEN});//47
-    addRule(POSVAL_TOKEN,            {NUM_TOKEN});//48
-    addRule(POSVAL_TOKEN,            {NAME_TOKEN});//49
-    addRule(SPACE_NEG_VAL_TOKEN,     {SPACE_NEG_NUM_TOKEN});//50
-    addRule(SPACE_NEG_VAL_TOKEN,     {SPACE_NEG_NAME_TOKEN});//51
+    addRule(EXPR_TOKEN,              {L_TERM_ADD_SUB_TOKEN, ADD_SUB_PRIME_TOKEN});//22
+    addRule(L_TERM_ADD_SUB_TOKEN,    {L_TERM_MULT_DIV_TOKEN, MULT_DIV_PRIME_TOKEN});//23
+    addRule(L_TERM_MULT_DIV_TOKEN,   {L_TERM_POWER_TOKEN, POWER_PRIME_TOKEN});//24
+    addRule(R_TERM_ADD_SUB_TOKEN,    {R_TERM_MULT_DIV_TOKEN, MULT_DIV_PRIME_TOKEN});//25
+    addRule(R_TERM_MULT_DIV_TOKEN,   {R_TERM_POWER_TOKEN, POWER_PRIME_TOKEN});//26
+    addRule(ADD_SUB_PRIME_TOKEN,     {PLUS_TOKEN, R_TERM_ADD_SUB_TOKEN, ADD_SUB_PRIME_TOKEN});//27
+    addRule(ADD_SUB_PRIME_TOKEN,     {MINUS_TOKEN, R_TERM_ADD_SUB_TOKEN, ADD_SUB_PRIME_TOKEN});//28
+    addRule(ADD_SUB_PRIME_TOKEN,     {EPSILON_TOKEN});//29
+    addRule(MULT_DIV_PRIME_TOKEN,    {MULT_AND_RIGHT_OP_TOKEN});//30
+    addRule(MULT_DIV_PRIME_TOKEN,    {DIV_AND_RIGHT_OP_TOKEN});//31
+    addRule(MULT_DIV_PRIME_TOKEN,    {EPSILON_TOKEN});//32
+    addRule(POWER_PRIME_TOKEN,       {POWER_AND_RIGHT_OP_TOKEN});//33
+    addRule(POWER_PRIME_TOKEN,       {EPSILON_TOKEN});//34
+    addRule(MULT_AND_RIGHT_OP_TOKEN, {MULTIPLY_TOKEN, R_TERM_MULT_DIV_TOKEN, MULT_DIV_PRIME_TOKEN});//35
+    addRule(DIV_AND_RIGHT_OP_TOKEN,  {DIVIDE_TOKEN, R_TERM_MULT_DIV_TOKEN, MULT_DIV_PRIME_TOKEN});//36
+    addRule(POWER_AND_RIGHT_OP_TOKEN,{POWER_TOKEN, R_TERM_POWER_TOKEN, POWER_PRIME_TOKEN});//37
+    addRule(L_TERM_POWER_TOKEN,      {G_FACTOR_TOKEN});//38
+    addRule(L_TERM_POWER_TOKEN,      {NEG_NUM_TOKEN});//39
+    addRule(L_TERM_POWER_TOKEN,      {NEG_NAME_TOKEN});//40
+    addRule(R_TERM_POWER_TOKEN,      {G_FACTOR_TOKEN});//41
+    addRule(G_FACTOR_TOKEN,          {PARENS_EXPR_TOKEN});//42
+    addRule(G_FACTOR_TOKEN,          {POSVAL_TOKEN});//43
+    addRule(G_FACTOR_TOKEN,          {SPACE_NEG_VAL_TOKEN});//44
+    addRule(PARENS_EXPR_TOKEN,       {OPEN_PAREN_TOKEN, EXPR_TOKEN, CLOSE_PAREN_TOKEN});//45
+    addRule(PARENS_EXPR_TOKEN,       {MINUS_TOKEN, OPEN_PAREN_TOKEN, EXPR_TOKEN, CLOSE_PAREN_TOKEN});//46
+    addRule(POSVAL_TOKEN,            {NUM_TOKEN});//47
+    addRule(POSVAL_TOKEN,            {NAME_TOKEN});//48
+    addRule(SPACE_NEG_VAL_TOKEN,     {SPACE_NEG_NUM_TOKEN});//49
+    addRule(SPACE_NEG_VAL_TOKEN,     {SPACE_NEG_NAME_TOKEN});//50
 }
 
 ///Generates the data for our language needed to parse expressions
@@ -360,9 +359,7 @@ void Table::BuildTable(){
                                     + "," + std::to_string(A) + ") is already " +
                                     std::to_string(RuleTable[terminal - NUM_OF_NON_TERMINALS][A]) +
                                     " but you are trying to change it to " + std::to_string(ruleNumber) + "\n";
-                            //throw std::logic_error(errorMessage);
-                            std::cout << errorMessage;
-                            RuleTable[terminal - NUM_OF_NON_TERMINALS][A] = ruleNumber;
+                            throw std::logic_error(errorMessage);
                         }
 
                     }
