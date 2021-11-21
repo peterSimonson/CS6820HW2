@@ -295,6 +295,26 @@ namespace {
         file.close();
     }
 
+    TEST(ParseTests, ProcedureParseTest){
+        std::ifstream file("../TestResources/Procedures.txt");//holds file we are opening
+        std::string line; //holds a single expression we wish to parse
+
+        ASSERT_TRUE(file.is_open());
+
+        //generate our table
+        Table table = Table();
+
+        //read each line from the file
+        while (std::getline(file, line)){
+            Parser parse = Parser(line, table);
+            //each one of these parses should fail
+            EXPECT_TRUE(parse.successfulParse);
+        }
+
+        //close input file
+        file.close();
+    }
+
     TEST(ParseTests, LeftMidAndRightTest){
         Table table = Table();
 
