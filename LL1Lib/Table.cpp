@@ -268,6 +268,8 @@ void Table::GenerateRules() {
 Table::Table() {
     //add our built-in data types
     dataTypes = {"ish", "num"};
+    //initiate the global scope
+    AddVariableScope();
     GenerateRules();
     GenerateFirstSet();
     GenerateFollowSet();
@@ -392,10 +394,14 @@ std::vector<int> Table::findFirstPlusSet(rule production){
 /// \param nameOfVariable The name you wish to check
 /// \return True if a variable has that name. False if their is no variable with the name
 bool Table::is_already_a_var(const std::string& nameOfVariable) {
-
-    for(auto & variable : variables){
-        if(nameOfVariable == variable.variableName){
-            return true;
+    //loop through the current variable scopes
+    for(auto & currentScope : variableScopes){
+        //loop through all the variables in the current scope
+        for(auto & variable : currentScope){
+            //if we have a variable with the name it is already declared
+            if(nameOfVariable == variable.variableName){
+                return true;
+            }
         }
     }
     return false;
@@ -406,10 +412,14 @@ bool Table::is_already_a_var(const std::string& nameOfVariable) {
 /// \return The variable corresponding to the name you entered. Returns nullptr if their is no variable by that name
 VariableNode * Table::GetVariable(const std::string &nameOfVariableToReturn) {
     VariableNode *varToReturn = nullptr;
-    for(auto & variable : variables){
-        if(nameOfVariableToReturn == variable.variableName){
-            varToReturn = &variable;
-            break;
+
+    for(auto & currentScope : variableScopes){
+        //loop through all the variables in the current scope
+        for(auto & variable : currentScope){
+            if(nameOfVariableToReturn == variable.variableName){
+                varToReturn = &variable;
+                break;
+            }
         }
     }
     return varToReturn;
@@ -420,13 +430,29 @@ VariableNode * Table::GetVariable(const std::string &nameOfVariableToReturn) {
 /// \param varToAdd the variable you wish to declare
 /// \return True if we added the variable. False if we were unable to add the variable
 bool Table::AddVariable(const VariableNode& varToAdd) {
-    bool isNotCurrentlyAVar = !is_already_a_var(varToAdd.variableName);
+    bool notPreviouslyAVar = !is_already_a_var(varToAdd.variableName);
     //if the variable name is not already used add it to the variables
-    if(isNotCurrentlyAVar){
-        variables.push_back(varToAdd);
+    if(notPreviouslyAVar){
+        //get the current scope and add a new variable
+        std::vector<VariableNode> * currentScope = &variableScopes.back();
+        currentScope->push_back(varToAdd);
     }
 
-    return isNotCurrentlyAVar;
+    return notPreviouslyAVar;
+}
+
+void Table::AddVariableScope() {
+    variableScopes.emplace_back();
+}
+
+void Table::RemoveVariableScope() {
+    std::vector<VariableNode> * currentScope = &variableScopes.back();
+
+    for(auto it = currentScope->begin(); it != currentScope->end(); it++){
+        //TODO: Ensure we have no memory leak
+    }
+
+    variableScopes.pop_back();
 }
 
 /// Removes epsilon from a set if it exists in the set

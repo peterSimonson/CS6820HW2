@@ -85,8 +85,8 @@ public:
     std::map<int, rule> rules;
     //holds the data types
     std::vector<std::string> dataTypes;
-    //holds the variables
-    std::vector<VariableNode> variables;
+    //Vector of vectors that holds the variable scopes
+    std::vector<std::vector<VariableNode>> variableScopes;
     //holds the table
     int RuleTable [NUM_OF_TOKENS - NUM_OF_NON_TERMINALS][NUM_OF_NON_TERMINALS]{};
 
@@ -100,6 +100,8 @@ public:
     bool is_already_a_var(const std::string& nameOfVariable);
     VariableNode * GetVariable(const std::string& nameOfVariableToReturn);
     bool AddVariable(const VariableNode& varToAdd);
+    void AddVariableScope();
+    void RemoveVariableScope();
 };
 
 std::vector<int> removeEpsilonFromSet(std::vector<int> set);

@@ -179,17 +179,22 @@ namespace {
 
     TEST(TableTests, AddVariableTest){
         Table table = Table();
+        ASSERT_EQ(table.variableScopes.size(), 1);
 
         IntegerNode eight = IntegerNode(8);
         VariableNode var1 = VariableNode(&eight, "var1", "num");
 
         ASSERT_TRUE(table.AddVariable(var1));
+        ASSERT_EQ(table.variableScopes.back().size(), 1);
         ASSERT_FALSE(table.AddVariable(var1));
+        ASSERT_EQ(table.variableScopes.back().size(), 1);
 
         VariableNode var2 = VariableNode(&eight, "var2", "num");
 
         ASSERT_TRUE(table.AddVariable(var2));
+        ASSERT_EQ(table.variableScopes.back().size(), 2);
         ASSERT_FALSE(table.AddVariable(var2));
+        ASSERT_EQ(table.variableScopes.back().size(), 2);
     }
 
     TEST(TableTests, GetVariableTest){
