@@ -25,6 +25,6 @@ public:
 };
 std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& infixExpression);
 Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vector<std::string>& dataTypes);
-TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table);
+TreeNode * evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table);
 
 #endif //CS6820HW2_EXPRESSION_H

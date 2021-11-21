@@ -307,6 +307,8 @@ namespace{
         line = {"return", "result"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
+        //We should have a return operation now
+        ASSERT_NE(table.procedures.back().procedureOperation, nullptr);
 
         //end the procedure
         line = {"}"} ;
@@ -318,6 +320,60 @@ namespace{
         ASSERT_EQ(table.variableScopes.size(), 1);
         //zero variables in the current scope
         ASSERT_EQ(currentScope->size(), 0);
+    }
+
+    TEST(ExpressionTests, ProcedureOverloadingTest){
+        Table table = Table();
+
+        std::vector<std::string> line = {"num", "procedure", "add", "(", "num", "a", ",", "num", "b", ")", "{"} ;
+        Expression expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        //1 procedure declared
+        ASSERT_EQ(table.procedures.size(), 1);
+
+        line = {"num", "procedure", "add", "(", "num", "a", ",", "num", "b", ")", "{"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        //try to declare a procedure we already have
+        try {
+            expr.EvaluateExpression(table);
+            FAIL() << "Expected logic error when evaluating";
+        }
+        catch(std::logic_error const & err) {
+            ASSERT_EQ(table.procedures.size(), 1);
+        }
+        catch(...) {
+            FAIL() << "Expected logic error but got a different kind of error";
+        }
+        //overload for add
+        line = {"num", "procedure", "add", "(", "num", "a", ",", "num", "b", "num", "c", ")", "{"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+        //2 procedure declared
+        ASSERT_EQ(table.procedures.size(), 2);
+
+        //same parameters as add but name is sub
+        line = {"num", "procedure", "sub", "(", "num", "a", ",", "num", "b", "num", "c", ")", "{"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+        //2 procedure declared
+        ASSERT_EQ(table.procedures.size(), 3);
+
+        //same as sub
+        line = {"num", "procedure", "sub", "(", "num", "a", ",", "num", "b", "num", "c", ")", "{"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        //try to declare a procedure we already have
+        try {
+            expr.EvaluateExpression(table);
+            FAIL() << "Expected logic error when evaluating";
+        }
+        catch(std::logic_error const & err) {
+            ASSERT_EQ(table.procedures.size(), 3);
+        }
+        catch(...) {
+            FAIL() << "Expected logic error but got a different kind of error";
+        }
+
     }
 
     TEST(ExpressionTests, EvaluateExpressionErrorTest){

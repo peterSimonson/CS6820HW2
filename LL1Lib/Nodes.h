@@ -71,6 +71,7 @@ public:
     explicit ProcedureNode(std::string name, std::string returnType, std::vector<VariableNode> parameters);
     double EvaluateNode() override;
     std::string NodeToString() override;
+    void AssignValue(TreeNode *valueOfVar);
 };
 
 //Interface for our operation classes

@@ -138,3 +138,7 @@ std::string ProcedureNode::NodeToString() {
 
     return returnVal;
 }
+
+void ProcedureNode::AssignValue(TreeNode *valueOfVar) {
+    procedureOperation = valueOfVar;
+}

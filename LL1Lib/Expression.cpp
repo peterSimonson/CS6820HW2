@@ -316,7 +316,12 @@ void Expression::EvaluateExpression(Table& table) {
     }
     //if the line is a return statement
     else if(tokens.front() == RETURN_TOKEN){
-
+        //get words after the equals sign. This is our infix expression
+        std::vector<std::string> infix(words.begin() + 1, words.end());
+        //convert infix to postfix
+        std::vector<std::string> postfix  = convertTextToPostFix(infix);
+        //give the last procedure a return operation
+        table.procedures.back().AssignValue(evaluatePostFix(postfix, table));
     }
     //if we have an open bracket
     else if(std::find(tokens.begin(), tokens.end(), CLOSE_CURLY_TOKEN) != tokens.end()){
@@ -403,5 +408,9 @@ void Expression::DeclareNewProcedure(Table &table) {
     //get the parameters
     std::vector<VariableNode> procedureParams = DeclareNewParams(table);
     ProcedureNode newProcedure = ProcedureNode(procedureName, returnType, procedureParams);
-    table.AddProcedure(newProcedure);
+    //if we cannot add a new procedure throw an error
+    if(!table.AddProcedure(newProcedure)){
+        throw std::logic_error(procedureName + " is being declared multiple times without proper overloading\n");
+    }
+
 }
