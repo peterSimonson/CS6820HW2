@@ -166,8 +166,13 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
         else if(is_data_type(word, dataTypes)){
             tokens.push_back(DATA_TYPE_TOKEN);
             text.push_back(word);
-        } else if(word == "procedure") {
+        }
+        else if(word == "procedure") {
             tokens.push_back(PROCEDURE_TOKEN);
+            text.push_back(word);
+        }
+        else if(word == "return") {
+            tokens.push_back(RETURN_TOKEN);
             text.push_back(word);
         }
         else if(is_name(word)){

@@ -59,9 +59,10 @@
 #define NEG_NAME_TOKEN 43
 #define NEG_NUM_TOKEN 44
 #define DATA_TYPE_TOKEN 45
-#define EPSILON_TOKEN 46
+#define RETURN_TOKEN 46
+#define EPSILON_TOKEN 47
 //TODO: Change where this is used so it is the number of tokens not number of tokens - 1
-#define NUM_OF_TOKENS 46
+#define NUM_OF_TOKENS 47
 
 //other tokens
 #define ERROR_TOKEN -1
