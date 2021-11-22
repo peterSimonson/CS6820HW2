@@ -83,14 +83,14 @@ namespace{
 
         //a+b*(c^d-e)^(f+g*h)-i
         std::vector<std::string> text = {"a", "+", "b", "*", "(", "c", "^", "d", "-", "e", ")", "^", "(", "f", "+", "g", "*", "h", ")", "-", "i"};
-        std::vector<std::string> actual = convertTextToPostFix(text);
+        std::vector<std::string> actual = convertInfixToPostFix(text);
         std::vector<std::string> expected = {"a", "b", "c", "d", "^", "e", "-", "f", "g", "h", "*", "+", "^", "*", "+", "i", "-"};
 
         ASSERT_EQ(actual, expected);
 
         //"x^y/(5*z)+2"
         text = {"x", "^", "y", "/", "(", "5", "*", "z", ")", "+", "2"};
-        actual = convertTextToPostFix(text);
+        actual = convertInfixToPostFix(text);
         expected = {"x", "y", "^", "5", "z", "*", "/", "2", "+"};
 
         ASSERT_EQ(actual, expected);
@@ -98,20 +98,34 @@ namespace{
         text = {
             "1", "+", "2", "*", "(", "2", "^", "4", "-", "5",
             ")", "^", "(", "1", "+", "2", "*", "3", ")", "-", "9"};
-        actual = convertTextToPostFix(text);
+        actual = convertInfixToPostFix(text);
         expected = {"1", "2", "2", "4", "^", "5", "-", "1", "2", "3", "*", "+", "^", "*", "+", "9", "-"};
 
         ASSERT_EQ(actual, expected);
 
         text = {"(", "A", "+", "B", ")", "*", "(", "C", "+", "D", ")"};
-        actual = convertTextToPostFix(text);
+        actual = convertInfixToPostFix(text);
         expected = {"A", "B", "+", "C", "D", "+", "*"};
 
         ASSERT_EQ(actual, expected);
 
         text = {"A", "*", "B", "+", "C", "*", "D"};
-        actual = convertTextToPostFix(text);
+        actual = convertInfixToPostFix(text);
         expected = {"A", "B", "*", "C", "D", "*", "+"};
+
+        ASSERT_EQ(actual, expected);
+    }
+
+    TEST(ExpressionTests, ConvertProcedureCallsPostFixTest){
+        std::vector<std::string> text = {"add", "(", "a", ",", "b", ")","*", "B", "+", "C", "*", "D"};
+        std::vector<std::string> actual = convertInfixToPostFix(text);
+        std::vector<std::string> expected = {"add(a,b)", "B", "*", "C", "D", "*", "+"};
+
+        ASSERT_EQ(actual, expected);
+
+        text = {"(", "sub", "(", "abba", ",", "paulsimon", ")", "+", "B", ")", "*", "(", "add", "(", "a", ",", "b", ")", "+", "D", ")"};
+        actual = convertInfixToPostFix(text);
+        expected = {"sub(abba,paulsimon)", "B", "+", "add(a,b)", "D", "+", "*"};
 
         ASSERT_EQ(actual, expected);
     }
@@ -320,6 +334,32 @@ namespace{
         ASSERT_EQ(table.variableScopes.size(), 1);
         //zero variables in the current scope
         ASSERT_EQ(currentScope->size(), 0);
+    }
+
+    TEST(ExpressionTests, AssignmentWithProceduresTest){
+        Table table = Table();
+
+        std::vector<std::string> line = {"num", "procedure", "add", "(", "num", "a", ",", "num", "b", ")", "{"} ;
+        Expression expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        line = {"num", "result", "=", "a", "+", "b"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        //return statement in the procedure
+        line = {"return", "result"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        //end the procedure
+        line = {"}"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        line = {"num", "var1", "=", "add", "(", "1", ",",  "1", ")"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
     }
 
     TEST(ExpressionTests, ProcedureOverloadingTest){

@@ -31,23 +31,41 @@ int precedenceOfOperator(std::string operation)
 /// Converts the infix vector of strings in text into a post-fix vector of string
 /// Function was taken and modified from: https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
 /// \return post-fix vector of strings created from strings in text
-std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& infixExpression) {
+std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& infixExpression) {
     std::vector<std::string> postFixExpression;
     std::vector<std::string> stack;
 
     //loop through all words in the expression
-    for(auto & word : infixExpression){
+    for(auto word = infixExpression.begin(); word!= infixExpression.end(); word++){
 
-        //if it is a variable, put it on the expression
-        if(is_name(word) || is_number(word)){
-            postFixExpression.push_back(word);
+        //if it is a variable of a function call
+        if(is_name(*word)){
+            std::string wordToPush = *word;
+            //if the next word is an open parenthesis we have a function call
+            if(*(word + 1) == "("){
+                //add the rest of the function call to the word to push back
+                word++;
+                //while we don't hit the close parenthesis
+                while(*word != ")"){
+                    //add the word
+                    wordToPush += *word;
+                    word++;
+                }
+                //add the close parenthesis
+                wordToPush += *word;
+            }
+            postFixExpression.push_back(wordToPush);
+        }
+        //if it is a number push it back of the stack
+        else if(is_number(*word)){
+            postFixExpression.push_back(*word);
         }
             //add the open paran to the stack. We will look for it once we encounter the close paran
-        else if(word == "("){
-            stack.push_back(word);
+        else if(*word == "("){
+            stack.push_back(*word);
         }
             //if we have a closing paran look for all teh operators before the open paran
-        else if(word == ")"){
+        else if(*word == ")"){
             while(!stack.empty() && stack.back() != "("){
                 //add the operator to the postfix expression
                 postFixExpression.push_back(stack.back());
@@ -58,14 +76,14 @@ std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& in
         }
             //else we have an operator
         else{
-            int precedenceOfWord = precedenceOfOperator(word);
+            int precedenceOfWord = precedenceOfOperator(*word);
             //take all operators off the stack that have a precedence equal to or greater than word
             while(!stack.empty() && precedenceOfWord <= precedenceOfOperator(stack.back())){
                 postFixExpression.push_back(stack.back());
                 stack.pop_back();
             }
             //put word onto the stack
-            stack.push_back(word);
+            stack.push_back(*word);
         }
     }
 
@@ -319,7 +337,7 @@ void Expression::EvaluateExpression(Table& table) {
         //get words after the equals sign. This is our infix expression
         std::vector<std::string> infix(words.begin() + 1, words.end());
         //convert infix to postfix
-        std::vector<std::string> postfix  = convertTextToPostFix(infix);
+        std::vector<std::string> postfix  = convertInfixToPostFix(infix);
         //give the last procedure a return operation
         table.procedures.back().AssignValue(evaluatePostFix(postfix, table));
     }
@@ -347,7 +365,7 @@ void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
     //get words after the equals sign. This is our infix expression
     std::vector<std::string> infix(words.begin() + (indexOfEquals + 1), words.end());
     //convert infix to postfix
-    std::vector<std::string> postfix  = convertTextToPostFix(infix);
+    std::vector<std::string> postfix  = convertInfixToPostFix(infix);
     //evaluate the expression in postfix form
     TreeNode * valueOfVariable = evaluatePostFix(postfix, table);
     //assign the evaluated value to the variable

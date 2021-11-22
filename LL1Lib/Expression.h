@@ -23,7 +23,7 @@ public:
     void DeclareNewProcedure(Table& table);
     std::vector<VariableNode> DeclareNewParams(Table& table);
 };
-std::vector<std::string> convertTextToPostFix(const std::vector<std::string>& infixExpression);
+std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& infixExpression);
 Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vector<std::string>& dataTypes);
 TreeNode * evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table);
 
