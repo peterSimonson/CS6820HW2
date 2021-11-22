@@ -57,7 +57,7 @@ std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& i
             postFixExpression.push_back(wordToPush);
         }
         //if it is a number push it back of the stack
-        else if(is_number(*word)){
+        else if(is_positive_number(*word)){
             postFixExpression.push_back(*word);
         }
             //add the open paran to the stack. We will look for it once we encounter the close paran
@@ -106,7 +106,7 @@ TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Tab
     //loop through each term in the post-fix expression
     for(auto & word : postFixExpression){
         //if word is a number, create an int node and push it to the stack
-        if(is_number(word)){
+        if(is_positive_number(word)){
             if(is_decimal_number(word)){
                 auto * decimalNode = new DecimalNode(std::stod(word));
                 stack.push(decimalNode);
@@ -177,7 +177,7 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
         std::string word = *str;
         //check what type of token this is
 
-        if(is_number(word)){
+        if(is_positive_number(word)){
             tokens.push_back(NUM_TOKEN);
             text.push_back(word);
         }
@@ -226,7 +226,7 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             text.push_back(word.substr(2, word.size()));
         }
             //if the first char is a negative check if everything else is a num
-        else if(word.at(0) == '-' && is_number(word.substr(1, word.size()))){
+        else if(word.at(0) == '-' && is_positive_number(word.substr(1, word.size()))){
             //if the last token is a value token we have a subtraction operation
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);

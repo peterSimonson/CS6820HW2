@@ -14,7 +14,7 @@
 /// note: does not accept negative numbers
 /// \param s string we want to check if it is a number
 /// \return true if it is a number, false if it is not
-bool is_number(const std::string& s)
+bool is_positive_number(const std::string& s)
 {
     std::string::const_iterator it = s.begin();
     bool isDecimalNum = false;
@@ -51,7 +51,7 @@ bool is_number(const std::string& s)
 }
 
 /// Check if a number is a decimal or not
-/// Note: the string must have returned true from is_number
+/// Note: the string must have returned true from is_positive_number
 /// \param number string containing a number
 /// \return true if the number is a decimal number. false if it is an integer
 bool is_decimal_number(const std::string& number){
@@ -84,7 +84,7 @@ bool is_name(const std::string& s)
 }
 
 bool is_Neg_Num(const std::string& s){
-    if(s.at(0) == '-' && is_number(s.substr(1, s.size()))){
+    if(s.at(0) == '-' && is_positive_number(s.substr(1, s.size()))){
         return true;
     }
     else{

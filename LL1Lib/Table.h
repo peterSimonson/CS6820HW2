@@ -112,7 +112,7 @@ public:
 
 std::vector<int> removeEpsilonFromSet(std::vector<int> set);
 std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vector<int>& secondSet);
-bool is_number(const std::string& s);
+bool is_positive_number(const std::string& s);
 bool is_decimal_number(const std::string& number);
 bool is_Neg_Num(const std::string& s);
 bool is_name(const std::string& s);

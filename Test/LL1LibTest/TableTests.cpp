@@ -9,25 +9,25 @@ namespace {
 
     TEST(TableTests, IsNumTest){
         std::string test = "123";
-        ASSERT_TRUE(is_number(test));
+        ASSERT_TRUE(is_positive_number(test));
 
         test = "12.3";
-        ASSERT_TRUE(is_number(test));
+        ASSERT_TRUE(is_positive_number(test));
 
         test = ".3";
-        ASSERT_FALSE(is_number(test));
+        ASSERT_FALSE(is_positive_number(test));
 
         test = "test";
-        ASSERT_FALSE(is_number(test));
+        ASSERT_FALSE(is_positive_number(test));
 
         test = ".test";
-        ASSERT_FALSE(is_number(test));
+        ASSERT_FALSE(is_positive_number(test));
 
         test = "1.2.3";
-        ASSERT_FALSE(is_number(test));
+        ASSERT_FALSE(is_positive_number(test));
 
         test = ".";
-        ASSERT_FALSE(is_number(test));
+        ASSERT_FALSE(is_positive_number(test));
     }
 
     TEST(TableTests, IsNameTest){
