@@ -33,18 +33,19 @@ int main(int argc, char *argv[]) {
     //initialize a parser with the expression the user entered
     Parser parser = Parser(expression, table);
 
+    table.CleanUpTable();
+
     return CORRECT_NUM_OF_ARGS;
 }
 
 void RunTestFiles(){
-    std::cout << "Part 1: Parse Invalid Expressions" <<std::endl << std::endl;
+    std::cout << "Reading expressions from: Test/TestResources/HW3Test.txt" <<std::endl << std::endl;
 
-    std::ifstream file("../Test/TestResources/BadExpressions.txt");//holds file we are opening
+    std::ifstream file("../Test/TestResources/HW3Test.txt");//holds file we are opening
     std::string line; //holds a single expression we wish to parse
-    bool encounteredAnError = false;
 
     if(!file.is_open()){
-        std::cout << "Could not open file containing good expressions";
+        std::cout << "Could not open file containing HW3Test";
         return;
     }
 
@@ -53,37 +54,15 @@ void RunTestFiles(){
 
     //read each line from the file
     while (std::getline(file, line)){
-        Parser parse = Parser(line, table);
-        if(parse.successfulParse){
-            encounteredAnError = true;
+        try{
+            Parser parse = Parser(line, table);
+        }
+        catch(...) {
+
         }
     }
 
     file.close();
 
-    std::cout << std::endl << "Part 2: Parse Valid Expressions" <<std::endl << std::endl;
-
-    file.open("../Test/TestResources/GoodExpressions.txt");
-
-    if(!file.is_open()){
-        std::cout << "Could not open file containing bad expressions";
-        return;
-    }
-
-    //read each line from the file
-    while (std::getline(file, line)){
-        Parser parse = Parser(line, table);
-        if(!parse.successfulParse){
-            encounteredAnError = true;
-        }
-    }
-
-    file.close();
-
-    if(encounteredAnError){
-        std::cout << std::endl <<"Not all expressions were successfully parsed" << std::endl;
-    }
-    else{
-        std::cout << std::endl <<"All expressions were successfully parsed" << std::endl;
-    }
+    table.CleanUpTable();
 }

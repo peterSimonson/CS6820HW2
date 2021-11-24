@@ -459,8 +459,8 @@ void Table::AddVariableScope() {
 void Table::RemoveVariableScope() {
     std::vector<VariableNode> * currentScope = &variableScopes.back();
 
-    for(auto it = currentScope->begin(); it != currentScope->end(); it++){
-        //TODO: Ensure we have no memory leak
+    for(auto & it : *currentScope){
+        delete it.valueOfVariable;
     }
 
     variableScopes.pop_back();
@@ -505,6 +505,18 @@ bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
     return true;
 }
 
+void Table::CleanUpTable() {
+    //clean up variable scopes
+    for(auto it = variableScopes.begin(); it != variableScopes.end(); it++){
+        RemoveVariableScope();
+    }
+    //remove procedures
+    for(auto it = procedures.begin(); it != procedures.end(); it++){
+        delete it->procedureOperation;
+    }
+
+}
+
 /// Removes epsilon from a set if it exists in the set
 /// \param set the set of integers you wish to remove EPSILON_TOKEN from
 /// \return set without EPSILON_TOKEN
@@ -542,4 +554,28 @@ std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vect
     }
 
     return {all.begin(), all.end()};
+}
+
+bool is_function_call(const std::string &word) {
+
+    int indexOfOpenParen = (int)word.find('(');
+    int indexOfCloseParen = (int)word.find(')');
+
+    //if we don't have both the open and close parenthesis return false
+    if(indexOfOpenParen == std::string::npos || indexOfCloseParen == std::string::npos){
+        return false;
+    }
+
+    std::string nameOfFunction = word.substr(0, indexOfOpenParen);
+
+    //if there is not a valid name
+    if(!is_name(nameOfFunction)){
+        return false;
+    }
+
+    return true;
+}
+
+bool is_number(const std::string &s) {
+    return is_positive_number(s) || is_Neg_Num(s);
 }

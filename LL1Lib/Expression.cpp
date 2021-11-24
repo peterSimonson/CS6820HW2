@@ -127,6 +127,57 @@ TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Tab
             }
             stack.push(variableNode);
         }
+        //if it is a function call
+        else if(is_function_call(word)){
+            //get the opening and closing parenthesis
+            int indexOfOpenParen = (int)word.find('(');
+            int indexOfCloseParen = (int)word.find(')');
+
+            std::string nameOfFunction = word.substr(0, indexOfOpenParen); //name of the function being called
+            std::vector<TreeNode *> functionArguments; //args being entered into the function
+            std::string currentArgument;
+            //get all the variables
+            for(int i = indexOfOpenParen + 1; i < indexOfCloseParen; i++){
+                if(word[i] == ','){
+                    //look up the parameter
+
+                    //check if we have a variable name or a constant
+                    if(is_name(currentArgument)){
+                        //get the variable
+                        VariableNode * argument = table.GetVariable(currentArgument);
+                        //check if we found a variable
+                        if(argument != nullptr){
+                            functionArguments.push_back(argument);
+                        }
+                        //if no variable was found throw an error
+                        else{
+                            std::string errMsg = "could not find variable " + currentArgument + "in function call to "
+                                                 + nameOfFunction;
+                            throw std::logic_error(errMsg);
+                        }
+                    }
+                    // if it is a constant
+                    else if(is_number(currentArgument)){
+                        TreeNode * constant;
+                        if(is_number(word)){
+                            constant = new IntegerNode(std::stoi(word));
+                        }
+                        else if(is_decimal_number(word)){
+                            constant = new DecimalNode(std::stod(word));
+                        }
+
+                        functionArguments.push_back(constant);
+                    }
+
+                    //reset the current argument string
+                    currentArgument = "";
+                }
+                //otherwise, add to the currentArg
+                else{
+                    currentArgument += word[i];
+                }
+            }
+        }
         //otherwise, we have an operator
         else{
             auto * value1 = stack.top();

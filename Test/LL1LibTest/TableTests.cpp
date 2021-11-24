@@ -79,32 +79,24 @@ namespace {
         ASSERT_FALSE(is_terminal(DIV_AND_RIGHT_OP_TOKEN));
     }
 
-//    TEST(TableTests, LookUpTableTest){
-//
-//        Table table = Table();
-//
-//        //we are going to look up a couple table entries
-//        int result = table.LookUpTable(END_TOKEN, START_TOKEN);
-//        ASSERT_EQ(result, ERROR_TOKEN);
-//
-//        result = table.LookUpTable(END_TOKEN, EXPR_PRIME_TOKEN);
-//        ASSERT_EQ(result, 4);
-//
-//        result = table.LookUpTable(END_TOKEN, TERM_PRIME_TOKEN);
-//        ASSERT_EQ(result, 8);
-//
-//        result = table.LookUpTable(PLUS_TOKEN, EXPR_PRIME_TOKEN);
-//        ASSERT_EQ(result, 2);
-//
-//        result = table.LookUpTable(PLUS_TOKEN, TERM_PRIME_TOKEN);
-//        ASSERT_EQ(result, 8);
-//
-//        result = table.LookUpTable(MINUS_TOKEN, EXPR_PRIME_TOKEN);
-//        ASSERT_EQ(result, 3);
-//
-//        result = table.LookUpTable(PLUS_TOKEN, TERM_PRIME_TOKEN);
-//        ASSERT_EQ(result, 8);
-//    }
+    TEST(TableTests, IsFucntionCallTest){
+
+        std::string test = "peter";
+        ASSERT_FALSE(is_function_call(test));
+
+        test = "peter(";
+        ASSERT_FALSE(is_function_call(test));
+        test = "peter)";
+        ASSERT_FALSE(is_function_call(test));
+        test = "(peter)";
+        ASSERT_FALSE(is_function_call(test));
+        test = "1peter()";
+        ASSERT_FALSE(is_function_call(test));
+
+        test = "peter()";
+        ASSERT_TRUE(is_function_call(test));
+
+    }
 
     TEST(TableTests, RemoveEpsilonTest){
         //remove third element

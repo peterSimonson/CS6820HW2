@@ -80,6 +80,7 @@ public:
 class Table {
 public:
     Table();
+    void CleanUpTable();
     //holds the first set
     std::map<int, std::vector<int>> firstSet;
     //holds the follow set
@@ -112,6 +113,7 @@ public:
 
 std::vector<int> removeEpsilonFromSet(std::vector<int> set);
 std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vector<int>& secondSet);
+bool is_number(const std::string& s);
 bool is_positive_number(const std::string& s);
 bool is_decimal_number(const std::string& number);
 bool is_Neg_Num(const std::string& s);
@@ -121,5 +123,6 @@ bool is_terminal(const int& token);
 bool is_Value_Token(int token);
 bool set_contains_epsilon(std::vector<int> set);
 bool is_data_type(const std::string& word, const std::vector<std::string>& dataTypes);
+bool is_function_call(const std::string& word);
 
 #endif //CS6820HW2_TABLE_H
