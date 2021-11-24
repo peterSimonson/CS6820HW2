@@ -19,7 +19,6 @@ num var18 = -42
 num var19 = (-42)
 num var20 = ( -42)
 num var21 = -var
-num var22 = -1 * 8 / -1
 num var23 = 2-3
 num var24 = 2 - 3
 num var25 = 2 - -3
@@ -66,12 +65,3 @@ num procedure mult(num a, num b) {
 num result = a * b
 return result
 }
-num a = 2
-num b = 3
-num result1 = add(a, b)
-num result2 = mult(a, b)
-num result3 = mult(a,a)
-num result4 = mult(b,b)
-num result5 = add(-a, -b)
-num result6 = add(a, b) - mult(a, b)
-num result7 = add(a,a) + mult(a,b) * mult(b,b)

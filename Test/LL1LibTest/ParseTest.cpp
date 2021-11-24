@@ -414,5 +414,26 @@ namespace {
         Parser parse = Parser(line, table);
 
         parse.EvaluateLine(table);
+
+        //try to divide by zero
+        try {
+            table.variableScopes.back().back().EvaluateNode();
+
+            FAIL() << "Expected runtime error";
+        }
+        catch(std::runtime_error const & err) {
+            EXPECT_EQ(err.what(),std::string("Error: Attempted to divide by zero\n"));
+        }
+        catch(...) {
+            FAIL() << "Expected runtime error";
+        }
+
+        line = "num var22 = -1 * 8 / -1";
+        parse = Parser(line, table);
+
+        ASSERT_TRUE(parse.successfulParse);
+        parse.EvaluateLine(table);
+
+        ASSERT_EQ(table.variableScopes.back().back().EvaluateNode(), 8);
     }
 }

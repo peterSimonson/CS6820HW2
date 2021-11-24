@@ -461,11 +461,7 @@ void Table::RemoveVariableScope() {
     std::vector<VariableNode> * currentScope = &variableScopes.back();
 
     for(auto & it : *currentScope){
-        if(it.variableName == "copy"){
-            std::cout << "problem child" << std::endl;
-        }
         delete it.valueOfVariable;
-        std::cout << "deleted " << it.variableName << std::endl;
     }
 
     variableScopes.pop_back();
