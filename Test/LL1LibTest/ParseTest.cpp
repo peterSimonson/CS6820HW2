@@ -385,4 +385,34 @@ namespace {
         parser = Parser("(1 + 2)", table);
         EXPECT_TRUE(parser.successfulParse);
     }
+
+    TEST(ParserTests, SimpleNegativeEvalTest){
+        std::string line = "num var1 = 1-2";
+
+        Table table = Table();
+        Parser parse = Parser(line, table);
+
+        ASSERT_TRUE(parse.successfulParse);
+        parse.EvaluateLine(table);
+
+        ASSERT_EQ(table.variableScopes.back().back().EvaluateNode(), -1);
+
+        line = "num var2 = -3";
+        parse = Parser(line, table);
+
+        ASSERT_TRUE(parse.successfulParse);
+        parse.EvaluateLine(table);
+
+        ASSERT_EQ(table.variableScopes.back().back().EvaluateNode(), -3);
+    }
+
+    TEST(ParserTests, SimpleDivideByZeroEvalTest){
+
+        std::string line = "num var1 = 5 / 0";
+
+        Table table = Table();
+        Parser parse = Parser(line, table);
+
+        parse.EvaluateLine(table);
+    }
 }

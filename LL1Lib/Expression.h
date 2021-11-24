@@ -21,6 +21,7 @@ public:
     void PerformAssignmentOperation(Table& table, int indexOfEquals);
     void DeclareNewVariable(Table& table);
     void DeclareNewProcedure(Table& table);
+    void HandleProcedureCall(Table& table, std::string procedureCall);
     std::vector<VariableNode> DeclareNewParams(Table& table);
 };
 std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& infixExpression);

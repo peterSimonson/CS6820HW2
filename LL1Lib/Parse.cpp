@@ -81,7 +81,7 @@ std::vector<std::string> parseWords(std::string const& line){
 /// Parse a expression. Will check for validity and store result in successfulParse
 /// \param line the expression you wish to parse for validity
 /// \param table the table containing information about our language
-Parser::Parser(const std::string& line, Table table) {
+Parser::Parser(const std::string& line, Table& table) {
     //get the input strings
     std::vector<std::string> inputWords = parseWords(line);
     //translate the input from strings into tokens
@@ -102,7 +102,7 @@ Parser::Parser(const std::string& line, Table table) {
         //if both the focus and the word are EOF then we have successfully completed a parse
         if(focus == END_TOKEN && *word == END_TOKEN){
             LL1Stack.pop_back(); //remove end token
-            std::cout << "Success Parsing: " << line << std::endl;
+            std::cout << "Success Parsing:\t" << line << std::endl;
             successfulParse = true;
             return;
         }
@@ -169,8 +169,13 @@ void Parser::SwapStack(int ruleIndex, std::vector<int> & stack, Table table) {
 
 }
 
+void Parser::EvaluateLine(Table& table) {
+    //Evaluate the line you just parsed
+    expr.EvaluateExpression(table);
+}
+
 /// Print an error message when you fail to parse an expression
 /// \param expr the expression you failed to parse
 void PrintParserError(const std::string& expr){
-    std::cout << "Error Parsing: " << expr << std::endl;
+    std::cout << "Error Parsing:\t" << expr << std::endl;
 }

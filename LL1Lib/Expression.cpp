@@ -129,69 +129,37 @@ TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Tab
         }
         //if it is a function call
         else if(is_function_call(word)){
-            //get the opening and closing parenthesis
-            int indexOfOpenParen = (int)word.find('(');
-            int indexOfCloseParen = (int)word.find(')');
-
-            std::string nameOfFunction = word.substr(0, indexOfOpenParen); //name of the function being called
-            std::vector<TreeNode *> functionArguments; //args being entered into the function
-            std::string currentArgument;
-            //get all the variables
-            for(int i = indexOfOpenParen + 1; i < indexOfCloseParen; i++){
-                if(word[i] == ','){
-                    //look up the parameter
-
-                    //check if we have a variable name or a constant
-                    if(is_name(currentArgument)){
-                        //get the variable
-                        VariableNode * argument = table.GetVariable(currentArgument);
-                        //check if we found a variable
-                        if(argument != nullptr){
-                            functionArguments.push_back(argument);
-                        }
-                        //if no variable was found throw an error
-                        else{
-                            std::string errMsg = "could not find variable " + currentArgument + "in function call to "
-                                                 + nameOfFunction;
-                            throw std::logic_error(errMsg);
-                        }
-                    }
-                    // if it is a constant
-                    else if(is_number(currentArgument)){
-                        TreeNode * constant;
-                        if(is_number(word)){
-                            constant = new IntegerNode(std::stoi(word));
-                        }
-                        else if(is_decimal_number(word)){
-                            constant = new DecimalNode(std::stod(word));
-                        }
-
-                        functionArguments.push_back(constant);
-                    }
-
-                    //reset the current argument string
-                    currentArgument = "";
-                }
-                //otherwise, add to the currentArg
-                else{
-                    currentArgument += word[i];
-                }
-            }
+            throw std::logic_error("Procedure calls are not yet fully implemented\n");
+            //HandleProcedureCall(table, word);
         }
         //otherwise, we have an operator
         else{
             auto * value1 = stack.top();
             stack.pop();
-            auto * value2 = stack.top();
-            stack.pop();
+
+            TreeNode * value2 = nullptr;
+            //check if we have a second value
+            if(!stack.empty()){
+                value2 = stack.top();
+                stack.pop();
+            }
+
 
             if(word == "+"){
                 auto * addNode = new AddNode(value2, value1);
                 stack.push(addNode);
             }
             else if(word == "-"){
-                auto * subNode = new SubtractNode(value2, value1);
-                stack.push(subNode);
+                TreeNode * minusNode = nullptr;
+                //if we have a second value create a minus node
+                if(value2 != nullptr){
+                    minusNode = new SubtractNode(value2, value1);
+                }
+                //if we don't have a second value create a negated node
+                else{
+                    minusNode = new NegateNode(value1);
+                }
+                stack.push(minusNode);
             }
             else if(word == "*"){
                 auto * multiplyNode = new MultiplyNode(value2, value1);
@@ -482,4 +450,55 @@ void Expression::DeclareNewProcedure(Table &table) {
         throw std::logic_error(procedureName + " is being declared multiple times without proper overloading\n");
     }
 
+}
+
+void Expression::HandleProcedureCall(Table &table, std::string procedureCall) {
+    //get the opening and closing parenthesis
+    int indexOfOpenParen = (int)procedureCall.find('(');
+    int indexOfCloseParen = (int)procedureCall.find(')');
+
+    std::string nameOfFunction = procedureCall.substr(0, indexOfOpenParen); //name of the function being called
+    std::vector<TreeNode *> functionArguments; //args being entered into the function
+    std::string currentArgument;
+    //get all the variables
+    for(int i = indexOfOpenParen + 1; i < indexOfCloseParen; i++){
+        if(procedureCall[i] == ','){
+            //look up the parameter
+
+            //check if we have a variable name
+            if(is_name(currentArgument)){
+                //get the variable
+                VariableNode * argument = table.GetVariable(currentArgument);
+                //check if we found a variable
+                if(argument != nullptr){
+                    functionArguments.push_back(argument);
+                }
+                    //if no variable was found throw an error
+                else{
+                    std::string errMsg = "could not find variable " + currentArgument + "in function call to "
+                                         + nameOfFunction;
+                    throw std::logic_error(errMsg);
+                }
+            }
+                // if it is a constant
+            else if(is_number(currentArgument)){
+                TreeNode * constant;
+                if(is_number(procedureCall)){
+                    constant = new IntegerNode(std::stoi(procedureCall));
+                }
+                else if(is_decimal_number(procedureCall)){
+                    constant = new DecimalNode(std::stod(procedureCall));
+                }
+
+                functionArguments.push_back(constant);
+            }
+
+            //reset the current argument string
+            currentArgument = "";
+        }
+            //otherwise, add to the currentArg
+        else{
+            currentArgument += procedureCall[i];
+        }
+    }
 }

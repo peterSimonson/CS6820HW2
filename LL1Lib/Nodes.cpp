@@ -142,3 +142,16 @@ std::string ProcedureNode::NodeToString() {
 void ProcedureNode::AssignValue(TreeNode *valueOfVar) {
     procedureOperation = valueOfVar;
 }
+
+NegateNode::NegateNode(TreeNode *valueToNegate) {
+    value = valueToNegate;
+}
+
+double NegateNode::EvaluateNode() {
+    //return the negative of the value you entered into the node
+    return -(value->EvaluateNode());
+}
+
+std::string NegateNode::NodeToString() {
+    return "-" + value->NodeToString();
+}

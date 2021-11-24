@@ -41,9 +41,14 @@ public:
 };
 
 //Negate an integer value
-class NegateNode : public IntegerNode{
+class NegateNode : public TreeNode{
 public:
-    explicit NegateNode(int value) : IntegerNode(-value){}
+    explicit NegateNode(TreeNode * valueToNegate);
+
+    TreeNode * value;
+
+    double EvaluateNode() override;
+    std::string NodeToString() override;
 };
 
 //represents a variable value

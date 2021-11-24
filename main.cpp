@@ -54,15 +54,45 @@ void RunTestFiles(){
 
     //read each line from the file
     while (std::getline(file, line)){
-        try{
-            Parser parse = Parser(line, table);
-        }
-        catch(...) {
 
+        Parser parse = Parser(line, table);
+        if(parse.successfulParse){
+            //try to evaluate the line
+            try{
+                parse.EvaluateLine(table);
+            }
+            //normally we would just kill the program if we cannot evaluate but in this instance
+            //we want to keep going and test the entire file
+            catch(const std::exception &exc) {
+                std::cout << "Error evaluating:\t" << line <<std::endl;
+                std::cout << exc.what();
+            }
+        }
+        //stop because we failed to parse a line
+        else{
+            return;
         }
     }
 
     file.close();
+    auto currentScope = table.variableScopes.back();
+    for(auto it = currentScope.begin(); it != currentScope.end(); it++){
+        std::string output = "Current Value of: " + it->variableType + " " + it->variableName + " = ";
+        try{
+            if(it->variableType == "num"){
+                //so we are saving all values as doubles and converting them back to ints at the vary end if need be
+                output += std::to_string((int)it->EvaluateNode());
+            }
+            else{
+                output += std::to_string(it->EvaluateNode());
+            }
+        }
+        catch(...){
+            output += "UNASSIGNED";
+        }
 
-    table.CleanUpTable();
+        std::cout << output << std::endl;
+    }
+
+    //table.CleanUpTable();
 }

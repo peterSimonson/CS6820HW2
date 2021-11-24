@@ -6,6 +6,7 @@
 #include <set>
 #include <algorithm>
 #include <stdexcept>
+#include <iostream>
 
 //the functions is_number and is_name were taken and modified from:
 //https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
@@ -460,7 +461,11 @@ void Table::RemoveVariableScope() {
     std::vector<VariableNode> * currentScope = &variableScopes.back();
 
     for(auto & it : *currentScope){
+        if(it.variableName == "copy"){
+            std::cout << "problem child" << std::endl;
+        }
         delete it.valueOfVariable;
+        std::cout << "deleted " << it.variableName << std::endl;
     }
 
     variableScopes.pop_back();

@@ -163,8 +163,8 @@ namespace {
         IntegerNode a = IntegerNode(8);
         VariableNode var = VariableNode(&a, "Test", "num");
 
-        NegateNode negIntNode = NegateNode((int)a.EvaluateNode());
-        NegateNode negVarNode = NegateNode((int)var.EvaluateNode());
+        NegateNode negIntNode = NegateNode(&a);
+        NegateNode negVarNode = NegateNode(&var);
 
         ASSERT_EQ(negIntNode.EvaluateNode(), -8);
         ASSERT_EQ(negVarNode.EvaluateNode(), -8);

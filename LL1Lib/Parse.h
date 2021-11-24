@@ -12,11 +12,11 @@
 
 class Parser{
 public:
-    explicit Parser(const std::string& line, Table table);
+    explicit Parser(const std::string& line, Table& table);
     bool successfulParse;
     //contains the expression
     Expression expr;
-
+    void EvaluateLine(Table& table);
     void SwapStack(int ruleIndex, std::vector<int> & stack, Table table);
 };
 
