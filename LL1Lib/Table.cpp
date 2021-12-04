@@ -411,7 +411,7 @@ bool Table::is_already_a_var(const std::string& nameOfVariable) {
         //loop through all the variables in the current scope
         for(auto & variable : currentScope){
             //if we have a variable with the name it is already declared
-            if(nameOfVariable == variable.variableName){
+            if(nameOfVariable == variable->variableName){
                 return true;
             }
         }
@@ -422,14 +422,14 @@ bool Table::is_already_a_var(const std::string& nameOfVariable) {
 /// Get the variable corresponding to the name you just passed
 /// \param nameOfVariableToReturn the name of the variable you want to get
 /// \return The variable corresponding to the name you entered. Throws an exception if their is no variable by that name
-VariableNode * Table::GetVariable(const std::string &nameOfVariableToReturn) {
-    VariableNode *varToReturn = nullptr;
+std::shared_ptr<VariableNode> Table::GetVariable(const std::string &nameOfVariableToReturn) {
+    std::shared_ptr<VariableNode> varToReturn = nullptr;
 
     for(auto & currentScope : variableScopes){
         //loop through all the variables in the current scope
         for(auto & variable : currentScope){
-            if(nameOfVariableToReturn == variable.variableName){
-                varToReturn = &variable;
+            if(nameOfVariableToReturn == variable->variableName){
+                varToReturn = variable;
                 break;
             }
         }
@@ -447,13 +447,12 @@ VariableNode * Table::GetVariable(const std::string &nameOfVariableToReturn) {
 /// Note: this function checks if there is already a variable by the same name
 /// \param varToAdd the variable you wish to declare
 /// \return True if we added the variable. False if we were unable to add the variable
-bool Table::AddVariable(const VariableNode& varToAdd) {
-    bool notPreviouslyAVar = !is_already_a_var(varToAdd.variableName);
+bool Table::AddVariable(const std::shared_ptr<VariableNode>& varToAdd) {
+    bool notPreviouslyAVar = !is_already_a_var(varToAdd->variableName);
     //if the variable name is not already used add it to the variables
     if(notPreviouslyAVar){
         //get the current scope and add a new variable
-        std::vector<VariableNode> * currentScope = &variableScopes.back();
-        currentScope->push_back(varToAdd);
+        variableScopes.back().push_back(varToAdd);
     }
 
     return notPreviouslyAVar;
@@ -464,12 +463,6 @@ void Table::AddVariableScope() {
 }
 
 void Table::RemoveVariableScope() {
-    std::vector<VariableNode> * currentScope = &variableScopes.back();
-
-    for(auto & it : *currentScope){
-        delete it.valueOfVariable;
-    }
-
     variableScopes.pop_back();
 }
 
@@ -492,8 +485,8 @@ bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
 
             //loop through to ensure all the params do not match
             for(int paramIndex = 0; paramIndex != it->procedureParameters.size(); paramIndex++){
-                std::string newParamType = procedureToAdd.procedureParameters[paramIndex].variableType;
-                std::string oldParamType = it->procedureParameters[paramIndex].variableType;
+                std::string newParamType = procedureToAdd.procedureParameters[paramIndex]->variableType;
+                std::string oldParamType = it->procedureParameters[paramIndex]->variableType;
 
                 //if at any point the params datatype does not match we can stop checking
                 if(oldParamType != newParamType){
@@ -516,10 +509,6 @@ void Table::CleanUpTable() {
     //clean up variable scopes
     for(auto it = variableScopes.begin(); it != variableScopes.end(); it++){
         RemoveVariableScope();
-    }
-    //remove procedures
-    for(auto it = procedures.begin(); it != procedures.end(); it++){
-        delete it->procedureOperation;
     }
 
 }

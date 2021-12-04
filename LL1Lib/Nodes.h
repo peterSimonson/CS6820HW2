@@ -6,6 +6,7 @@
 #define CS6820HW2_NODES_H
 
 #include <string>
+#include <utility>
 #include <vector>
 
 //Super class for all nodes in our tree
@@ -43,9 +44,9 @@ public:
 //Negate an integer value
 class NegateNode : public TreeNode{
 public:
-    explicit NegateNode(TreeNode * valueToNegate);
+    explicit NegateNode(std::shared_ptr<TreeNode> valueToNegate);
 
-    TreeNode * value;
+    std::shared_ptr<TreeNode>value;
 
     double EvaluateNode() override;
     std::string NodeToString() override;
@@ -56,10 +57,10 @@ class VariableNode : public TreeNode{
 public:
     std::string variableName;
     std::string variableType;
-    TreeNode * valueOfVariable = nullptr;
+    std::shared_ptr<TreeNode>valueOfVariable = nullptr;
 
-    explicit VariableNode(TreeNode *valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar);
-    void AssignValue(TreeNode *valueOfVar);
+    explicit VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar);
+    void AssignValue(std::shared_ptr<TreeNode> valueOfVar);
     double EvaluateNode() override;
     std::string NodeToString() override;
 };
@@ -69,23 +70,23 @@ public:
     std::string procedureName;
     std::string procedureReturnType;
     //holds the parameters
-    std::vector<VariableNode> procedureParameters;
+    std::vector<std::shared_ptr<VariableNode>> procedureParameters;
     //holds the operation the procedure performs
-    TreeNode * procedureOperation = nullptr;
+    std::shared_ptr<TreeNode> procedureOperation = nullptr;
 
-    explicit ProcedureNode(std::string name, std::string returnType, std::vector<VariableNode> parameters);
+    explicit ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters);
     double EvaluateNode() override;
     std::string NodeToString() override;
-    void AssignValue(TreeNode *valueOfVar);
+    void AssignValue(std::shared_ptr<TreeNode>);
 };
 
 //Interface for our operation classes
 class OperationNode : public TreeNode{
 public:
-    TreeNode * left;
-    TreeNode * right;
+    std::shared_ptr<TreeNode> left;
+    std::shared_ptr<TreeNode> right;
 
-    OperationNode(TreeNode * leftNode, TreeNode * rightNode);
+    OperationNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode);
 };
 
 //add two integer values
@@ -94,7 +95,8 @@ public:
     double EvaluateNode() override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
-    AddNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
+    AddNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode)
+    : OperationNode(std::move(leftNode), std::move(rightNode)) {}
 };
 
 //subtract two integer values
@@ -103,7 +105,8 @@ public:
     double EvaluateNode() override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
-    SubtractNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
+    SubtractNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode)
+    : OperationNode(std::move(leftNode), std::move(rightNode)) {}
 };
 
 //Divide two integer values
@@ -112,7 +115,8 @@ public:
     double EvaluateNode() override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
-    DivideNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
+    DivideNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode)
+    : OperationNode(std::move(leftNode), std::move(rightNode)) {}
 };
 
 //multiply two integer values
@@ -121,7 +125,8 @@ public:
     double EvaluateNode() override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
-    MultiplyNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
+    MultiplyNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode)
+    : OperationNode(std::move(leftNode), std::move(rightNode)) {}
 };
 
 //multiply two integer values
@@ -130,7 +135,8 @@ public:
     double EvaluateNode() override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
-    ExponentNode(TreeNode *leftNode, TreeNode *rightNode) : OperationNode(leftNode, rightNode) {}
+    ExponentNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode)
+    : OperationNode(std::move(leftNode), std::move(rightNode)) {}
 };
 
 #endif //CS6820HW2_NODES_H

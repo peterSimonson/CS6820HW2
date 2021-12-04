@@ -90,7 +90,7 @@ public:
     //holds the data types
     std::vector<std::string> dataTypes;
     //Vector of vectors that holds the variable scopes
-    std::vector<std::vector<VariableNode>> variableScopes;
+    std::vector<std::vector<std::shared_ptr<VariableNode>>> variableScopes;
     //holds the procedures
     std::vector<ProcedureNode> procedures;
     //holds the table
@@ -104,8 +104,8 @@ public:
     void addRule(int lhs, std::vector<int>&& rhs);
     std::vector<int> findFirstPlusSet(rule production);
     bool is_already_a_var(const std::string& nameOfVariable);
-    VariableNode * GetVariable(const std::string& nameOfVariableToReturn);
-    bool AddVariable(const VariableNode& varToAdd);
+    std::shared_ptr<VariableNode> GetVariable(const std::string& nameOfVariableToReturn);
+    bool AddVariable(const std::shared_ptr<VariableNode>& varToAdd);
     bool AddProcedure(const ProcedureNode& procedureToAdd);
     void AddVariableScope();
     void RemoveVariableScope();

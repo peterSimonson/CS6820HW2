@@ -75,21 +75,20 @@ void RunTestFiles(){
     }
 
     file.close();
-    auto currentScope = table.variableScopes.back();
+    std::vector<std::shared_ptr<VariableNode>> currentScope = table.variableScopes.back();
     for(auto it = currentScope.begin(); it != currentScope.end(); it++){
 
         if(line == "num var50 = var1 - var2"){
 
         }
-
-        std::string output = "Current Value of: " + it->variableType + " " + it->variableName + " = ";
+        std::string output = "Current Value of: " + it->get()->variableType + " " + it->get()->variableName + " = ";
         try{
-            if(it->variableType == "num"){
-                //so we are saving all values as doubles and converting them back to ints at the vary end if need be
-                output += std::to_string((int)it->EvaluateNode());
+            if(it->get()->variableType == "num"){
+                //so we are saving all values as doubles and converting them back to ints at the very end if need be
+                output += std::to_string((int)it->get()->EvaluateNode());
             }
             else{
-                output += std::to_string(it->EvaluateNode());
+                output += std::to_string(it->get()->EvaluateNode());
             }
         }
         catch(...){

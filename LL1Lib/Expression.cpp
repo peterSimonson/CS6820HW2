@@ -99,34 +99,34 @@ std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& i
 /// Evaluates a postfix expression
 /// \param postFixExpression the post-fix expression you wish to evaluate
 /// \return the value of the post-fix expression
-TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table) {
+std::shared_ptr<TreeNode> evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table) {
 
     //holds the stack needed to evaluate
-    std::stack<TreeNode*> stack;
+    std::stack<std::shared_ptr<TreeNode>> stack;
     //loop through each term in the post-fix expression
     for(auto & word : postFixExpression){
         //if word is a number, create an int node and push it to the stack
         if(is_number(word)){
             if(is_decimal_number(word)){
-                auto * decimalNode = new DecimalNode(std::stod(word));
-                stack.push(decimalNode);
+                std::shared_ptr<TreeNode> decimalNode(new DecimalNode(std::stod(word)));
+                stack.push(std::move(decimalNode));
             }
             //if it isn't a decimal it is an integer
             else{
-                auto * intNode = new IntegerNode(std::stoi(word));
-                stack.push(intNode);
+                std::shared_ptr<TreeNode> intNode(new IntegerNode(std::stoi(word)));
+                stack.push(std::move(intNode));
             }
 
         }
         //if it is a variable
         else if(is_name(word)){
-            TreeNode * nodeToPush;
+            std::shared_ptr<TreeNode> nodeToPush;
             //if it is a negative variable
             if(is_Neg_Name(word)){
                 //get the variable name without the minus sign
-                TreeNode * variableNode = table.GetVariable(word.substr(1, word.size()));
+                std::shared_ptr<VariableNode> variableNode = table.GetVariable(word.substr(1, word.size()));
                 //add the negative of variable node
-                nodeToPush = new NegateNode(variableNode);
+                nodeToPush =  std::make_shared<NegateNode>(variableNode);
             }
             else{
                 //if it is positive we can just get the variable
@@ -141,10 +141,10 @@ TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Tab
         }
         //otherwise, we have an operator
         else{
-            auto * value1 = stack.top();
+            std::shared_ptr<TreeNode> value1 = stack.top();
             stack.pop();
 
-            TreeNode * value2 = nullptr;
+            std::shared_ptr<TreeNode> value2 = nullptr;
             //check if we have a second value
             if(!stack.empty()){
                 value2 = stack.top();
@@ -153,23 +153,23 @@ TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Tab
 
 
             if(word == "+"){
-                auto * addNode = new AddNode(value2, value1);
+                std::shared_ptr<TreeNode> addNode(new AddNode(value2, value1));
                 stack.push(addNode);
             }
             else if(word == "-"){
-                TreeNode * minusNode = new SubtractNode(value2, value1);
+                std::shared_ptr<TreeNode> minusNode(new SubtractNode(value2, value1));
                 stack.push(minusNode);
             }
             else if(word == "*"){
-                auto * multiplyNode = new MultiplyNode(value2, value1);
+                std::shared_ptr<TreeNode> multiplyNode(new MultiplyNode(value2, value1));
                 stack.push(multiplyNode);
             }
             else if(word == "/"){
-                auto * divideNode = new DivideNode(value2, value1);
+                std::shared_ptr<TreeNode> divideNode(new DivideNode(value2, value1));
                 stack.push(divideNode);
             }
             else if(word == "^"){
-                auto * exponentNode = new ExponentNode(value2, value1);
+                std::shared_ptr<TreeNode> exponentNode(new ExponentNode(value2, value1));
                 stack.push(exponentNode);
             }
             //else if it is a function call
@@ -373,7 +373,7 @@ void Expression::EvaluateExpression(Table& table) {
 
 void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
     std::string variableName;
-    VariableNode * variable;
+    std::shared_ptr<VariableNode> variable;
 
     //the variable name is one before the equals
     variableName = words[indexOfEquals - 1];
@@ -384,7 +384,7 @@ void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
     //convert infix to postfix
     std::vector<std::string> postfix  = convertInfixToPostFix(infix);
     //evaluate the expression in postfix form
-    TreeNode * valueOfVariable = evaluatePostFix(postfix, table);
+    std::shared_ptr<TreeNode> valueOfVariable = evaluatePostFix(postfix, table);
     //assign the evaluated value to the variable
     variable->AssignValue(valueOfVariable);
 }
@@ -396,16 +396,16 @@ void Expression::DeclareNewVariable(Table& table) {
     //the variable name is the second word
     variableName = words[1];
     //create the unassigned variable
-    VariableNode variable = VariableNode(nullptr, variableName, variableType);
+    std::shared_ptr<VariableNode> variable(new VariableNode(nullptr, variableName, variableType));
 
     if(!table.AddVariable(variable)){
         throw std::logic_error(variableName + " is being declared multiple times\n");
     }
 }
 
-std::vector<VariableNode> Expression::DeclareNewParams(Table &table) {
+std::vector<std::shared_ptr<VariableNode>> Expression::DeclareNewParams(Table &table) {
 
-    std::vector<VariableNode> parameters;
+    std::vector<std::shared_ptr<VariableNode>> parameters;
     //find where the parameters start
     auto it = std::find(tokens.begin(), tokens.end(), OPEN_PAREN_TOKEN);
     int indexOfOpenParen = (int)(it - tokens.begin());
@@ -420,7 +420,7 @@ std::vector<VariableNode> Expression::DeclareNewParams(Table &table) {
             std::string variableType = words[i]; //get the datatype
             i++;//move onto the variable name
             std::string variableName = words[i]; //get the datatype
-            VariableNode procedureParameter = VariableNode(nullptr, variableName, variableType);
+            std::shared_ptr<VariableNode> procedureParameter(new VariableNode(nullptr, variableName, variableType));
             //add the parameter to the current scope
             table.AddVariable(procedureParameter);
             //add the parameter to the list of parameters
@@ -441,7 +441,7 @@ void Expression::DeclareNewProcedure(Table &table) {
     //get the procedure name
     std::string procedureName = words[2];
     //get the parameters
-    std::vector<VariableNode> procedureParams = DeclareNewParams(table);
+    std::vector<std::shared_ptr<VariableNode>> procedureParams = DeclareNewParams(table);
     ProcedureNode newProcedure = ProcedureNode(procedureName, returnType, procedureParams);
     //if we cannot add a new procedure throw an error
     if(!table.AddProcedure(newProcedure)){
@@ -456,7 +456,7 @@ void Expression::HandleProcedureCall(Table &table, std::string procedureCall) {
     int indexOfCloseParen = (int)procedureCall.find(')');
 
     std::string nameOfFunction = procedureCall.substr(0, indexOfOpenParen); //name of the function being called
-    std::vector<TreeNode *> functionArguments; //args being entered into the function
+    std::vector<std::shared_ptr<TreeNode>> functionArguments; //args being entered into the function
     std::string currentArgument;
     //get all the variables
     for(int i = indexOfOpenParen + 1; i < indexOfCloseParen; i++){
@@ -466,18 +466,18 @@ void Expression::HandleProcedureCall(Table &table, std::string procedureCall) {
             //check if we have a variable name
             if(is_positive_name(currentArgument)){
                 //get the variable
-                VariableNode * argument = table.GetVariable(currentArgument);
+                std::shared_ptr<VariableNode> argument = table.GetVariable(currentArgument);
                 //add the argument
                 functionArguments.push_back(argument);
             }
-                // if it is a constant
+            // if it is a constant
             else if(is_number(currentArgument)){
-                TreeNode * constant;
+                std::shared_ptr<TreeNode> constant;
                 if(is_number(procedureCall)){
-                    constant = new IntegerNode(std::stoi(procedureCall));
+                    constant = std::make_shared<IntegerNode>(std::stoi(procedureCall));
                 }
                 else if(is_decimal_number(procedureCall)){
-                    constant = new DecimalNode(std::stod(procedureCall));
+                    constant = std::make_shared<DecimalNode>(std::stod(procedureCall));
                 }
 
                 functionArguments.push_back(constant);
@@ -486,7 +486,7 @@ void Expression::HandleProcedureCall(Table &table, std::string procedureCall) {
             //reset the current argument string
             currentArgument = "";
         }
-            //otherwise, add to the currentArg
+        //otherwise, add to the currentArg
         else{
             currentArgument += procedureCall[i];
         }

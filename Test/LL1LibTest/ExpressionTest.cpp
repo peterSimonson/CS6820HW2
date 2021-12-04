@@ -134,7 +134,7 @@ namespace{
         //1+2 in postfix Form
         std::vector<std::string> postFixExpr = {"1", "2", "+"};
 
-        TreeNode * node = evaluatePostFix(postFixExpr, Table());
+        std::shared_ptr<TreeNode> node = evaluatePostFix(postFixExpr, Table());
         int actual = (int) node->EvaluateNode();
         int expected = 1+2;
 
@@ -194,7 +194,7 @@ namespace{
         //1+2 in postfix Form
         std::vector<std::string> postFixExpr = {"1.5", "2", "+"};
 
-        TreeNode * node = evaluatePostFix(postFixExpr, Table());
+        std::shared_ptr<TreeNode> node = evaluatePostFix(postFixExpr, Table());
         double actual = node->EvaluateNode();
         double expected = 1.5+2;
 
@@ -251,41 +251,40 @@ namespace{
 
     TEST(ExpressionTests, EvaluateExpressionTest){
         Table table = Table();
-        std::vector<VariableNode> * currentScope = & table.variableScopes.back();
 
         std::vector<std::string> line = {"num", "var1"};
         Expression expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
 
-        ASSERT_EQ(currentScope->size(), 1);
-        ASSERT_EQ(currentScope->back().variableName, "var1");
-        ASSERT_EQ(currentScope->back().variableType, "num");
+        ASSERT_EQ(table.variableScopes.back().size(), 1);
+        ASSERT_EQ(table.variableScopes.back().back()->variableName, "var1");
+        ASSERT_EQ(table.variableScopes.back().back()->variableType, "num");
 
         line = {"var1", "=", "42"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
 
-        ASSERT_EQ(currentScope->size(), 1);
-        ASSERT_EQ(currentScope->back().variableName, "var1");
-        ASSERT_EQ(currentScope->back().variableType, "num");
-        ASSERT_EQ(currentScope->back().EvaluateNode(), 42);
+        ASSERT_EQ(table.variableScopes.back().size(), 1);
+        ASSERT_EQ(table.variableScopes.back().back()->variableName, "var1");
+        ASSERT_EQ(table.variableScopes.back().back()->variableType, "num");
+        ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), 42);
 
         line = {"ish", "var2", "=", "42.5"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
 
-        ASSERT_EQ(currentScope->size(), 2);
-        ASSERT_EQ(currentScope->back().variableName, "var2");
-        ASSERT_EQ(currentScope->back().variableType, "ish");
-        ASSERT_EQ(currentScope->back().EvaluateNode(), 42.5);
+        ASSERT_EQ(table.variableScopes.back().size(), 2);
+        ASSERT_EQ(table.variableScopes.back().back()->variableName, "var2");
+        ASSERT_EQ(table.variableScopes.back().back()->variableType, "ish");
+        ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), 42.5);
 
         line = {"ish", "var3", "=", "var2", "+", "var2"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
-        ASSERT_EQ(currentScope->size(), 3);
-        ASSERT_EQ(currentScope->back().variableName, "var3");
-        ASSERT_EQ(currentScope->back().variableType, "ish");
-        ASSERT_EQ(currentScope->back().EvaluateNode(), 85);
+        ASSERT_EQ(table.variableScopes.back().size(), 3);
+        ASSERT_EQ(table.variableScopes.back().back()->variableName, "var3");
+        ASSERT_EQ(table.variableScopes.back().back()->variableType, "ish");
+        ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), 85);
 
     }
 
@@ -296,11 +295,10 @@ namespace{
         Expression expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
 
-        std::vector<VariableNode> * currentScope = & table.variableScopes.back();
         //2 variable scopes
         ASSERT_EQ(table.variableScopes.size(), 2);
         //two variables in the current scope
-        ASSERT_EQ(currentScope->size(), 2);
+        ASSERT_EQ(table.variableScopes.back().size(), 2);
         //1 procedure declared
         ASSERT_EQ(table.procedures.size(), 1);
 
@@ -315,7 +313,7 @@ namespace{
 
         ASSERT_EQ(table.variableScopes.size(), 2);
         //two variables in the current scope
-        ASSERT_EQ(currentScope->size(), 3);
+        ASSERT_EQ(table.variableScopes.back().size(), 3);
 
         //return statement in the procedure
         line = {"return", "result"} ;
@@ -328,12 +326,11 @@ namespace{
         line = {"}"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
-        currentScope = & table.variableScopes.back();
 
         //1 variable scope
         ASSERT_EQ(table.variableScopes.size(), 1);
         //zero variables in the current scope
-        ASSERT_EQ(currentScope->size(), 0);
+        ASSERT_EQ(table.variableScopes.back().size(), 0);
     }
 
     TEST(ExpressionTests, AssignmentWithProceduresTest){
@@ -418,7 +415,7 @@ namespace{
 
     TEST(ExpressionTests, EvaluateExpressionErrorTest){
         Table table = Table();
-        std::vector<VariableNode> * currentScope = & table.variableScopes.back();
+        std::vector<std::shared_ptr<VariableNode>> currentScope = table.variableScopes.back();
 
         std::vector<std::string> line = {"var1", "=", "2"};
         Expression expr = TranslateWordsToTokens(line, table.dataTypes);
@@ -428,7 +425,7 @@ namespace{
             FAIL() << "Expected logic error when evaluating";
         }
         catch(std::logic_error const & err) {
-            ASSERT_EQ(currentScope->size(), 0);
+            ASSERT_EQ(currentScope.size(), 0);
         }
         catch(...) {
             FAIL() << "Expected logic error but got a different kind of error";
@@ -438,7 +435,7 @@ namespace{
         line = {"num", "test"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
-        ASSERT_EQ(currentScope->size(), 1);
+        ASSERT_EQ(currentScope.size(), 1);
 
         //try to reference a variable that does not exist
         line = {"test", "=", "doesNotExist"};
@@ -449,7 +446,7 @@ namespace{
         }
         catch(std::logic_error const & err) {
             //ensure we have not set the variable to anything
-            ASSERT_EQ(currentScope->back().valueOfVariable, nullptr);
+            ASSERT_EQ(currentScope.back()->valueOfVariable, nullptr);
         }
         catch(...) {
             FAIL() << "Expected logic error but got a different kind of error";
@@ -464,7 +461,7 @@ namespace{
         }
         catch(std::logic_error const & err) {
             //ensure we did not declare it again
-            ASSERT_EQ(currentScope->size(), 1);
+            ASSERT_EQ(currentScope.size(), 1);
         }
         catch(...) {
             FAIL() << "Expected logic error but got a different kind of error";

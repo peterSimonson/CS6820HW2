@@ -22,10 +22,10 @@ public:
     void DeclareNewVariable(Table& table);
     void DeclareNewProcedure(Table& table);
     void HandleProcedureCall(Table& table, std::string procedureCall);
-    std::vector<VariableNode> DeclareNewParams(Table& table);
+    std::vector<std::shared_ptr<VariableNode>> DeclareNewParams(Table& table);
 };
 std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& infixExpression);
 Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vector<std::string>& dataTypes);
-TreeNode * evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table);
+std::shared_ptr<TreeNode> evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table);
 
 #endif //CS6820HW2_EXPRESSION_H

@@ -19,10 +19,10 @@ IntegerNode::IntegerNode(int valueOfNode) {
     value = valueOfNode;
 }
 
-VariableNode::VariableNode(TreeNode *valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) {
+VariableNode::VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) {
     variableName = nameOfVar;
     variableType = typeOfVar;
-    AssignValue(valueOfVar);
+    AssignValue(std::move(valueOfVar));
 }
 
 std::string VariableNode::NodeToString() {
@@ -39,13 +39,13 @@ double VariableNode::EvaluateNode() {
 
 }
 
-void VariableNode::AssignValue(TreeNode *valueOfVar) {
-    valueOfVariable = valueOfVar;
+void VariableNode::AssignValue(std::shared_ptr<TreeNode> valueOfVar) {
+    valueOfVariable = std::move(valueOfVar);
 }
 
-OperationNode::OperationNode(TreeNode *leftNode, TreeNode *rightNode) {
-    left = leftNode;
-    right = rightNode;
+OperationNode::OperationNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode) {
+    left = std::move(leftNode);
+    right = std::move(rightNode);
 }
 
 double AddNode::EvaluateNode() {
@@ -107,7 +107,7 @@ std::string DecimalNode::NodeToString() {
     return std::to_string(value);
 }
 
-ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vector<VariableNode> parameters) {
+ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters) {
 
     procedureName = std::move(name);
     procedureReturnType = std::move(returnType);
@@ -127,7 +127,7 @@ std::string ProcedureNode::NodeToString() {
     std::string returnVal = procedureName + "(";
 
     for(int i = 0; i < procedureParameters.size(); i++){
-        returnVal += procedureParameters[i].variableName;
+        returnVal += procedureParameters[i]->variableName;
 
         if(i + 1 != procedureParameters.size()){
             returnVal += ", ";
@@ -139,12 +139,12 @@ std::string ProcedureNode::NodeToString() {
     return returnVal;
 }
 
-void ProcedureNode::AssignValue(TreeNode *valueOfVar) {
-    procedureOperation = valueOfVar;
+void ProcedureNode::AssignValue(std::shared_ptr<TreeNode> valueOfVar) {
+    procedureOperation = std::move(valueOfVar);
 }
 
-NegateNode::NegateNode(TreeNode *valueToNegate) {
-    value = valueToNegate;
+NegateNode::NegateNode(std::shared_ptr<TreeNode> valueToNegate) {
+    value = std::move(valueToNegate);
 }
 
 double NegateNode::EvaluateNode() {

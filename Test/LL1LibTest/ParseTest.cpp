@@ -395,7 +395,7 @@ namespace {
         ASSERT_TRUE(parse.successfulParse);
         parse.EvaluateLine(table);
 
-        ASSERT_EQ(table.variableScopes.back().back().EvaluateNode(), -1);
+        ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), -1);
 
         line = "num var2 = -3";
         parse = Parser(line, table);
@@ -403,7 +403,7 @@ namespace {
         ASSERT_TRUE(parse.successfulParse);
         parse.EvaluateLine(table);
 
-        ASSERT_EQ(table.variableScopes.back().back().EvaluateNode(), -3);
+        ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), -3);
 
         line = "num var22 = -1 * 8 / -1";
         parse = Parser(line, table);
@@ -411,7 +411,7 @@ namespace {
         ASSERT_TRUE(parse.successfulParse);
         parse.EvaluateLine(table);
 
-        ASSERT_EQ(table.variableScopes.back().back().EvaluateNode(), 8);
+        ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), 8);
     }
 
     TEST(ParserTests, SimpleDivideByZeroEvalTest){
@@ -425,7 +425,7 @@ namespace {
 
         //try to divide by zero
         try {
-            table.variableScopes.back().back().EvaluateNode();
+            table.variableScopes.back().back()->EvaluateNode();
 
             FAIL() << "Expected runtime error";
         }

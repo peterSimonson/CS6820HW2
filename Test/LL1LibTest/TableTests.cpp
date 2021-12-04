@@ -173,15 +173,15 @@ namespace {
         Table table = Table();
         ASSERT_EQ(table.variableScopes.size(), 1);
 
-        IntegerNode eight = IntegerNode(8);
-        VariableNode var1 = VariableNode(&eight, "var1", "num");
+        std::shared_ptr<TreeNode> eight(new IntegerNode(8));
+        std::shared_ptr<VariableNode> var1 (new VariableNode(eight, "var1", "num"));
 
         ASSERT_TRUE(table.AddVariable(var1));
         ASSERT_EQ(table.variableScopes.back().size(), 1);
         ASSERT_FALSE(table.AddVariable(var1));
         ASSERT_EQ(table.variableScopes.back().size(), 1);
 
-        VariableNode var2 = VariableNode(&eight, "var2", "num");
+        std::shared_ptr<VariableNode> var2 (new VariableNode(eight, "var2", "num"));
 
         ASSERT_TRUE(table.AddVariable(var2));
         ASSERT_EQ(table.variableScopes.back().size(), 2);
@@ -204,15 +204,15 @@ namespace {
             FAIL() << "Expected logic error but got a different kind of error";
         }
 
-        IntegerNode eight = IntegerNode(8);
-        VariableNode var1 = VariableNode(&eight, varName, "num");
+        std::shared_ptr<TreeNode> eight(new IntegerNode(8));
+        std::shared_ptr<VariableNode> var1 (new VariableNode(eight, "var1", "num"));
 
         table.AddVariable(var1);
 
-        VariableNode * result = table.GetVariable(varName);
+        std::shared_ptr<VariableNode> result = table.GetVariable(varName);
 
-        ASSERT_EQ(result->variableName, var1.variableName);
-        ASSERT_EQ(result->EvaluateNode(), var1.EvaluateNode());
+        ASSERT_EQ(result->variableName, var1->variableName);
+        ASSERT_EQ(result->EvaluateNode(), var1->EvaluateNode());
     }
 
 }
