@@ -136,8 +136,7 @@ std::shared_ptr<TreeNode> evaluatePostFix(const std::vector<std::string> &postFi
         }
         //if it is a function call
         else if(is_function_call(word)){
-            throw std::logic_error("Procedure calls are not yet fully implemented\n");
-            //HandleProcedureCall(table, word);
+            HandleProcedureCall(table, word);
         }
         //otherwise, we have an operator
         else{
@@ -450,7 +449,7 @@ void Expression::DeclareNewProcedure(Table &table) {
 
 }
 
-void Expression::HandleProcedureCall(Table &table, std::string procedureCall) {
+void HandleProcedureCall(Table &table, std::string procedureCall) {
     //get the opening and closing parenthesis
     int indexOfOpenParen = (int)procedureCall.find('(');
     int indexOfCloseParen = (int)procedureCall.find(')');

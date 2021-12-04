@@ -415,7 +415,6 @@ namespace{
 
     TEST(ExpressionTests, EvaluateExpressionErrorTest){
         Table table = Table();
-        std::vector<std::shared_ptr<VariableNode>> currentScope = table.variableScopes.back();
 
         std::vector<std::string> line = {"var1", "=", "2"};
         Expression expr = TranslateWordsToTokens(line, table.dataTypes);
@@ -425,7 +424,7 @@ namespace{
             FAIL() << "Expected logic error when evaluating";
         }
         catch(std::logic_error const & err) {
-            ASSERT_EQ(currentScope.size(), 0);
+            ASSERT_EQ(table.variableScopes.back().size(), 0);
         }
         catch(...) {
             FAIL() << "Expected logic error but got a different kind of error";
@@ -435,7 +434,7 @@ namespace{
         line = {"num", "test"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
-        ASSERT_EQ(currentScope.size(), 1);
+        ASSERT_EQ(table.variableScopes.back().size(), 1);
 
         //try to reference a variable that does not exist
         line = {"test", "=", "doesNotExist"};
@@ -446,7 +445,7 @@ namespace{
         }
         catch(std::logic_error const & err) {
             //ensure we have not set the variable to anything
-            ASSERT_EQ(currentScope.back()->valueOfVariable, nullptr);
+            ASSERT_EQ(table.variableScopes.back().back()->valueOfVariable, nullptr);
         }
         catch(...) {
             FAIL() << "Expected logic error but got a different kind of error";
@@ -461,7 +460,7 @@ namespace{
         }
         catch(std::logic_error const & err) {
             //ensure we did not declare it again
-            ASSERT_EQ(currentScope.size(), 1);
+            ASSERT_EQ(table.variableScopes.back().size(), 1);
         }
         catch(...) {
             FAIL() << "Expected logic error but got a different kind of error";
