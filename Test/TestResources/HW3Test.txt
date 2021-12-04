@@ -19,6 +19,7 @@ num var18 = -42
 num var19 = (-42)
 num var20 = ( -42)
 num var21 = -var
+num var22 = -1 * 8 / -1
 num var23 = 2-3
 num var24 = 2 - 3
 num var25 = 2 - -3
