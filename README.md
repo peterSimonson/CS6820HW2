@@ -18,7 +18,7 @@ To run the program enter the following
     ./CS6820HW2 [Expr]
        OPTIONAL <Expr>: The string containing the mathematical expression you wish to parse
 
-Please note: If you run `./CS6820HW2` without any command line arguments the program will parse all the expressions in the text files located in `./Test/TestResources`
+Please note: If you run `./CS6820HW2` without any command line arguments the program will parse all the expressions in the text file located in `./Test/TestResources/HW3Test.txt`
 
 ##LL1Lib Folder
 
