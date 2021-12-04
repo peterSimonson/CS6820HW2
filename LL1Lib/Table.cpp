@@ -68,7 +68,7 @@ bool is_decimal_number(const std::string& number){
 /// We check that the first char is a letter and the rest are alphanumeric
 /// \param s string we want to check if it is a name
 /// \return True if a name, false if it is not
-bool is_name(const std::string& s)
+bool is_positive_name(const std::string& s)
 {
     std::string::const_iterator it = s.begin();
     //first char must be a letter
@@ -94,7 +94,7 @@ bool is_Neg_Num(const std::string& s){
 }
 
 bool is_Neg_Name(const std::string& s){
-    if(s.at(0) == '-' && is_name(s.substr(1, s.size()))){
+    if(s.at(0) == '-' && is_positive_name(s.substr(1, s.size()))){
         return true;
     }
     else{
@@ -421,7 +421,7 @@ bool Table::is_already_a_var(const std::string& nameOfVariable) {
 
 /// Get the variable corresponding to the name you just passed
 /// \param nameOfVariableToReturn the name of the variable you want to get
-/// \return The variable corresponding to the name you entered. Returns nullptr if their is no variable by that name
+/// \return The variable corresponding to the name you entered. Throws an exception if their is no variable by that name
 VariableNode * Table::GetVariable(const std::string &nameOfVariableToReturn) {
     VariableNode *varToReturn = nullptr;
 
@@ -434,6 +434,12 @@ VariableNode * Table::GetVariable(const std::string &nameOfVariableToReturn) {
             }
         }
     }
+
+    //we couldn't find a match so through an error
+    if(varToReturn == nullptr){
+        throw std::logic_error(nameOfVariableToReturn + " is an undeclared or out of scope variable being referenced\n");
+    }
+
     return varToReturn;
 }
 
@@ -570,7 +576,7 @@ bool is_function_call(const std::string &word) {
     std::string nameOfFunction = word.substr(0, indexOfOpenParen);
 
     //if there is not a valid name
-    if(!is_name(nameOfFunction)){
+    if(!is_positive_name(nameOfFunction)){
         return false;
     }
 
@@ -579,4 +585,8 @@ bool is_function_call(const std::string &word) {
 
 bool is_number(const std::string &s) {
     return is_positive_number(s) || is_Neg_Num(s);
+}
+
+bool is_name(const std::string &s) {
+    return is_positive_name(s) || is_Neg_Name(s);
 }

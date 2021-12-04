@@ -77,6 +77,11 @@ void RunTestFiles(){
     file.close();
     auto currentScope = table.variableScopes.back();
     for(auto it = currentScope.begin(); it != currentScope.end(); it++){
+
+        if(line == "num var50 = var1 - var2"){
+
+        }
+
         std::string output = "Current Value of: " + it->variableType + " " + it->variableName + " = ";
         try{
             if(it->variableType == "num"){

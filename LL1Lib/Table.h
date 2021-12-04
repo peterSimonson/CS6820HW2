@@ -118,6 +118,7 @@ bool is_positive_number(const std::string& s);
 bool is_decimal_number(const std::string& number);
 bool is_Neg_Num(const std::string& s);
 bool is_name(const std::string& s);
+bool is_positive_name(const std::string& s);
 bool is_Neg_Name(const std::string& s);
 bool is_terminal(const int& token);
 bool is_Value_Token(int token);

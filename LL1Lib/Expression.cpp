@@ -35,7 +35,7 @@ std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& i
     std::vector<std::string> postFixExpression;
     std::vector<std::string> stack;
 
-    //loop through all words in the expression
+    //loop through the remaining words
     for(auto word = infixExpression.begin(); word!= infixExpression.end(); word++){
 
         //if it is a variable of a function call
@@ -57,7 +57,7 @@ std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& i
             postFixExpression.push_back(wordToPush);
         }
         //if it is a number push it back of the stack
-        else if(is_positive_number(*word)){
+        else if(is_number(*word)){
             postFixExpression.push_back(*word);
         }
             //add the open paran to the stack. We will look for it once we encounter the close paran
@@ -106,7 +106,7 @@ TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Tab
     //loop through each term in the post-fix expression
     for(auto & word : postFixExpression){
         //if word is a number, create an int node and push it to the stack
-        if(is_positive_number(word)){
+        if(is_number(word)){
             if(is_decimal_number(word)){
                 auto * decimalNode = new DecimalNode(std::stod(word));
                 stack.push(decimalNode);
@@ -120,12 +120,19 @@ TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Tab
         }
         //if it is a variable
         else if(is_name(word)){
-            auto * variableNode = table.GetVariable(word);
-            //if the variable is not declared throw an error
-            if(variableNode == nullptr){
-                throw std::logic_error(word + " is an undeclared or out of scope variable being referenced\n");
+            TreeNode * nodeToPush;
+            //if it is a negative variable
+            if(is_Neg_Name(word)){
+                //get the variable name without the minus sign
+                TreeNode * variableNode = table.GetVariable(word.substr(1, word.size()));
+                //add the negative of variable node
+                nodeToPush = new NegateNode(variableNode);
             }
-            stack.push(variableNode);
+            else{
+                //if it is positive we can just get the variable
+                nodeToPush = table.GetVariable(word);
+            }
+            stack.push(nodeToPush);
         }
         //if it is a function call
         else if(is_function_call(word)){
@@ -150,15 +157,7 @@ TreeNode *evaluatePostFix(const std::vector<std::string> &postFixExpression, Tab
                 stack.push(addNode);
             }
             else if(word == "-"){
-                TreeNode * minusNode = nullptr;
-                //if we have a second value create a minus node
-                if(value2 != nullptr){
-                    minusNode = new SubtractNode(value2, value1);
-                }
-                //if we don't have a second value create a negated node
-                else{
-                    minusNode = new NegateNode(value1);
-                }
+                TreeNode * minusNode = new SubtractNode(value2, value1);
                 stack.push(minusNode);
             }
             else if(word == "*"){
@@ -212,23 +211,24 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             tokens.push_back(RETURN_TOKEN);
             text.push_back(word);
         }
-        else if(is_name(word)){
+        else if(is_positive_name(word)){
             tokens.push_back(NAME_TOKEN);
             text.push_back(word);
         }
-            //if the first char is a space check if everything else is a num
+        //if the first char is a space check if everything else is a num
         else if(word.at(0) == ' ' && is_Neg_Num(word.substr(1, word.size()))){
             //if the last token is a value token we have a subtraction operation
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
                 tokens.push_back(NUM_TOKEN);
+                text.emplace_back("-");
+                text.push_back(word.substr(2, word.size()));
             }
-                //otherwise, we have a negative num
+            //otherwise, we have a negative num
             else{
                 tokens.push_back(SPACE_NEG_NUM_TOKEN);
+                text.push_back(word.substr(1, word.size()));
             }
-            text.emplace_back("-");
-            text.push_back(word.substr(2, word.size()));
         }
         //if the first char is a space check if everything else is a name
         else if(word.at(0) == ' ' && is_Neg_Name(word.substr(1, word.size()))){
@@ -236,13 +236,14 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
                 tokens.push_back(NAME_TOKEN);
+                text.emplace_back("-");
+                text.push_back(word.substr(2, word.size()));
             }
-                //otherwise, we have a negative num
+            //otherwise, we have a negative num
             else{
                 tokens.push_back(SPACE_NEG_NAME_TOKEN);
+                text.push_back(word.substr(1, word.size()));
             }
-            text.emplace_back("-");
-            text.push_back(word.substr(2, word.size()));
         }
             //if the first char is a negative check if everything else is a num
         else if(word.at(0) == '-' && is_positive_number(word.substr(1, word.size()))){
@@ -250,25 +251,27 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
                 tokens.push_back(NUM_TOKEN);
+                text.emplace_back("-");
+                text.push_back(word.substr(1, word.size()));
             }
-                //otherwise, we have a negative num
+            //otherwise, we have a negative num
             else{
                 tokens.push_back(NEG_NUM_TOKEN);
+                text.push_back(word);
             }
-            text.emplace_back("-");
-            text.push_back(word.substr(1, word.size()));
         }
             //if the first char is a negative check if everything else is a name
-        else if(word.at(0) == '-' && is_name(word.substr(1, word.size()))){
+        else if(word.at(0) == '-' && is_positive_name(word.substr(1, word.size()))){
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
                 tokens.push_back(NAME_TOKEN);
+                text.emplace_back("-");
+                text.push_back(word.substr(1, word.size()));
             }
             else{
                 tokens.push_back(NEG_NAME_TOKEN);
+                text.push_back(word);
             }
-            text.emplace_back("-");
-            text.push_back(word.substr(1, word.size()));
         }
         else if(word == "+"){
             tokens.push_back(PLUS_TOKEN);
@@ -376,11 +379,6 @@ void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
     variableName = words[indexOfEquals - 1];
     //look up the variable name
     variable = table.GetVariable(variableName);
-    //check if we were able to look up the variable
-    if(variable == nullptr){
-        //if it is not previously declared throw an error
-        throw std::logic_error(variableName + " is an undeclared or out of scope variable being assigned to\n");
-    }
     //get words after the equals sign. This is our infix expression
     std::vector<std::string> infix(words.begin() + (indexOfEquals + 1), words.end());
     //convert infix to postfix
@@ -466,19 +464,11 @@ void Expression::HandleProcedureCall(Table &table, std::string procedureCall) {
             //look up the parameter
 
             //check if we have a variable name
-            if(is_name(currentArgument)){
+            if(is_positive_name(currentArgument)){
                 //get the variable
                 VariableNode * argument = table.GetVariable(currentArgument);
-                //check if we found a variable
-                if(argument != nullptr){
-                    functionArguments.push_back(argument);
-                }
-                    //if no variable was found throw an error
-                else{
-                    std::string errMsg = "could not find variable " + currentArgument + "in function call to "
-                                         + nameOfFunction;
-                    throw std::logic_error(errMsg);
-                }
+                //add the argument
+                functionArguments.push_back(argument);
             }
                 // if it is a constant
             else if(is_number(currentArgument)){

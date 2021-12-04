@@ -404,6 +404,14 @@ namespace {
         parse.EvaluateLine(table);
 
         ASSERT_EQ(table.variableScopes.back().back().EvaluateNode(), -3);
+
+        line = "num var22 = -1 * 8 / -1";
+        parse = Parser(line, table);
+
+        ASSERT_TRUE(parse.successfulParse);
+        parse.EvaluateLine(table);
+
+        ASSERT_EQ(table.variableScopes.back().back().EvaluateNode(), 8);
     }
 
     TEST(ParserTests, SimpleDivideByZeroEvalTest){
@@ -427,13 +435,5 @@ namespace {
         catch(...) {
             FAIL() << "Expected runtime error";
         }
-
-        line = "num var22 = -1 * 8 / -1";
-        parse = Parser(line, table);
-
-        ASSERT_TRUE(parse.successfulParse);
-        parse.EvaluateLine(table);
-
-        ASSERT_EQ(table.variableScopes.back().back().EvaluateNode(), 8);
     }
 }

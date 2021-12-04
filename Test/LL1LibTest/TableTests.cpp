@@ -32,31 +32,31 @@ namespace {
 
     TEST(TableTests, IsNameTest){
         std::string test = "123";
-        ASSERT_FALSE(is_name(test));
+        ASSERT_FALSE(is_positive_name(test));
 
         test = "test";
-        ASSERT_TRUE(is_name(test));
+        ASSERT_TRUE(is_positive_name(test));
 
         test = "test123";
-        ASSERT_TRUE(is_name(test));
+        ASSERT_TRUE(is_positive_name(test));
 
         test = "test_123";
-        ASSERT_TRUE(is_name(test));
+        ASSERT_TRUE(is_positive_name(test));
 
         test = "test___________123";
-        ASSERT_TRUE(is_name(test));
+        ASSERT_TRUE(is_positive_name(test));
 
         test = "test___________123";
-        ASSERT_TRUE(is_name(test));
+        ASSERT_TRUE(is_positive_name(test));
 
         test = "123test";
-        ASSERT_FALSE(is_name(test));
+        ASSERT_FALSE(is_positive_name(test));
 
         test = "123_test";
-        ASSERT_FALSE(is_name(test));
+        ASSERT_FALSE(is_positive_name(test));
 
         test = "test!";
-        ASSERT_FALSE(is_name(test));
+        ASSERT_FALSE(is_positive_name(test));
     }
 
     TEST(TableTests, IsTerminalTest){
@@ -192,7 +192,17 @@ namespace {
     TEST(TableTests, GetVariableTest){
         Table table = Table();
         std::string varName = "var1";
-        ASSERT_EQ(table.GetVariable(varName), nullptr);
+        try {
+            table.GetVariable(varName);
+            FAIL() << "Expected logic error when evaluating";
+        }
+        catch(std::logic_error const & err) {
+            //ensure we have not set the variable to anything
+            ASSERT_EQ(table.variableScopes.size(), 1);
+        }
+        catch(...) {
+            FAIL() << "Expected logic error but got a different kind of error";
+        }
 
         IntegerNode eight = IntegerNode(8);
         VariableNode var1 = VariableNode(&eight, varName, "num");
