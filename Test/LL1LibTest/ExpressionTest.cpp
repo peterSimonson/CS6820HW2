@@ -60,20 +60,20 @@ namespace{
 
         auto expr =  TranslateWordsToTokens(words, dataTypes);
         std::vector<int> results{NEG_NUM_TOKEN, MINUS_TOKEN ,SPACE_NEG_NUM_TOKEN, MINUS_TOKEN, NEG_NAME_TOKEN, MINUS_TOKEN ,SPACE_NEG_NAME_TOKEN, END_TOKEN};
-        std::vector<std::string> text{"-", "32", "-", "-", "32", "-", "-", "testVar", "-", "-", "testVar"};
+        std::vector<std::string> text{"-32", "-", "-32", "-",  "-testVar", "-", "-testVar"};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.words, text);
 
         words = {"-32", " -32"};
         expr =  TranslateWordsToTokens(words, dataTypes);
         results = {NEG_NUM_TOKEN, MINUS_TOKEN, NUM_TOKEN, END_TOKEN};
-        text = {"-", "32", "-", "32"};
+        text = {"-32", "-", "32"};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.words, text);
 
         words = {"-test1", " -test2"};
         expr =  TranslateWordsToTokens(words, dataTypes);
-        text = {"-", "test1", "-", "test2"};
+        text = {"-test1", "-", "test2"};
         results = {NEG_NAME_TOKEN, MINUS_TOKEN, NAME_TOKEN, END_TOKEN};
         ASSERT_EQ(expr.tokens, results);
         ASSERT_EQ(expr.words, text);
