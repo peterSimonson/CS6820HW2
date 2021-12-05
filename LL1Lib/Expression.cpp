@@ -136,7 +136,9 @@ std::shared_ptr<TreeNode> evaluatePostFix(const std::vector<std::string> &postFi
         }
         //if it is a function call
         else if(is_function_call(word)){
-            HandleProcedureCall(table, word);
+            //get a populated procedure node
+            std::shared_ptr<ProcedureNode> procedureNode = HandleProcedureCall(table, word);
+            stack.push(procedureNode);
         }
         //otherwise, we have an operator
         else{
@@ -408,7 +410,7 @@ std::vector<std::shared_ptr<VariableNode>> Expression::DeclareNewParams(Table &t
     //find where the parameters start
     auto it = std::find(tokens.begin(), tokens.end(), OPEN_PAREN_TOKEN);
     int indexOfOpenParen = (int)(it - tokens.begin());
-    //loop through all the params. The params start after
+    //loop through all the params. The params start after open paren
     for(int i = indexOfOpenParen + 1; i < words.size(); i++){
         //if we hit the close parenthesis stop adding parameters
         if(tokens[i] == CLOSE_PAREN_TOKEN){
@@ -449,37 +451,39 @@ void Expression::DeclareNewProcedure(Table &table) {
 
 }
 
-void HandleProcedureCall(Table &table, std::string procedureCall) {
+std::shared_ptr<ProcedureNode> HandleProcedureCall(Table &table, std::string procedureCall) {
     //get the opening and closing parenthesis
     int indexOfOpenParen = (int)procedureCall.find('(');
     int indexOfCloseParen = (int)procedureCall.find(')');
 
-    std::string nameOfFunction = procedureCall.substr(0, indexOfOpenParen); //name of the function being called
-    std::vector<std::shared_ptr<TreeNode>> functionArguments; //args being entered into the function
-    std::string currentArgument;
-    //get all the variables
-    for(int i = indexOfOpenParen + 1; i < indexOfCloseParen; i++){
-        if(procedureCall[i] == ','){
-            //look up the parameter
+    std::string procedureName = procedureCall.substr(0, indexOfOpenParen); //name of the function being called
+    std::vector<std::shared_ptr<TreeNode>> procedureArgs; //args being entered into the function
+    std::string currentArgument; //the argument we are currently parsing
+    //get all the variables between the parentheses
+    for(int i = indexOfOpenParen + 1; i <= indexOfCloseParen; i++){
+        //if we are at a comma or a close paren we must add the currentArgument to the list
+        if(procedureCall[i] == ',' || procedureCall[i] == ')'){
 
             //check if we have a variable name
             if(is_positive_name(currentArgument)){
                 //get the variable
                 std::shared_ptr<VariableNode> argument = table.GetVariable(currentArgument);
-                //add the argument
-                functionArguments.push_back(argument);
+                //add the variable
+                procedureArgs.push_back(argument);
             }
             // if it is a constant
             else if(is_number(currentArgument)){
                 std::shared_ptr<TreeNode> constant;
-                if(is_number(procedureCall)){
-                    constant = std::make_shared<IntegerNode>(std::stoi(procedureCall));
+                //check if it is a decimal
+                if(is_decimal_number(currentArgument)){
+                    constant = std::make_shared<DecimalNode>(std::stod(currentArgument));
                 }
-                else if(is_decimal_number(procedureCall)){
-                    constant = std::make_shared<DecimalNode>(std::stod(procedureCall));
+                //otherwise, it must be an integer
+                else{
+                    constant = std::make_shared<IntegerNode>(std::stoi(currentArgument));
                 }
-
-                functionArguments.push_back(constant);
+                //add the constant
+                procedureArgs.push_back(constant);
             }
 
             //reset the current argument string
@@ -490,4 +494,15 @@ void HandleProcedureCall(Table &table, std::string procedureCall) {
             currentArgument += procedureCall[i];
         }
     }
+
+    //get the procedure being called
+    std::shared_ptr<ProcedureNode> procedureToCall = table.GetProcedure(procedureName, procedureArgs);
+
+    //populate the arguments
+    for(int i = 0; i < procedureToCall->procedureParameters.size(); i++){
+        //set the args to the ones we parsed
+        procedureToCall->procedureParameters[i]->AssignValue(procedureArgs[i]);
+    }
+
+    return procedureToCall;
 }

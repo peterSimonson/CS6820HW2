@@ -105,6 +105,7 @@ public:
     std::vector<int> findFirstPlusSet(rule production);
     bool is_already_a_var(const std::string& nameOfVariable);
     std::shared_ptr<VariableNode> GetVariable(const std::string& nameOfVariableToReturn);
+    std::shared_ptr<ProcedureNode> GetProcedure(const std::string& nameOfProcedureToReturn, std::vector<std::shared_ptr<TreeNode>> functionArguments);
     bool AddVariable(const std::shared_ptr<VariableNode>& varToAdd);
     bool AddProcedure(const ProcedureNode& procedureToAdd);
     void AddVariableScope();

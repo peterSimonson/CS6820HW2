@@ -26,6 +26,6 @@ public:
 std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& infixExpression);
 Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vector<std::string>& dataTypes);
 std::shared_ptr<TreeNode> evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table);
-void HandleProcedureCall(Table& table, std::string procedureCall);
+std::shared_ptr<ProcedureNode> HandleProcedureCall(Table& table, std::string procedureCall);
 
 #endif //CS6820HW2_EXPRESSION_H

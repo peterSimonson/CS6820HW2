@@ -513,6 +513,23 @@ void Table::CleanUpTable() {
 
 }
 
+std::shared_ptr<ProcedureNode> Table::GetProcedure(const std::string &nameOfProcedureToReturn, std::vector<std::shared_ptr<TreeNode>> functionArguments) {
+    std::unique_ptr<ProcedureNode> procedureToReturn;
+
+    for(auto & procedure : procedures){
+        //check if the procedure name matches and the number of arguments match
+        if(procedure.procedureName == nameOfProcedureToReturn && functionArguments.size() == procedure.procedureParameters.size()){
+            //TODO: actually check variable type
+            return std::make_shared<ProcedureNode>(procedure);
+        }
+    }
+
+    //we couldn't find a match so through an error
+
+    throw std::logic_error(nameOfProcedureToReturn + " is an undeclared procedure being referenced\n");
+
+}
+
 /// Removes epsilon from a set if it exists in the set
 /// \param set the set of integers you wish to remove EPSILON_TOKEN from
 /// \return set without EPSILON_TOKEN
