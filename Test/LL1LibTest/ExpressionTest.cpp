@@ -128,6 +128,11 @@ namespace{
         expected = {"sub(abba,paulsimon)", "B", "+", "add(a,b)", "D", "+", "*"};
 
         ASSERT_EQ(actual, expected);
+
+        text = {"add", "(", "add", "(", "1", ",",  "1", ")", ",",  "var2", ")"};
+        actual = convertInfixToPostFix(text);
+        expected = {"add(add(1,1),var2)"};
+        ASSERT_EQ(actual, expected);
     }
 
     TEST(ExpressionTests, EvaluatePostFixIntExpressionTest){
@@ -359,17 +364,23 @@ namespace{
 
         ASSERT_EQ(2, table.variableScopes.back().back()->EvaluateNode());
 
-        line = {"num", "var2", "=", "add", "(", "var1", ",",  "1", ")"} ;
+        line = {"num", "var2", "=", "add", "(", "var1", ",",  "1", ")"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
 
         ASSERT_EQ(3, table.variableScopes.back().back()->EvaluateNode());
 
-        line = {"num", "var3", "=", "add", "(", "var1", ",",  "var2", ")", "*" ,"add", "(", "1", ",",  "1", ")"} ;
+        line = {"num", "var3", "=", "add", "(", "var1", ",",  "var2", ")", "*" ,"add", "(", "1", ",",  "1", ")"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
 
         ASSERT_EQ(10, table.variableScopes.back().back()->EvaluateNode());
+
+        line = {"num", "var4", "=", "add", "(", "add", "(", "1", ",",  "1", ")", ",",  "var2", ")"};
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        ASSERT_EQ(5, table.variableScopes.back().back()->EvaluateNode());
     }
 
     TEST(ExpressionTests, ProcedureOverloadingTest){

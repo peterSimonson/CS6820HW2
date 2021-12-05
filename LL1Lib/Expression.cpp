@@ -41,18 +41,25 @@ std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& i
         //if it is a variable of a function call
         if(is_name(*word)){
             std::string wordToPush = *word;
+
             //if the next word is an open parenthesis we have a function call
             if(*(word + 1) == "("){
-                //add the rest of the function call to the word to push back
+                //hold the number of open and close parentheses in the call
+                //this is helpful if we have a function call in side of a function call
+                int openCount = 1;
+                int closeCount = 0;
                 word++;
-                //while we don't hit the close parenthesis
-                while(*word != ")"){
-                    //add the word
-                    wordToPush += *word;
-                    word++;
-                }
-                //add the close parenthesis
                 wordToPush += *word;
+                while (openCount != closeCount){
+                    word++;
+                    if(*word == ")"){
+                        closeCount ++;
+                    }
+                    else if(*word == "("){
+                        openCount++;
+                    }
+                    wordToPush += *word;
+                }
             }
             postFixExpression.push_back(wordToPush);
         }
@@ -472,45 +479,56 @@ void Expression::DeclareNewProcedure(Table &table) {
 
 std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedureCall) {
     //get the opening and closing parenthesis
-    int indexOfOpenParen = (int)procedureCall.find('(');
-    int indexOfCloseParen = (int)procedureCall.find(')');
+    int indexOfOpenParen = (int)procedureCall.find_first_of('(');
+    int indexOfCloseParen = (int)procedureCall.find_last_of(')');
 
     std::string procedureName = procedureCall.substr(0, indexOfOpenParen); //name of the function being called
     std::vector<std::shared_ptr<TreeNode>> procedureArgs; //args being entered into the function
     std::string currentArgument; //the argument we are currently parsing
+    //we want to keep track of the total parentheses we have encountered in case we have another function call inside
+    int openCount = 1;
+    int closeCount = 0;
     //get all the variables between the parentheses
     for(int i = indexOfOpenParen + 1; i <= indexOfCloseParen; i++){
         //if we are at a comma or a close paren we must add the currentArgument to the list
-        if(procedureCall[i] == ',' || procedureCall[i] == ')'){
+        if((procedureCall[i] == ',' || i == indexOfCloseParen) && openCount == closeCount + 1){
 
+            std::shared_ptr<TreeNode> argument;
             //check if we have a procedure call
             if(is_procedure_call(currentArgument)){
-
+                //evaluate the procedure call inside the procedure call
+                argument = HandleProcedureCall(table, currentArgument);
             }
-            //check if we have a variable name
+                //check if we have a variable name
             else if(is_positive_name(currentArgument)){
                 //get the variable
-                std::shared_ptr<VariableNode> argument = table.GetVariable(currentArgument);
-                //add the variable
-                procedureArgs.push_back(argument);
+                argument = table.GetVariable(currentArgument);
+
             }
-            // if it is a constant
+                // if it is a constant
             else if(is_number(currentArgument)){
-                std::shared_ptr<TreeNode> constant;
                 //check if it is a decimal
                 if(is_decimal_number(currentArgument)){
-                    constant = std::make_shared<DecimalNode>(std::stod(currentArgument));
+                    argument = std::make_shared<DecimalNode>(std::stod(currentArgument));
                 }
-                //otherwise, it must be an integer
+                    //otherwise, it must be an integer
                 else{
-                    constant = std::make_shared<IntegerNode>(std::stoi(currentArgument));
+                    argument = std::make_shared<IntegerNode>(std::stoi(currentArgument));
                 }
-                //add the constant
-                procedureArgs.push_back(constant);
             }
+            //add the argument
+            procedureArgs.push_back(argument);
 
             //reset the current argument string
             currentArgument = "";
+        }
+        else if(procedureCall[i] == ')'){
+            closeCount++;
+            currentArgument += procedureCall[i];
+        }
+        else if(procedureCall[i] == '('){
+            openCount++;
+            currentArgument += procedureCall[i];
         }
         //otherwise, add to the currentArg
         else{
