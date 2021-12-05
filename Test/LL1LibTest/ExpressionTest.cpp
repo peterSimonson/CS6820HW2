@@ -364,6 +364,12 @@ namespace{
         expr.EvaluateExpression(table);
 
         ASSERT_EQ(3, table.variableScopes.back().back()->EvaluateNode());
+
+        line = {"num", "var3", "=", "add", "(", "var1", ",",  "var2", ")", "*" ,"add", "(", "1", ",",  "1", ")"} ;
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        ASSERT_EQ(10, table.variableScopes.back().back()->EvaluateNode());
     }
 
     TEST(ExpressionTests, ProcedureOverloadingTest){

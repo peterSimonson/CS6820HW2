@@ -125,6 +125,6 @@ bool is_terminal(const int& token);
 bool is_Value_Token(int token);
 bool set_contains_epsilon(std::vector<int> set);
 bool is_data_type(const std::string& word, const std::vector<std::string>& dataTypes);
-bool is_function_call(const std::string& word);
+bool is_procedure_call(const std::string& word);
 
 #endif //CS6820HW2_TABLE_H

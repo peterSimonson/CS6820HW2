@@ -135,10 +135,10 @@ std::shared_ptr<TreeNode> evaluatePostFix(const std::vector<std::string> &postFi
             stack.push(nodeToPush);
         }
         //if it is a function call
-        else if(is_function_call(word)){
+        else if(is_procedure_call(word)){
             //get a populated procedure node
-            std::shared_ptr<ProcedureNode> procedureNode = HandleProcedureCall(table, word);
-            stack.push(procedureNode);
+            std::shared_ptr<TreeNode> procedureResult = HandleProcedureCall(table, word);
+            stack.push(procedureResult);
         }
         //otherwise, we have an operator
         else{
@@ -470,7 +470,7 @@ void Expression::DeclareNewProcedure(Table &table) {
 
 }
 
-std::shared_ptr<ProcedureNode> HandleProcedureCall(Table &table, std::string procedureCall) {
+std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedureCall) {
     //get the opening and closing parenthesis
     int indexOfOpenParen = (int)procedureCall.find('(');
     int indexOfCloseParen = (int)procedureCall.find(')');
@@ -483,8 +483,12 @@ std::shared_ptr<ProcedureNode> HandleProcedureCall(Table &table, std::string pro
         //if we are at a comma or a close paren we must add the currentArgument to the list
         if(procedureCall[i] == ',' || procedureCall[i] == ')'){
 
+            //check if we have a procedure call
+            if(is_procedure_call(currentArgument)){
+
+            }
             //check if we have a variable name
-            if(is_positive_name(currentArgument)){
+            else if(is_positive_name(currentArgument)){
                 //get the variable
                 std::shared_ptr<VariableNode> argument = table.GetVariable(currentArgument);
                 //add the variable
@@ -523,5 +527,14 @@ std::shared_ptr<ProcedureNode> HandleProcedureCall(Table &table, std::string pro
         procedureToCall->procedureParameters[i]->AssignValue(procedureArgs[i]);
     }
 
-    return procedureToCall;
+    std::shared_ptr<TreeNode> valueOfVariable;
+    //find the data type of the variable and use that type
+    if(procedureToCall->procedureReturnType == "num"){
+        valueOfVariable = std::make_shared<IntegerNode>(IntegerNode((int)procedureToCall->EvaluateNode()));
+    }
+    else if(procedureToCall->procedureReturnType == "ish"){
+        valueOfVariable = std::make_shared<DecimalNode>(DecimalNode(procedureToCall->EvaluateNode()));
+    }
+
+    return valueOfVariable;
 }

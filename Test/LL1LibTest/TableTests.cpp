@@ -82,19 +82,19 @@ namespace {
     TEST(TableTests, IsFucntionCallTest){
 
         std::string test = "peter";
-        ASSERT_FALSE(is_function_call(test));
+        ASSERT_FALSE(is_procedure_call(test));
 
         test = "peter(";
-        ASSERT_FALSE(is_function_call(test));
+        ASSERT_FALSE(is_procedure_call(test));
         test = "peter)";
-        ASSERT_FALSE(is_function_call(test));
+        ASSERT_FALSE(is_procedure_call(test));
         test = "(peter)";
-        ASSERT_FALSE(is_function_call(test));
+        ASSERT_FALSE(is_procedure_call(test));
         test = "1peter()";
-        ASSERT_FALSE(is_function_call(test));
+        ASSERT_FALSE(is_procedure_call(test));
 
         test = "peter()";
-        ASSERT_TRUE(is_function_call(test));
+        ASSERT_TRUE(is_procedure_call(test));
 
     }
 

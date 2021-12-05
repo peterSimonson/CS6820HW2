@@ -568,7 +568,7 @@ std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vect
     return {all.begin(), all.end()};
 }
 
-bool is_function_call(const std::string &word) {
+bool is_procedure_call(const std::string &word) {
 
     int indexOfOpenParen = (int)word.find('(');
     int indexOfCloseParen = (int)word.find(')');
