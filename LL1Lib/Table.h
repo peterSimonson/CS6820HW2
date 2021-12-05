@@ -92,7 +92,7 @@ public:
     //Vector of vectors that holds the variable scopes
     std::vector<std::vector<std::shared_ptr<VariableNode>>> variableScopes;
     //holds the procedures
-    std::vector<ProcedureNode> procedures;
+    std::vector<std::shared_ptr<ProcedureNode>> procedures;
     //holds the table
     int RuleTable [NUM_OF_TOKENS - NUM_OF_NON_TERMINALS][NUM_OF_NON_TERMINALS]{};
 

@@ -362,7 +362,7 @@ void Expression::EvaluateExpression(Table& table) {
         //convert infix to postfix
         std::vector<std::string> postfix  = convertInfixToPostFix(infix);
         //give the last procedure a return operation
-        table.procedures.back().AssignValue(evaluatePostFix(postfix, table));
+        table.procedures.back()->AssignValue(evaluatePostFix(postfix, table));
     }
     //if we have an open bracket
     else if(std::find(tokens.begin(), tokens.end(), CLOSE_CURLY_TOKEN) != tokens.end()){

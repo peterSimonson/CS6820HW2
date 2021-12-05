@@ -302,9 +302,8 @@ namespace{
         //1 procedure declared
         ASSERT_EQ(table.procedures.size(), 1);
 
-        ProcedureNode declaredProcedure = table.procedures.back();
-        ASSERT_EQ(declaredProcedure.procedureName, "add");
-        ASSERT_EQ(declaredProcedure.procedureParameters.size(), 2);
+        ASSERT_EQ(table.procedures.back()->procedureName, "add");
+        ASSERT_EQ(table.procedures.back()->procedureParameters.size(), 2);
 
         //line in the procedure
         line = {"num", "result", "=", "a", "+", "b"} ;
@@ -320,7 +319,7 @@ namespace{
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
         //We should have a return operation now
-        ASSERT_NE(table.procedures.back().procedureOperation, nullptr);
+        ASSERT_NE(table.procedures.back()->procedureOperation, nullptr);
 
         //end the procedure
         line = {"}"} ;

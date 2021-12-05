@@ -472,11 +472,11 @@ bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
 
         //get the names of the new and old procedures
         std::string newProcedureName = procedureToAdd.procedureName;
-        std::string oldProcedureName = it->procedureName;
+        std::string oldProcedureName = it->get()->procedureName;
 
         //get the number of parameters for each procedure
         int newProcedureParamsSize = (int)procedureToAdd.procedureParameters.size();
-        int oldProcedureParamsSize = (int)it->procedureParameters.size();
+        int oldProcedureParamsSize = (int)it->get()->procedureParameters.size();
 
         //if the names match, and we have the same number of parameters
         if(oldProcedureName == newProcedureName && oldProcedureParamsSize == newProcedureParamsSize){
@@ -484,9 +484,9 @@ bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
             bool paramsMatch = true;
 
             //loop through to ensure all the params do not match
-            for(int paramIndex = 0; paramIndex != it->procedureParameters.size(); paramIndex++){
+            for(int paramIndex = 0; paramIndex != it->get()->procedureParameters.size(); paramIndex++){
                 std::string newParamType = procedureToAdd.procedureParameters[paramIndex]->variableType;
-                std::string oldParamType = it->procedureParameters[paramIndex]->variableType;
+                std::string oldParamType = it->get()->procedureParameters[paramIndex]->variableType;
 
                 //if at any point the params datatype does not match we can stop checking
                 if(oldParamType != newParamType){
@@ -501,7 +501,7 @@ bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
         }
     }
 
-    procedures.push_back(procedureToAdd);
+    procedures.push_back(std::make_shared<ProcedureNode>(procedureToAdd));
     return true;
 }
 
@@ -514,13 +514,12 @@ void Table::CleanUpTable() {
 }
 
 std::shared_ptr<ProcedureNode> Table::GetProcedure(const std::string &nameOfProcedureToReturn, std::vector<std::shared_ptr<TreeNode>> functionArguments) {
-    std::unique_ptr<ProcedureNode> procedureToReturn;
 
     for(auto & procedure : procedures){
         //check if the procedure name matches and the number of arguments match
-        if(procedure.procedureName == nameOfProcedureToReturn && functionArguments.size() == procedure.procedureParameters.size()){
+        if(procedure->procedureName == nameOfProcedureToReturn && functionArguments.size() == procedure->procedureParameters.size()){
             //TODO: actually check variable type
-            return std::make_shared<ProcedureNode>(procedure);
+            return std::make_shared<ProcedureNode>(*procedure);
         }
     }
 
