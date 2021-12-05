@@ -385,9 +385,28 @@ void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
     //convert infix to postfix
     std::vector<std::string> postfix  = convertInfixToPostFix(infix);
     //evaluate the expression in postfix form
-    std::shared_ptr<TreeNode> valueOfVariable = evaluatePostFix(postfix, table);
-    //assign the evaluated value to the variable
-    variable->AssignValue(valueOfVariable);
+    std::shared_ptr<TreeNode> variableOperation = evaluatePostFix(postfix, table);
+
+    //this is a sad workaround...
+    //try to evaluate the expression
+    try{
+        std::shared_ptr<TreeNode> valueOfVariable;
+        //find the data type of the variable and use that type
+        if(variable->variableType == "num"){
+            valueOfVariable = std::make_shared<IntegerNode>(IntegerNode((int)variableOperation->EvaluateNode()));
+        }
+        else if(variable->variableType == "ish"){
+            valueOfVariable = std::make_shared<DecimalNode>(DecimalNode(variableOperation->EvaluateNode()));
+        }
+
+        //assign the evaluated value to the variable
+        variable->AssignValue(valueOfVariable);
+    }
+    //if we are in a method we cannot evaluate yet because parameters are not assigned
+    catch (std::runtime_error const & err){
+        variable->AssignValue(variableOperation);
+    }
+
 }
 
 void Expression::DeclareNewVariable(Table& table) {

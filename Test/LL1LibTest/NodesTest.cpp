@@ -110,7 +110,7 @@ namespace {
 
             FAIL() << "Expected runtime error";
         }
-        catch(std::runtime_error const & err) {
+        catch(std::logic_error const & err) {
             EXPECT_EQ(err.what(),std::string("Error: Attempted to divide by zero\n"));
         }
         catch(...) {

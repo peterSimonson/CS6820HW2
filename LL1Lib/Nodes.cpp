@@ -70,7 +70,7 @@ double DivideNode::EvaluateNode() {
         return left->EvaluateNode() / rightNode;
     }
     else{
-        throw std::runtime_error("Error: Attempted to divide by zero\n");
+        throw std::logic_error("Error: Attempted to divide by zero\n");
     }
 
 }
