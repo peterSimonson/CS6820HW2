@@ -381,6 +381,18 @@ namespace{
         expr.EvaluateExpression(table);
 
         ASSERT_EQ(5, table.variableScopes.back().back()->EvaluateNode());
+
+        line = {"num", "var5", "=", "add", "(", "-2", ",",  "-3", ")"};
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        ASSERT_EQ(-5, table.variableScopes.back().back()->EvaluateNode());
+
+        line = {"num", "var6", "=", "add", "(", "-var1", ",",  "-var2", ")"};
+        expr = TranslateWordsToTokens(line, table.dataTypes);
+        expr.EvaluateExpression(table);
+
+        ASSERT_EQ(-5, table.variableScopes.back().back()->EvaluateNode());
     }
 
     TEST(ExpressionTests, ProcedureOverloadingTest){

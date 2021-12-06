@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 void RunTestFiles(){
     std::cout << "Reading expressions from: Test/TestResources/HW3Test.txt" <<std::endl << std::endl;
 
-    std::ifstream file("../Test/TestResources/HW3Test.txt");//holds file we are opening
+    std::ifstream file("../Test/TestResources/irassignment.txt");//holds file we are opening
     std::string line; //holds a single expression we wish to parse
 
     if(!file.is_open()){
@@ -78,9 +78,6 @@ void RunTestFiles(){
     std::vector<std::shared_ptr<VariableNode>> currentScope = table.variableScopes.back();
     for(auto it = currentScope.begin(); it != currentScope.end(); it++){
 
-        if(line == "num var50 = var1 - var2"){
-
-        }
         std::string output = "Current Value of: " + it->get()->variableType + " " + it->get()->variableName + " = ";
         try{
             if(it->get()->variableType == "num"){

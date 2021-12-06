@@ -500,10 +500,18 @@ std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedur
                 argument = HandleProcedureCall(table, currentArgument);
             }
                 //check if we have a variable name
-            else if(is_positive_name(currentArgument)){
-                //get the variable
-                argument = table.GetVariable(currentArgument);
-
+            else if(is_name(currentArgument)) {
+                //if it is a negative variable
+                if (is_Neg_Name(currentArgument)) {
+                    //get the variable name without the minus sign
+                    std::shared_ptr<VariableNode> variableNode = table.GetVariable(currentArgument.substr(1, currentArgument.size()));
+                    //add the negative of variable node
+                    argument = std::make_shared<NegateNode>(variableNode);
+                }
+                else {
+                    //if it is positive we can just get the variable
+                    argument = table.GetVariable(currentArgument);
+                }
             }
                 // if it is a constant
             else if(is_number(currentArgument)){
