@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "Expression.h"
 #include "Nodes.h"
+#include "String_Checker.h"
 #include <stdexcept>
 
 /// function to find the precedence level of an operator. Taken from: https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
@@ -39,7 +40,7 @@ std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& i
     for(auto word = infixExpression.begin(); word!= infixExpression.end(); word++){
 
         //if it is a variable of a function call
-        if(is_name(*word)){
+        if(str_check::is_name(*word)){
             std::string wordToPush = *word;
 
             //if the next word is an open parenthesis we have a function call
@@ -64,7 +65,7 @@ std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& i
             postFixExpression.push_back(wordToPush);
         }
         //if it is a number push it back of the stack
-        else if(is_number(*word)){
+        else if(str_check::is_number(*word)){
             postFixExpression.push_back(*word);
         }
             //add the open paran to the stack. We will look for it once we encounter the close paran
@@ -113,15 +114,15 @@ std::shared_ptr<TreeNode> evaluatePostFix(const std::vector<std::string> &postFi
     //loop through each term in the post-fix expression
     for(auto & word : postFixExpression){
         //if word is a number, create an int node and push it to the stack
-        if(is_number(word)){
+        if(str_check::is_number(word)){
             stack.push(HandleNumber(word));
         }
         //if it is a variable
-        else if(is_name(word)){
+        else if(str_check::is_name(word)){
             stack.push(HandleVariable(table, word));
         }
         //if it is a function call
-        else if(is_procedure_call(word)){
+        else if(str_check::is_procedure_call(word)){
             //get a populated procedure node
             stack.push(HandleProcedureCall(table, word));
         }
@@ -181,11 +182,11 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
         std::string word = *str;
         //check what type of token this is
 
-        if(is_positive_number(word)){
+        if(str_check::is_positive_number(word)){
             tokens.push_back(NUM_TOKEN);
             text.push_back(word);
         }
-        else if(is_data_type(word, dataTypes)){
+        else if(str_check::is_data_type(word, dataTypes)){
             tokens.push_back(DATA_TYPE_TOKEN);
             text.push_back(word);
         }
@@ -197,12 +198,12 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             tokens.push_back(RETURN_TOKEN);
             text.push_back(word);
         }
-        else if(is_positive_name(word)){
+        else if(str_check::is_positive_name(word)){
             tokens.push_back(NAME_TOKEN);
             text.push_back(word);
         }
         //if the first char is a space check if everything else is a num
-        else if(word.at(0) == ' ' && is_Neg_Num(word.substr(1, word.size()))){
+        else if(word.at(0) == ' ' && str_check::is_Neg_Num(word.substr(1, word.size()))){
             //if the last token is a value token we have a subtraction operation
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
@@ -217,7 +218,7 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             }
         }
         //if the first char is a space check if everything else is a name
-        else if(word.at(0) == ' ' && is_Neg_Name(word.substr(1, word.size()))){
+        else if(word.at(0) == ' ' && str_check::is_Neg_Name(word.substr(1, word.size()))){
             //if the last token is a value token we have a subtraction operation
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
@@ -232,7 +233,7 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             }
         }
             //if the first char is a negative check if everything else is a num
-        else if(word.at(0) == '-' && is_positive_number(word.substr(1, word.size()))){
+        else if(word.at(0) == '-' && str_check::is_positive_number(word.substr(1, word.size()))){
             //if the last token is a value token we have a subtraction operation
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
@@ -247,7 +248,7 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             }
         }
             //if the first char is a negative check if everything else is a name
-        else if(word.at(0) == '-' && is_positive_name(word.substr(1, word.size()))){
+        else if(word.at(0) == '-' && str_check::is_positive_name(word.substr(1, word.size()))){
             if(!tokens.empty() && is_Value_Token(tokens.back())){
                 tokens.push_back(MINUS_TOKEN);
                 tokens.push_back(NAME_TOKEN);
@@ -464,16 +465,16 @@ std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedur
 
             std::shared_ptr<TreeNode> argument;
             //check if we have a procedure call
-            if(is_procedure_call(currentArgument)){
+            if(str_check::is_procedure_call(currentArgument)){
                 //evaluate the procedure call inside the procedure call
                 argument = HandleProcedureCall(table, currentArgument);
             }
             //check if we have a variable name
-            else if(is_name(currentArgument)) {
+            else if(str_check::is_name(currentArgument)) {
                 argument = HandleVariable(table, currentArgument);
             }
             // if it is a constant
-            else if(is_number(currentArgument)){
+            else if(str_check::is_number(currentArgument)){
                 argument = HandleNumber(currentArgument);
             }
             //add the argument
@@ -512,7 +513,7 @@ std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedur
 std::shared_ptr<TreeNode> HandleVariable(Table &table, const std::string& variable) {
     std::shared_ptr<TreeNode> nodeToReturn;
     //if it is a negative variable
-    if(is_Neg_Name(variable)){
+    if(str_check::is_Neg_Name(variable)){
         //get the variable name without the minus sign
         std::shared_ptr<VariableNode> variableNode = table.GetVariable(variable.substr(1, variable.size()));
         //add the negative of variable node
@@ -529,7 +530,7 @@ std::shared_ptr<TreeNode> HandleVariable(Table &table, const std::string& variab
 std::shared_ptr<TreeNode> HandleNumber(const std::string& number) {
     std::shared_ptr<TreeNode> nodeToReturn;
     //check if it is a decimal
-    if(is_decimal_number(number)){
+    if(str_check::is_decimal_number(number)){
         nodeToReturn = std::make_shared<DecimalNode>(std::stod(number));
     }
         //otherwise, it must be an integer

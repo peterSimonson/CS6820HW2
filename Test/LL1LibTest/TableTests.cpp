@@ -7,58 +7,6 @@
 
 namespace {
 
-    TEST(TableTests, IsNumTest){
-        std::string test = "123";
-        ASSERT_TRUE(is_positive_number(test));
-
-        test = "12.3";
-        ASSERT_TRUE(is_positive_number(test));
-
-        test = ".3";
-        ASSERT_FALSE(is_positive_number(test));
-
-        test = "test";
-        ASSERT_FALSE(is_positive_number(test));
-
-        test = ".test";
-        ASSERT_FALSE(is_positive_number(test));
-
-        test = "1.2.3";
-        ASSERT_FALSE(is_positive_number(test));
-
-        test = ".";
-        ASSERT_FALSE(is_positive_number(test));
-    }
-
-    TEST(TableTests, IsNameTest){
-        std::string test = "123";
-        ASSERT_FALSE(is_positive_name(test));
-
-        test = "test";
-        ASSERT_TRUE(is_positive_name(test));
-
-        test = "test123";
-        ASSERT_TRUE(is_positive_name(test));
-
-        test = "test_123";
-        ASSERT_TRUE(is_positive_name(test));
-
-        test = "test___________123";
-        ASSERT_TRUE(is_positive_name(test));
-
-        test = "test___________123";
-        ASSERT_TRUE(is_positive_name(test));
-
-        test = "123test";
-        ASSERT_FALSE(is_positive_name(test));
-
-        test = "123_test";
-        ASSERT_FALSE(is_positive_name(test));
-
-        test = "test!";
-        ASSERT_FALSE(is_positive_name(test));
-    }
-
     TEST(TableTests, IsTerminalTest){
         //check the terminals
         ASSERT_TRUE(is_terminal(END_TOKEN));
@@ -77,25 +25,6 @@ namespace {
         ASSERT_FALSE(is_terminal(EXPR_TOKEN));
         ASSERT_FALSE(is_terminal(MULT_DIV_PRIME_TOKEN));
         ASSERT_FALSE(is_terminal(DIV_AND_RIGHT_OP_TOKEN));
-    }
-
-    TEST(TableTests, IsFucntionCallTest){
-
-        std::string test = "peter";
-        ASSERT_FALSE(is_procedure_call(test));
-
-        test = "peter(";
-        ASSERT_FALSE(is_procedure_call(test));
-        test = "peter)";
-        ASSERT_FALSE(is_procedure_call(test));
-        test = "(peter)";
-        ASSERT_FALSE(is_procedure_call(test));
-        test = "1peter()";
-        ASSERT_FALSE(is_procedure_call(test));
-
-        test = "peter()";
-        ASSERT_TRUE(is_procedure_call(test));
-
     }
 
     TEST(TableTests, RemoveEpsilonTest){
