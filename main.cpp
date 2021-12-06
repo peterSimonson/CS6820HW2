@@ -78,9 +78,9 @@ void RunTestFiles(){
     std::vector<std::shared_ptr<VariableNode>> currentScope = table.variableScopes.back();
     for(auto it = currentScope.begin(); it != currentScope.end(); it++){
 
-        std::string output = "Current Value of: " + it->get()->variableType + " " + it->get()->variableName + " = ";
+        std::string output = "Current Value of: " + it->get()->type + " " + it->get()->name + " = ";
         try{
-            if(it->get()->variableType == "num"){
+            if(it->get()->type == "num"){
                 //so we are saving all values as doubles and converting them back to ints at the very end if need be
                 output += std::to_string((int)it->get()->EvaluateNode());
             }

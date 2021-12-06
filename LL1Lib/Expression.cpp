@@ -376,7 +376,7 @@ void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
     //try to evaluate the expression
     try{
         //assign the evaluated value to the variable
-        variable->AssignValue(HandleType(variable->variableType, variable));
+        variable->AssignValue(HandleType(variable));
     }
     //if we are in a method we cannot evaluate yet because parameters are not assigned
     catch (std::runtime_error const & err){
@@ -506,10 +506,10 @@ std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedur
     }
 
     //find the data type of the variable and use that type
-    return HandleType(procedureToCall->procedureReturnType, procedureToCall);
+    return HandleType(procedureToCall);
 }
 
-std::shared_ptr<TreeNode> HandleVariable(Table &table, std::string variable) {
+std::shared_ptr<TreeNode> HandleVariable(Table &table, const std::string& variable) {
     std::shared_ptr<TreeNode> nodeToReturn;
     //if it is a negative variable
     if(is_Neg_Name(variable)){
@@ -526,7 +526,7 @@ std::shared_ptr<TreeNode> HandleVariable(Table &table, std::string variable) {
     return nodeToReturn;
 }
 
-std::shared_ptr<TreeNode> HandleNumber(std::string number) {
+std::shared_ptr<TreeNode> HandleNumber(const std::string& number) {
     std::shared_ptr<TreeNode> nodeToReturn;
     //check if it is a decimal
     if(is_decimal_number(number)){
@@ -539,14 +539,14 @@ std::shared_ptr<TreeNode> HandleNumber(std::string number) {
     return nodeToReturn;
 }
 
-std::shared_ptr<TreeNode> HandleType(std::string variableType, std::shared_ptr<TreeNode> NodeToEval) {
+std::shared_ptr<TreeNode> HandleType(const std::shared_ptr<ObjectNode>& NodeToEval) {
     std::shared_ptr<TreeNode> nodeToReturn;
 
     //find the data type of the variable and use that type
-    if(variableType == "num"){
+    if(NodeToEval->type == "num"){
         nodeToReturn = std::make_shared<IntegerNode>(IntegerNode((int)NodeToEval->EvaluateNode()));
     }
-    else if(variableType == "ish"){
+    else if(NodeToEval->type == "ish"){
         nodeToReturn = std::make_shared<DecimalNode>(DecimalNode(NodeToEval->EvaluateNode()));
     }
     return nodeToReturn;

@@ -52,11 +52,17 @@ public:
     std::string NodeToString() override;
 };
 
-//represents a variable value
-class VariableNode : public TreeNode{
+class ObjectNode : public TreeNode{
 public:
-    std::string variableName;
-    std::string variableType;
+    std::string name;
+    std::string type;
+
+    ObjectNode(std::string objName, std::string objType);
+};
+
+//represents a variable value
+class VariableNode : public ObjectNode{
+public:
     std::shared_ptr<TreeNode>valueOfVariable = nullptr;
 
     explicit VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar);
@@ -65,10 +71,8 @@ public:
     std::string NodeToString() override;
 };
 
-class ProcedureNode : public TreeNode{
+class ProcedureNode : public ObjectNode{
 public:
-    std::string procedureName;
-    std::string procedureReturnType;
     //holds the parameters
     std::vector<std::shared_ptr<VariableNode>> procedureParameters;
     //holds the operation the procedure performs

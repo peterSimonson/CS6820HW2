@@ -211,7 +211,7 @@ namespace {
 
         std::shared_ptr<VariableNode> result = table.GetVariable(varName);
 
-        ASSERT_EQ(result->variableName, var1->variableName);
+        ASSERT_EQ(result->name, var1->name);
         ASSERT_EQ(result->EvaluateNode(), var1->EvaluateNode());
     }
 

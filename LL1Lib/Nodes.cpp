@@ -19,14 +19,13 @@ IntegerNode::IntegerNode(int valueOfNode) {
     value = valueOfNode;
 }
 
-VariableNode::VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) {
-    variableName = nameOfVar;
-    variableType = typeOfVar;
+VariableNode::VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) :
+        ObjectNode(nameOfVar, typeOfVar){
     AssignValue(std::move(valueOfVar));
 }
 
 std::string VariableNode::NodeToString() {
-    return variableName;
+    return name;
 }
 
 double VariableNode::EvaluateNode() {
@@ -107,10 +106,9 @@ std::string DecimalNode::NodeToString() {
     return std::to_string(value);
 }
 
-ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters) {
+ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters):
+        ObjectNode(std::move(name), std::move(returnType)){
 
-    procedureName = std::move(name);
-    procedureReturnType = std::move(returnType);
     procedureParameters = std::move(parameters);
 }
 
@@ -124,10 +122,10 @@ double ProcedureNode::EvaluateNode() {
 }
 
 std::string ProcedureNode::NodeToString() {
-    std::string returnVal = procedureName + "(";
+    std::string returnVal = name + "(";
 
     for(int i = 0; i < procedureParameters.size(); i++){
-        returnVal += procedureParameters[i]->variableName;
+        returnVal += procedureParameters[i]->name;
 
         if(i + 1 != procedureParameters.size()){
             returnVal += ", ";
@@ -154,4 +152,9 @@ double NegateNode::EvaluateNode() {
 
 std::string NegateNode::NodeToString() {
     return "-" + value->NodeToString();
+}
+
+ObjectNode::ObjectNode(std::string objName, std::string objType) {
+    name = std::move(objName);
+    type = std::move(objType);
 }

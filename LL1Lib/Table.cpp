@@ -411,7 +411,7 @@ bool Table::is_already_a_var(const std::string& nameOfVariable) {
         //loop through all the variables in the current scope
         for(auto & variable : currentScope){
             //if we have a variable with the name it is already declared
-            if(nameOfVariable == variable->variableName){
+            if(nameOfVariable == variable->name){
                 return true;
             }
         }
@@ -428,7 +428,7 @@ std::shared_ptr<VariableNode> Table::GetVariable(const std::string &nameOfVariab
     for(auto & currentScope : variableScopes){
         //loop through all the variables in the current scope
         for(auto & variable : currentScope){
-            if(nameOfVariableToReturn == variable->variableName){
+            if(nameOfVariableToReturn == variable->name){
                 varToReturn = variable;
                 break;
             }
@@ -448,7 +448,7 @@ std::shared_ptr<VariableNode> Table::GetVariable(const std::string &nameOfVariab
 /// \param varToAdd the variable you wish to declare
 /// \return True if we added the variable. False if we were unable to add the variable
 bool Table::AddVariable(const std::shared_ptr<VariableNode>& varToAdd) {
-    bool notPreviouslyAVar = !is_already_a_var(varToAdd->variableName);
+    bool notPreviouslyAVar = !is_already_a_var(varToAdd->name);
     //if the variable name is not already used add it to the variables
     if(notPreviouslyAVar){
         //get the current scope and add a new variable
@@ -471,8 +471,8 @@ bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
     for(auto it = procedures.begin(); it !=procedures.end(); it++){
 
         //get the names of the new and old procedures
-        std::string newProcedureName = procedureToAdd.procedureName;
-        std::string oldProcedureName = it->get()->procedureName;
+        std::string newProcedureName = procedureToAdd.name;
+        std::string oldProcedureName = it->get()->name;
 
         //get the number of parameters for each procedure
         int newProcedureParamsSize = (int)procedureToAdd.procedureParameters.size();
@@ -485,8 +485,8 @@ bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
 
             //loop through to ensure all the params do not match
             for(int paramIndex = 0; paramIndex != it->get()->procedureParameters.size(); paramIndex++){
-                std::string newParamType = procedureToAdd.procedureParameters[paramIndex]->variableType;
-                std::string oldParamType = it->get()->procedureParameters[paramIndex]->variableType;
+                std::string newParamType = procedureToAdd.procedureParameters[paramIndex]->type;
+                std::string oldParamType = it->get()->procedureParameters[paramIndex]->type;
 
                 //if at any point the params datatype does not match we can stop checking
                 if(oldParamType != newParamType){
@@ -517,7 +517,7 @@ std::shared_ptr<ProcedureNode> Table::GetProcedure(const std::string &nameOfProc
 
     for(auto & procedure : procedures){
         //check if the procedure name matches and the number of arguments match
-        if(procedure->procedureName == nameOfProcedureToReturn && functionArguments.size() == procedure->procedureParameters.size()){
+        if(procedure->name == nameOfProcedureToReturn && functionArguments.size() == procedure->procedureParameters.size()){
             //TODO: actually check variable type
             return std::make_shared<ProcedureNode>(*procedure);
         }

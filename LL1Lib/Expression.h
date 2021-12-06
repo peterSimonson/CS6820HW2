@@ -27,8 +27,8 @@ std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& i
 Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vector<std::string>& dataTypes);
 std::shared_ptr<TreeNode> evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table);
 std::shared_ptr<TreeNode> HandleProcedureCall(Table& table, std::string procedureCall);
-std::shared_ptr<TreeNode> HandleVariable(Table& table, std::string variable);
-std::shared_ptr<TreeNode> HandleNumber(std::string number);
-std::shared_ptr<TreeNode> HandleType(std::string variableType, std::shared_ptr<TreeNode> NodeToEval);
+std::shared_ptr<TreeNode> HandleVariable(Table& table, const std::string& variable);
+std::shared_ptr<TreeNode> HandleNumber(const std::string& number);
+std::shared_ptr<TreeNode> HandleType(const std::shared_ptr<ObjectNode>& NodeToEval);
 
 #endif //CS6820HW2_EXPRESSION_H

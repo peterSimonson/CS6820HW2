@@ -262,16 +262,16 @@ namespace{
         expr.EvaluateExpression(table);
 
         ASSERT_EQ(table.variableScopes.back().size(), 1);
-        ASSERT_EQ(table.variableScopes.back().back()->variableName, "var1");
-        ASSERT_EQ(table.variableScopes.back().back()->variableType, "num");
+        ASSERT_EQ(table.variableScopes.back().back()->name, "var1");
+        ASSERT_EQ(table.variableScopes.back().back()->type, "num");
 
         line = {"var1", "=", "42"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
 
         ASSERT_EQ(table.variableScopes.back().size(), 1);
-        ASSERT_EQ(table.variableScopes.back().back()->variableName, "var1");
-        ASSERT_EQ(table.variableScopes.back().back()->variableType, "num");
+        ASSERT_EQ(table.variableScopes.back().back()->name, "var1");
+        ASSERT_EQ(table.variableScopes.back().back()->type, "num");
         ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), 42);
 
         line = {"ish", "var2", "=", "42.5"};
@@ -279,16 +279,16 @@ namespace{
         expr.EvaluateExpression(table);
 
         ASSERT_EQ(table.variableScopes.back().size(), 2);
-        ASSERT_EQ(table.variableScopes.back().back()->variableName, "var2");
-        ASSERT_EQ(table.variableScopes.back().back()->variableType, "ish");
+        ASSERT_EQ(table.variableScopes.back().back()->name, "var2");
+        ASSERT_EQ(table.variableScopes.back().back()->type, "ish");
         ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), 42.5);
 
         line = {"ish", "var3", "=", "var2", "+", "var2"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table);
         ASSERT_EQ(table.variableScopes.back().size(), 3);
-        ASSERT_EQ(table.variableScopes.back().back()->variableName, "var3");
-        ASSERT_EQ(table.variableScopes.back().back()->variableType, "ish");
+        ASSERT_EQ(table.variableScopes.back().back()->name, "var3");
+        ASSERT_EQ(table.variableScopes.back().back()->type, "ish");
         ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), 85);
 
     }
@@ -307,7 +307,7 @@ namespace{
         //1 procedure declared
         ASSERT_EQ(table.procedures.size(), 1);
 
-        ASSERT_EQ(table.procedures.back()->procedureName, "add");
+        ASSERT_EQ(table.procedures.back()->name, "add");
         ASSERT_EQ(table.procedures.back()->procedureParameters.size(), 2);
 
         //line in the procedure
