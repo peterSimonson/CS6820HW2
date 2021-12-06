@@ -114,38 +114,16 @@ std::shared_ptr<TreeNode> evaluatePostFix(const std::vector<std::string> &postFi
     for(auto & word : postFixExpression){
         //if word is a number, create an int node and push it to the stack
         if(is_number(word)){
-            if(is_decimal_number(word)){
-                std::shared_ptr<TreeNode> decimalNode(new DecimalNode(std::stod(word)));
-                stack.push(std::move(decimalNode));
-            }
-            //if it isn't a decimal it is an integer
-            else{
-                std::shared_ptr<TreeNode> intNode(new IntegerNode(std::stoi(word)));
-                stack.push(std::move(intNode));
-            }
-
+            stack.push(HandleNumber(word));
         }
         //if it is a variable
         else if(is_name(word)){
-            std::shared_ptr<TreeNode> nodeToPush;
-            //if it is a negative variable
-            if(is_Neg_Name(word)){
-                //get the variable name without the minus sign
-                std::shared_ptr<VariableNode> variableNode = table.GetVariable(word.substr(1, word.size()));
-                //add the negative of variable node
-                nodeToPush =  std::make_shared<NegateNode>(variableNode);
-            }
-            else{
-                //if it is positive we can just get the variable
-                nodeToPush = table.GetVariable(word);
-            }
-            stack.push(nodeToPush);
+            stack.push(HandleVariable(table, word));
         }
         //if it is a function call
         else if(is_procedure_call(word)){
             //get a populated procedure node
-            std::shared_ptr<TreeNode> procedureResult = HandleProcedureCall(table, word);
-            stack.push(procedureResult);
+            stack.push(HandleProcedureCall(table, word));
         }
         //otherwise, we have an operator
         else{
@@ -397,17 +375,8 @@ void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
     //this is a sad workaround...
     //try to evaluate the expression
     try{
-        std::shared_ptr<TreeNode> valueOfVariable;
-        //find the data type of the variable and use that type
-        if(variable->variableType == "num"){
-            valueOfVariable = std::make_shared<IntegerNode>(IntegerNode((int)variableOperation->EvaluateNode()));
-        }
-        else if(variable->variableType == "ish"){
-            valueOfVariable = std::make_shared<DecimalNode>(DecimalNode(variableOperation->EvaluateNode()));
-        }
-
         //assign the evaluated value to the variable
-        variable->AssignValue(valueOfVariable);
+        variable->AssignValue(HandleType(variable->variableType, variable));
     }
     //if we are in a method we cannot evaluate yet because parameters are not assigned
     catch (std::runtime_error const & err){
@@ -499,30 +468,13 @@ std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedur
                 //evaluate the procedure call inside the procedure call
                 argument = HandleProcedureCall(table, currentArgument);
             }
-                //check if we have a variable name
+            //check if we have a variable name
             else if(is_name(currentArgument)) {
-                //if it is a negative variable
-                if (is_Neg_Name(currentArgument)) {
-                    //get the variable name without the minus sign
-                    std::shared_ptr<VariableNode> variableNode = table.GetVariable(currentArgument.substr(1, currentArgument.size()));
-                    //add the negative of variable node
-                    argument = std::make_shared<NegateNode>(variableNode);
-                }
-                else {
-                    //if it is positive we can just get the variable
-                    argument = table.GetVariable(currentArgument);
-                }
+                argument = HandleVariable(table, currentArgument);
             }
-                // if it is a constant
+            // if it is a constant
             else if(is_number(currentArgument)){
-                //check if it is a decimal
-                if(is_decimal_number(currentArgument)){
-                    argument = std::make_shared<DecimalNode>(std::stod(currentArgument));
-                }
-                    //otherwise, it must be an integer
-                else{
-                    argument = std::make_shared<IntegerNode>(std::stoi(currentArgument));
-                }
+                argument = HandleNumber(currentArgument);
             }
             //add the argument
             procedureArgs.push_back(argument);
@@ -553,14 +505,51 @@ std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedur
         procedureToCall->procedureParameters[i]->AssignValue(procedureArgs[i]);
     }
 
-    std::shared_ptr<TreeNode> valueOfVariable;
     //find the data type of the variable and use that type
-    if(procedureToCall->procedureReturnType == "num"){
-        valueOfVariable = std::make_shared<IntegerNode>(IntegerNode((int)procedureToCall->EvaluateNode()));
+    return HandleType(procedureToCall->procedureReturnType, procedureToCall);
+}
+
+std::shared_ptr<TreeNode> HandleVariable(Table &table, std::string variable) {
+    std::shared_ptr<TreeNode> nodeToReturn;
+    //if it is a negative variable
+    if(is_Neg_Name(variable)){
+        //get the variable name without the minus sign
+        std::shared_ptr<VariableNode> variableNode = table.GetVariable(variable.substr(1, variable.size()));
+        //add the negative of variable node
+        nodeToReturn =  std::make_shared<NegateNode>(variableNode);
     }
-    else if(procedureToCall->procedureReturnType == "ish"){
-        valueOfVariable = std::make_shared<DecimalNode>(DecimalNode(procedureToCall->EvaluateNode()));
+    else{
+        //if it is positive we can just get the variable
+        nodeToReturn = table.GetVariable(variable);
     }
 
-    return valueOfVariable;
+    return nodeToReturn;
 }
+
+std::shared_ptr<TreeNode> HandleNumber(std::string number) {
+    std::shared_ptr<TreeNode> nodeToReturn;
+    //check if it is a decimal
+    if(is_decimal_number(number)){
+        nodeToReturn = std::make_shared<DecimalNode>(std::stod(number));
+    }
+        //otherwise, it must be an integer
+    else{
+        nodeToReturn = std::make_shared<IntegerNode>(std::stoi(number));
+    }
+    return nodeToReturn;
+}
+
+std::shared_ptr<TreeNode> HandleType(std::string variableType, std::shared_ptr<TreeNode> NodeToEval) {
+    std::shared_ptr<TreeNode> nodeToReturn;
+
+    //find the data type of the variable and use that type
+    if(variableType == "num"){
+        nodeToReturn = std::make_shared<IntegerNode>(IntegerNode((int)NodeToEval->EvaluateNode()));
+    }
+    else if(variableType == "ish"){
+        nodeToReturn = std::make_shared<DecimalNode>(DecimalNode(NodeToEval->EvaluateNode()));
+    }
+    return nodeToReturn;
+}
+
+

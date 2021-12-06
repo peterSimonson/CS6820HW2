@@ -424,7 +424,7 @@ namespace {
         //try to divide by zero
         try {
             parse.EvaluateLine(table);
-
+            table.variableScopes.back().back()->EvaluateNode();
             FAIL() << "Expected runtime error";
         }
         catch(std::logic_error const & err) {
