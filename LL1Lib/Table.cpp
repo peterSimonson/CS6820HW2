@@ -21,7 +21,7 @@ void Table::GenerateFirstSet() {
     bool finishedFindingSet = false;
 
     //loop through all the tokens
-    for(int CURRENT_TOKEN = 0; CURRENT_TOKEN <= NUM_OF_TOKENS; CURRENT_TOKEN++){
+    for(int CURRENT_TOKEN = 0; CURRENT_TOKEN < NUM_OF_TOKENS; CURRENT_TOKEN++){
         //just add it
         if(is_terminal(CURRENT_TOKEN)){
             firstSet.insert({CURRENT_TOKEN, {CURRENT_TOKEN}});
@@ -449,7 +449,7 @@ bool is_Value_Token(int token){
 /// \param token integer token you wish to check if it is a terminal
 /// \return Returns true if the token is a terminal. False if it is not a terminal
 bool is_terminal(const int &token) {
-    if(token >= NUM_OF_NON_TERMINALS && token <= NUM_OF_TOKENS){
+    if(token >= NUM_OF_NON_TERMINALS && token < NUM_OF_TOKENS){
         return true;
     }
     else{

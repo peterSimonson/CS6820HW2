@@ -60,8 +60,7 @@ enum tokens{
     DATA_TYPE_TOKEN,
     RETURN_TOKEN,
     EPSILON_TOKEN,
-    //TODO: Change where this is used so it is the number of tokens not number of tokens - 1
-    NUM_OF_TOKENS = EPSILON_TOKEN,
+    NUM_OF_TOKENS,
     ERROR_TOKEN = -1
 };
 
