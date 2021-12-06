@@ -335,15 +335,15 @@ void Table::RemoveVariableScope() {
 
 bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
     //check to make sure we do not have any matching procedures
-    for(auto it = procedures.begin(); it !=procedures.end(); it++){
+    for(auto & procedure : procedures){
 
         //get the names of the new and old procedures
         std::string newProcedureName = procedureToAdd.name;
-        std::string oldProcedureName = it->get()->name;
+        std::string oldProcedureName = procedure->name;
 
         //get the number of parameters for each procedure
         int newProcedureParamsSize = (int)procedureToAdd.procedureParameters.size();
-        int oldProcedureParamsSize = (int)it->get()->procedureParameters.size();
+        int oldProcedureParamsSize = (int)procedure->procedureParameters.size();
 
         //if the names match, and we have the same number of parameters
         if(oldProcedureName == newProcedureName && oldProcedureParamsSize == newProcedureParamsSize){
@@ -351,9 +351,9 @@ bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
             bool paramsMatch = true;
 
             //loop through to ensure all the params do not match
-            for(int paramIndex = 0; paramIndex != it->get()->procedureParameters.size(); paramIndex++){
+            for(int paramIndex = 0; paramIndex != procedure->procedureParameters.size(); paramIndex++){
                 std::string newParamType = procedureToAdd.procedureParameters[paramIndex]->type;
-                std::string oldParamType = it->get()->procedureParameters[paramIndex]->type;
+                std::string oldParamType = procedure->procedureParameters[paramIndex]->type;
 
                 //if at any point the params datatype does not match we can stop checking
                 if(oldParamType != newParamType){
@@ -380,7 +380,8 @@ void Table::CleanUpTable() {
 
 }
 
-std::shared_ptr<ProcedureNode> Table::GetProcedure(const std::string &nameOfProcedureToReturn, std::vector<std::shared_ptr<TreeNode>> functionArguments) {
+std::shared_ptr<ProcedureNode> Table::GetProcedure(const std::string &nameOfProcedureToReturn,
+                                                   const std::vector<std::shared_ptr<TreeNode>>& functionArguments) {
 
     for(auto & procedure : procedures){
         //check if the procedure name matches and the number of arguments match

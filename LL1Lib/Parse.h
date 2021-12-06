@@ -17,7 +17,7 @@ public:
     //contains the expression
     Expression expr;
     void EvaluateLine(Table& table);
-    void SwapStack(int ruleIndex, std::vector<int> & stack, Table table);
+    static void SwapStack(int ruleIndex, std::vector<int> & stack, Table table);
 };
 
 std::vector<std::string> parseWords(std::string const& line);
