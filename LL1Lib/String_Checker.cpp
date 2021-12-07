@@ -138,3 +138,15 @@ bool str_check::is_data_type(const std::string& word, const std::vector<std::str
         return false;
     }
 }
+
+bool str_check::is_string(const std::string &word) {
+    const char doubleQuote = '\"';
+    //if the first and last chars are double quotes return true
+    if(word[0] == doubleQuote && word[word.size()-1] == doubleQuote){
+        return true;
+    }
+    //otherwise, this is not a valid string
+    else{
+        return false;
+    }
+}

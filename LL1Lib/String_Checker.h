@@ -17,4 +17,5 @@ namespace str_check {
     bool is_Neg_Name(const std::string& s);
     bool is_data_type(const std::string& word, const std::vector<std::string>& dataTypes);
     bool is_procedure_call(const std::string& word);
+    bool is_string(const std::string& word);
 }

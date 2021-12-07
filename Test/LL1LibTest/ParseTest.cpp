@@ -231,6 +231,32 @@ namespace {
         ASSERT_EQ(words, result);
     }
 
+    TEST(ParseTests, ParseStringTest){
+        std::string expr = "printString \"hello, world\"";
+        std::vector<std::string> words = parseWords(expr);
+        std::vector<std::string> result = {"printString", "\"hello, world\""};
+        ASSERT_EQ(words, result);
+
+        expr = "printString \"2+2 * 3 =peter\"";
+        words = parseWords(expr);
+        result = {"printString", "\"2+2 * 3 =peter\""};
+        ASSERT_EQ(words, result);
+
+        expr = "printString \"2+2 * 3 =peter";
+
+        try{
+            //We needed an end quote
+            parseWords(expr);
+            FAIL() << "Expected range error";
+        }
+        catch(std::range_error const & err) {
+
+        }
+        catch(...) {
+            FAIL() << "Expected runtime error";
+        }
+    }
+
     TEST(ParseTests, ParseProcedureTest){
         std::string expr = "num procedure add(num a, num b) {";
 

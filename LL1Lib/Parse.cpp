@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "Parse.h"
+#include "stdexcept"
 
 void PrintParserError(const std::string& expr);
 
@@ -19,6 +20,8 @@ std::vector<std::string> parseWords(std::string const& line){
     const std::string whitespace = " \n\r\t\f\v";
     //these reserved chars also separate words
     const std::string keyChar = "=+-()*^/,{}";
+    const char doubleQuote = '\"';
+    bool inString = false;
 
     auto it = line.begin();
     std::string word; //holds a word we are parsing
@@ -27,7 +30,7 @@ std::vector<std::string> parseWords(std::string const& line){
     bool leadingWhiteSpace = false;
     while(it != line.end()){
         //check if there is whitespace leading up to our term
-        while(whitespace.find(*it) != std::string::npos){
+        while(whitespace.find(*it) != std::string::npos && !inString){
             if(!word.empty()){
                 words.push_back(word);
                 word = "";
@@ -37,7 +40,7 @@ std::vector<std::string> parseWords(std::string const& line){
         }
 
         //if the first non-whitespace char is a minus, and we have leading whitespace we have a spacenegnum
-        if(*it == '-'){
+        if(*it == '-' && !inString){
             if(!word.empty()){
                 words.push_back(word);
                 word = "";
@@ -54,7 +57,22 @@ std::vector<std::string> parseWords(std::string const& line){
                 it++;
             }
         }
-        else if(keyChar.find(*it) != std::string::npos){
+        //if we found a quote
+        else if(*it == doubleQuote){
+            word += *it;
+            //if we were already in a string we have an end-quote
+            if(inString){
+                words.push_back(word);
+                word = "";
+                inString = false;
+            }
+            //otherwise, we are beginning a quote
+            else{
+                inString = true;
+            }
+            it++;
+        }
+        else if(keyChar.find(*it) != std::string::npos && !inString){
             if(!word.empty()){
                 words.push_back(word);
             }
@@ -73,6 +91,10 @@ std::vector<std::string> parseWords(std::string const& line){
     //our strings are not whitespace terminated, so we need to add the last word
     if(!word.empty()){
         words.push_back(word);
+    }
+    //check that we do not have a string without an end
+    if(inString){
+        throw std::range_error("Line is missing an end quote " + line);
     }
 
     return words;

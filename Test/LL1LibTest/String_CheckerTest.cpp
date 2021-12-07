@@ -5,7 +5,7 @@
 #include "../../LL1Lib/String_Checker.h"
 
 namespace {
-    TEST(TableTests, IsNumTest){
+    TEST(StrCheckTests, IsNumTest){
         std::string test = "123";
         ASSERT_TRUE(str_check::is_positive_number(test));
 
@@ -28,7 +28,7 @@ namespace {
         ASSERT_FALSE(str_check::is_positive_number(test));
     }
 
-    TEST(TableTests, IsNameTest){
+    TEST(StrCheckTests, IsNameTest){
         std::string test = "123";
         ASSERT_FALSE(str_check::is_positive_name(test));
 
@@ -57,7 +57,7 @@ namespace {
         ASSERT_FALSE(str_check::is_positive_name(test));
     }
 
-    TEST(TableTests, IsFucntionCallTest){
+    TEST(StrCheckTests, IsFucntionCallTest){
 
         std::string test = "peter";
         ASSERT_FALSE(str_check::is_procedure_call(test));
@@ -74,5 +74,25 @@ namespace {
         test = "peter()";
         ASSERT_TRUE(str_check::is_procedure_call(test));
 
+    }
+
+    TEST(StrCheckTests, IsStringTest){
+        std::string test = "\"peter\"";
+        ASSERT_TRUE(str_check::is_string(test));
+
+        test = "\"peter is a nice guy\"";
+        ASSERT_TRUE(str_check::is_string(test));
+
+        test = "\"2+2 = 4\"";
+        ASSERT_TRUE(str_check::is_string(test));
+
+        test = "peter\"";
+        ASSERT_FALSE(str_check::is_string(test));
+
+        test = "\"peter";
+        ASSERT_FALSE(str_check::is_string(test));
+
+        test = "peter";
+        ASSERT_FALSE(str_check::is_string(test));
     }
 }

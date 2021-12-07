@@ -190,12 +190,28 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             tokens.push_back(DATA_TYPE_TOKEN);
             text.push_back(word);
         }
+        else if(str_check::is_string(word)){
+            tokens.push_back(STRING_TOKEN);
+            text.push_back(word);
+        }
         else if(word == "procedure") {
             tokens.push_back(PROCEDURE_TOKEN);
             text.push_back(word);
         }
         else if(word == "return") {
             tokens.push_back(RETURN_TOKEN);
+            text.push_back(word);
+        }
+        else if(word == "printNum") {
+            tokens.push_back(PRINT_NUM_TOKEN);
+            text.push_back(word);
+        }
+        else if(word == "printIsh") {
+            tokens.push_back(PRINT_ISH_TOKEN);
+            text.push_back(word);
+        }
+        else if(word == "printString") {
+            tokens.push_back(PRINT_STRING_TOKEN);
             text.push_back(word);
         }
         else if(str_check::is_positive_name(word)){
