@@ -94,6 +94,4 @@ void RunTestFiles(){
 
         std::cout << output << std::endl;
     }
-
-    //table.CleanUpTable();
 }
