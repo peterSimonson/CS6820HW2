@@ -17,10 +17,12 @@ AssemblyFile::AssemblyFile() {
     //save names of format strings
     stringFormatter = "formatStr";
     numFormatter = "formatInt";
+    ishFormatter = "formatIsh";
 
     //add format strings to data section
     AddInitializedString(stringFormatter, "\"%s\", 10");
     AddInitializedString(numFormatter, "\"%d\", 10");
+    AddInitializedString(ishFormatter, "\"%f\", 10");
 }
 
 ///Once you have populated an assembly file object, run this class to create the .asm file

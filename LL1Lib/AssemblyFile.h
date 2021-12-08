@@ -28,6 +28,7 @@ public:
     std::string fileName;
     std::string stringFormatter;
     std::string numFormatter;
+    std::string ishFormatter;
 
     AssemblyFile();
 
