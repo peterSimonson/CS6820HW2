@@ -18,6 +18,9 @@ public:
 
 class AssemblyFile{
 public:
+    //these are the registers we shall use for functions
+    std::vector<std::string> assemblyParameters;
+
     //signifies the start of the program
     std::string entryPoint;
     //data and code sections

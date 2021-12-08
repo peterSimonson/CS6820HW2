@@ -23,6 +23,9 @@ AssemblyFile::AssemblyFile() {
     AddInitializedString(stringFormatter, "\"%s\", 10");
     AddInitializedString(numFormatter, "\"%d\", 10");
     AddInitializedString(ishFormatter, "\"%f\", 10");
+
+    //these are our parameters we will use for function calls
+    assemblyParameters = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
 }
 
 ///Once you have populated an assembly file object, run this class to create the .asm file

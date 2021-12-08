@@ -6,13 +6,13 @@
 _main:
   push    rbx
 
-  mov rcx, 10
-  mov rdx, 5
+  mov rdi, 10
+  mov rsi, 5
 
   call multiply
 
-  mov rsi, rax
   lea rdi, [formatInt]
+  mov rsi, rax
   xor rax, rax
   call _printf
 
@@ -23,9 +23,9 @@ _main:
     push rbp
     mov  rbp, rsp
 
-    mov rax, rcx
+    mov rax, rdi
 
-    mul rdx
+    mul rsi
 
     mov rsp, rbp
     pop rbp
