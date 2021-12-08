@@ -83,6 +83,10 @@ void AssemblyFile::AddInitializedNum(std::string name, int value){
     dataSection.sectionLines.push_back(name + ":" + " dq " + std::to_string(value));
 }
 
+void AssemblyFile::AddInitializedIsh(std::string name, double value) {
+    dataSection.sectionLines.push_back(name + ":" + " dq " + std::to_string(value));
+}
+
 /// adds an uninitialized variable to the .bss section
 /// \param name the name of the variable
 void AssemblyFile::AddUnInitializedNum(std::string name){
@@ -250,4 +254,19 @@ void AssemblyFile::WriteStringPrint(std::string dataToPrint, bool isVariable){
     textSection.sectionLines.emplace_back("xor rax, rax");
     textSection.sectionLines.emplace_back("call _printf");
 
+}
+
+void AssemblyFile::WriteIshPrint(std::string dataToPrint) {
+    //offset to 16 bit addressing
+    textSection.sectionLines.emplace_back("sub rsp, 8");
+    //add the printf formatter
+    textSection.sectionLines.push_back("lea rdi, [" + ishFormatter + "]");
+    //add the variable move
+    textSection.sectionLines.push_back("movq xmm0, qword [" + dataToPrint + "]");
+    //set rax to 1
+    textSection.sectionLines.emplace_back("mov rax, 1");
+    //call printf
+    textSection.sectionLines.emplace_back("call _printf");
+    //reset offset
+    textSection.sectionLines.emplace_back("add rsp, 8");
 }

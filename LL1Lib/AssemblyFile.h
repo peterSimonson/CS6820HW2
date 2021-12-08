@@ -36,6 +36,7 @@ public:
     void AddInitializedString(std::string name, std::string text);
     void AddUnInitializedNum(std::string name);
     void AddInitializedNum(std::string name, int value);
+    void AddInitializedIsh(std::string name, double value);
     void SetNumToConstant(std::string name, int value);
     void SetTempRegister(std::string source, bool isVariable);
     void SetVariableToTempRegister(std::string destination);
@@ -44,6 +45,7 @@ public:
     void ExponentVariable(std::string power, bool isVariable);
     void WriteStringPrint(std::string dataToPrint, bool isVariable);
     void WriteNumPrint(std::string dataToPrint, bool isVariable);
+    void WriteIshPrint(std::string dataToPrint);
 
 };
 
