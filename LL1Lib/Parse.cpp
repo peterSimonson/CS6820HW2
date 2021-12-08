@@ -124,7 +124,6 @@ Parser::Parser(const std::string& line, Table& table) {
         //if both the focus and the word are EOF then we have successfully completed a parse
         if(focus == END_TOKEN && *word == END_TOKEN){
             LL1Stack.pop_back(); //remove end token
-            std::cout << "Success Parsing:\t" << line << std::endl;
             successfulParse = true;
             return;
         }

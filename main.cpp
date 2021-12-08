@@ -1,12 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include "LL1Lib/Parse.h"
+#include "stdexcept"
 
 #define NUM_OF_COMMAND_LINE_ARGS 2
 #define INCORRECT_NUM_OF_ARGS_ERR 1
 #define CORRECT_NUM_OF_ARGS 0
 
 void RunTestFiles();
+void ConvertFileToAssembly(const std::string& fileName);
 
 int main(int argc, char *argv[]) {
     std::cout << "CS6820 LL(1) Parser" << std::endl;
@@ -19,23 +21,46 @@ int main(int argc, char *argv[]) {
     //check command line args
     else if(argc != NUM_OF_COMMAND_LINE_ARGS){
         std::cout << "Error: Incorrect number of arguments entered." << std::endl;
-        std::cout << "Usage: ./CS6820 <Expr>" << std::endl;
-        std::cout << "\t<Expr>: String containing the mathematical expression you wish to parse." << std::endl;
+        std::cout << "Usage: ./CS6820 <File>" << std::endl;
+        std::cout << "\t<File>: String containing the file you wish to convert to assembly." << std::endl;
         exit(INCORRECT_NUM_OF_ARGS_ERR);
     }
 
-    //grab the expression the user entered
-    std::string expression = argv[1];
+    //grab the file name the user entered
+    std::string fileName = argv[1];
 
-    //holds our table
-    Table table;
-
-    //initialize a parser with the expression the user entered
-    Parser parser = Parser(expression, table);
-
-    table.CleanUpTable();
+    ConvertFileToAssembly(fileName);
 
     return CORRECT_NUM_OF_ARGS;
+}
+
+void ConvertFileToAssembly(const std::string& fileName){
+    std::cout << "Converting " << fileName << " to x86 assembly code" <<std::endl;
+
+    std::ifstream file(fileName);//holds file we are opening
+    std::string line; //holds a single expression we wish to parse
+
+    if(!file.is_open()){
+        std::cout << "Could not open file " << fileName;
+        return;
+    }
+
+    //generate our table
+    Table table = Table();
+
+    //read each line from the file
+    while (std::getline(file, line)){
+        //parse each line
+        Parser parse = Parser(line, table);
+        //if we successfully parsed a line, evaluate the line
+        if(parse.successfulParse){
+            parse.EvaluateLine(table);
+        }
+        //otherwise, we did not parse successfully and need to print an error message
+        else{
+            throw std::logic_error("Error Parsing " + line);
+        }
+    }
 }
 
 void RunTestFiles(){
