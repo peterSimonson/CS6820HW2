@@ -16,7 +16,7 @@ public:
     bool successfulParse;
     //contains the expression
     Expression expr;
-    void EvaluateLine(Table& table);
+    void EvaluateLine(Table &table, AssemblyFile &file);
     static void SwapStack(int ruleIndex, std::vector<int> & stack, Table table);
 };
 

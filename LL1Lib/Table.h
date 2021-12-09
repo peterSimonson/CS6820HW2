@@ -55,10 +55,5 @@ public:
     void RemoveVariableScope();
 };
 
-bool is_terminal(const int& token);
-bool is_Value_Token(int token);
-std::vector<int> removeEpsilonFromSet(std::vector<int> set);
-std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vector<int>& secondSet);
-bool set_contains_epsilon(std::vector<int> set);
 
 #endif //CS6820HW2_TABLE_H

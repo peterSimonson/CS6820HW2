@@ -5,9 +5,12 @@
 #ifndef CS6820HW2_TOKENS_H
 #define CS6820HW2_TOKENS_H
 
+#include <vector>
+#include <set>
+
 ///This contains all of the terminals and non-terminals in our grammar
 ///Note: non-terminals are list first. Terminals occur after NUM_OF_NON_TERMINALS enum
-enum tokens{
+enum token{
     START_TOKEN,
     LINE_FULL_TOKEN,
     LINE_VAR_NAME,
@@ -69,5 +72,11 @@ enum tokens{
     ERROR_TOKEN = -1
 };
 
+bool is_terminal(const int& token);
+bool is_Value_Token(int token);
+bool is_Print_Token(int token);
+std::vector<int> removeEpsilonFromSet(std::vector<int> set);
+std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vector<int>& secondSet);
+bool set_contains_epsilon(std::vector<int> set);
 
 #endif //CS6820HW2_TOKENS_H

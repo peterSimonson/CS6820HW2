@@ -419,7 +419,7 @@ namespace {
         Parser parse = Parser(line, table);
 
         ASSERT_TRUE(parse.successfulParse);
-        parse.EvaluateLine(table);
+        parse.EvaluateLine(table, <#initializer#>);
 
         ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), -1);
 
@@ -427,7 +427,7 @@ namespace {
         parse = Parser(line, table);
 
         ASSERT_TRUE(parse.successfulParse);
-        parse.EvaluateLine(table);
+        parse.EvaluateLine(table, <#initializer#>);
 
         ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), -3);
 
@@ -435,7 +435,7 @@ namespace {
         parse = Parser(line, table);
 
         ASSERT_TRUE(parse.successfulParse);
-        parse.EvaluateLine(table);
+        parse.EvaluateLine(table, <#initializer#>);
 
         ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), 8);
     }
@@ -449,7 +449,7 @@ namespace {
 
         //try to divide by zero
         try {
-            parse.EvaluateLine(table);
+            parse.EvaluateLine(table, <#initializer#>);
             table.variableScopes.back().back()->EvaluateNode();
             FAIL() << "Expected runtime error";
         }

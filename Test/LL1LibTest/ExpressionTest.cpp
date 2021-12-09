@@ -259,7 +259,7 @@ namespace{
 
         std::vector<std::string> line = {"num", "var1"};
         Expression expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         ASSERT_EQ(table.variableScopes.back().size(), 1);
         ASSERT_EQ(table.variableScopes.back().back()->name, "var1");
@@ -267,7 +267,7 @@ namespace{
 
         line = {"var1", "=", "42"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         ASSERT_EQ(table.variableScopes.back().size(), 1);
         ASSERT_EQ(table.variableScopes.back().back()->name, "var1");
@@ -276,7 +276,7 @@ namespace{
 
         line = {"ish", "var2", "=", "42.5"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         ASSERT_EQ(table.variableScopes.back().size(), 2);
         ASSERT_EQ(table.variableScopes.back().back()->name, "var2");
@@ -285,7 +285,7 @@ namespace{
 
         line = {"ish", "var3", "=", "var2", "+", "var2"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
         ASSERT_EQ(table.variableScopes.back().size(), 3);
         ASSERT_EQ(table.variableScopes.back().back()->name, "var3");
         ASSERT_EQ(table.variableScopes.back().back()->type, "ish");
@@ -298,7 +298,7 @@ namespace{
 
         std::vector<std::string> line = {"num", "procedure", "add", "(", "num", "a", ",", "num", "b", ")", "{"} ;
         Expression expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         //2 variable scopes
         ASSERT_EQ(table.variableScopes.size(), 2);
@@ -313,7 +313,7 @@ namespace{
         //line in the procedure
         line = {"num", "result", "=", "a", "+", "b"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         ASSERT_EQ(table.variableScopes.size(), 2);
         //two variables in the current scope
@@ -322,14 +322,14 @@ namespace{
         //return statement in the procedure
         line = {"return", "result"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
         //We should have a return operation now
         ASSERT_NE(table.procedures.back()->procedureOperation, nullptr);
 
         //end the procedure
         line = {"}"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         //1 variable scope
         ASSERT_EQ(table.variableScopes.size(), 1);
@@ -342,55 +342,55 @@ namespace{
 
         std::vector<std::string> line = {"num", "procedure", "add", "(", "num", "a", ",", "num", "b", ")", "{"} ;
         Expression expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         line = {"num", "result", "=", "a", "+", "b"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         //return statement in the procedure
         line = {"return", "result"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         //end the procedure
         line = {"}"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         line = {"num", "var1", "=", "add", "(", "1", ",",  "1", ")"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         ASSERT_EQ(2, table.variableScopes.back().back()->EvaluateNode());
 
         line = {"num", "var2", "=", "add", "(", "var1", ",",  "1", ")"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         ASSERT_EQ(3, table.variableScopes.back().back()->EvaluateNode());
 
         line = {"num", "var3", "=", "add", "(", "var1", ",",  "var2", ")", "*" ,"add", "(", "1", ",",  "1", ")"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         ASSERT_EQ(10, table.variableScopes.back().back()->EvaluateNode());
 
         line = {"num", "var4", "=", "add", "(", "add", "(", "1", ",",  "1", ")", ",",  "var2", ")"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         ASSERT_EQ(5, table.variableScopes.back().back()->EvaluateNode());
 
         line = {"num", "var5", "=", "add", "(", "-2", ",",  "-3", ")"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         ASSERT_EQ(-5, table.variableScopes.back().back()->EvaluateNode());
 
         line = {"num", "var6", "=", "add", "(", "-var1", ",",  "-var2", ")"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         ASSERT_EQ(-5, table.variableScopes.back().back()->EvaluateNode());
     }
@@ -400,7 +400,7 @@ namespace{
 
         std::vector<std::string> line = {"num", "procedure", "add", "(", "num", "a", ",", "num", "b", ")", "{"} ;
         Expression expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
 
         //1 procedure declared
         ASSERT_EQ(table.procedures.size(), 1);
@@ -409,7 +409,7 @@ namespace{
         expr = TranslateWordsToTokens(line, table.dataTypes);
         //try to declare a procedure we already have
         try {
-            expr.EvaluateExpression(table);
+            expr.EvaluateExpression(table, AssemblyFile());
             FAIL() << "Expected logic error when evaluating";
         }
         catch(std::logic_error const & err) {
@@ -421,14 +421,14 @@ namespace{
         //overload for add
         line = {"num", "procedure", "add", "(", "num", "a", ",", "num", "b", "num", "c", ")", "{"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
         //2 procedure declared
         ASSERT_EQ(table.procedures.size(), 2);
 
         //same parameters as add but name is sub
         line = {"num", "procedure", "sub", "(", "num", "a", ",", "num", "b", "num", "c", ")", "{"} ;
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
         //2 procedure declared
         ASSERT_EQ(table.procedures.size(), 3);
 
@@ -437,7 +437,7 @@ namespace{
         expr = TranslateWordsToTokens(line, table.dataTypes);
         //try to declare a procedure we already have
         try {
-            expr.EvaluateExpression(table);
+            expr.EvaluateExpression(table, AssemblyFile());
             FAIL() << "Expected logic error when evaluating";
         }
         catch(std::logic_error const & err) {
@@ -456,7 +456,7 @@ namespace{
         Expression expr = TranslateWordsToTokens(line, table.dataTypes);
         //try assigning an unassigned variable
         try {
-            expr.EvaluateExpression(table);
+            expr.EvaluateExpression(table, AssemblyFile());
             FAIL() << "Expected logic error when evaluating";
         }
         catch(std::logic_error const & err) {
@@ -469,14 +469,14 @@ namespace{
         //create a good variable
         line = {"num", "test"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
-        expr.EvaluateExpression(table);
+        expr.EvaluateExpression(table, AssemblyFile());
         ASSERT_EQ(table.variableScopes.back().size(), 1);
 
         //try to reference a variable that does not exist
         line = {"test", "=", "doesNotExist"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         try {
-            expr.EvaluateExpression(table);
+            expr.EvaluateExpression(table, AssemblyFile());
             FAIL() << "Expected logic error when evaluating";
         }
         catch(std::logic_error const & err) {
@@ -491,7 +491,7 @@ namespace{
         line = {"num", "test"};
         expr = TranslateWordsToTokens(line, table.dataTypes);
         try {
-            expr.EvaluateExpression(table);
+            expr.EvaluateExpression(table, AssemblyFile());
             FAIL() << "Expected logic error when evaluating";
         }
         catch(std::logic_error const & err) {

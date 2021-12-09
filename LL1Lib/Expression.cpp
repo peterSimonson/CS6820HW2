@@ -333,7 +333,7 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
     return {tokens, text};
 }
 
-void Expression::EvaluateExpression(Table& table) {
+void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
 
     bool startsWithDataType = tokens.front() == DATA_TYPE_TOKEN;
     bool isProcedureDeclaration = tokens[1] == PROCEDURE_TOKEN;
@@ -366,10 +366,15 @@ void Expression::EvaluateExpression(Table& table) {
         //give the last procedure a return operation
         table.procedures.back()->AssignValue(evaluatePostFix(postfix, table));
     }
-    //if we have an open bracket
+    //if we have a close bracket
     else if(std::find(tokens.begin(), tokens.end(), CLOSE_CURLY_TOKEN) != tokens.end()){
         //remove the old scope
         table.RemoveVariableScope();
+    }
+    //if the first token is a print token
+    else if(is_Print_Token(tokens.front())){
+        //we need to handle a print statement
+        HandlePrintStatement(table, words[1], tokens.front(), file);
     }
 
 }
@@ -567,6 +572,25 @@ std::shared_ptr<TreeNode> HandleType(const std::shared_ptr<ObjectNode>& NodeToEv
         nodeToReturn = std::make_shared<DecimalNode>(DecimalNode(NodeToEval->EvaluateNode()));
     }
     return nodeToReturn;
+}
+
+void HandlePrintStatement(Table &table, const std::string& valueToPrint, int printType, AssemblyFile &file) {
+    //Note: for ish and nums we only print variables
+    //      for strings we only print constants
+
+    switch (printType) {
+        case PRINT_STRING_TOKEN:
+            file.WriteStringPrint(valueToPrint, false);
+            break;
+        case PRINT_NUM_TOKEN:
+            table.GetVariable(valueToPrint);
+            file.WriteNumPrint(valueToPrint, true);
+            break;
+        case PRINT_ISH_TOKEN:
+            table.GetVariable(valueToPrint);
+            file.WriteIshPrint(valueToPrint);
+            break;
+    }
 }
 
 

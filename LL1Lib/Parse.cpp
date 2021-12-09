@@ -190,9 +190,9 @@ void Parser::SwapStack(int ruleIndex, std::vector<int> & stack, Table table) {
 
 }
 
-void Parser::EvaluateLine(Table& table) {
+void Parser::EvaluateLine(Table &table, AssemblyFile &file) {
     //Evaluate the line you just parsed
-    expr.EvaluateExpression(table);
+    expr.EvaluateExpression(table, file);
 }
 
 /// Print an error message when you fail to parse an expression

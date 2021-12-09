@@ -2,6 +2,7 @@
 #include <fstream>
 #include "LL1Lib/Parse.h"
 #include "stdexcept"
+#include "AssemblyWriterLib/AssemblyFile.h"
 
 #define NUM_OF_COMMAND_LINE_ARGS 2
 #define INCORRECT_NUM_OF_ARGS_ERR 1
@@ -35,7 +36,6 @@ int main(int argc, char *argv[]) {
 }
 
 void ConvertFileToAssembly(const std::string& fileName){
-    std::cout << "Converting " << fileName << " to x86 assembly code" <<std::endl;
 
     std::ifstream file(fileName);//holds file we are opening
     std::string line; //holds a single expression we wish to parse
@@ -45,8 +45,13 @@ void ConvertFileToAssembly(const std::string& fileName){
         return;
     }
 
+    std::cout << "Converting " << fileName << " to x86 assembly code" <<std::endl;
+
     //generate our table
     Table table = Table();
+    //generate the file we will be writing
+    AssemblyFile asmFile = AssemblyFile();
+
 
     //read each line from the file
     while (std::getline(file, line)){
@@ -54,13 +59,15 @@ void ConvertFileToAssembly(const std::string& fileName){
         Parser parse = Parser(line, table);
         //if we successfully parsed a line, evaluate the line
         if(parse.successfulParse){
-            parse.EvaluateLine(table);
+            parse.EvaluateLine(table, <#initializer#>);
         }
         //otherwise, we did not parse successfully and need to print an error message
         else{
             throw std::logic_error("Error Parsing " + line);
         }
     }
+    //close the file
+    file.close();
 }
 
 void RunTestFiles(){
@@ -84,7 +91,7 @@ void RunTestFiles(){
         if(parse.successfulParse){
             //try to evaluate the line
             try{
-                parse.EvaluateLine(table);
+                parse.EvaluateLine(table, <#initializer#>);
             }
             //normally we would just kill the program if we cannot evaluate but in this instance
             //we want to keep going and test the entire file
