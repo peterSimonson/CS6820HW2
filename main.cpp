@@ -10,6 +10,7 @@
 
 void RunTestFiles();
 void ConvertFileToAssembly(const std::string& fileName);
+std::string replaceFirstOccurrence(std::string s, const std::string& toReplace, const std::string& replaceWith);
 
 int main(int argc, char *argv[]) {
     std::cout << "CS6820 LL(1) Parser" << std::endl;
@@ -59,7 +60,7 @@ void ConvertFileToAssembly(const std::string& fileName){
         Parser parse = Parser(line, table);
         //if we successfully parsed a line, evaluate the line
         if(parse.successfulParse){
-            parse.EvaluateLine(table, <#initializer#>);
+            parse.EvaluateLine(table, asmFile);
         }
         //otherwise, we did not parse successfully and need to print an error message
         else{
@@ -68,6 +69,12 @@ void ConvertFileToAssembly(const std::string& fileName){
     }
     //close the file
     file.close();
+
+    //set the output file name
+    asmFile.fileName = replaceFirstOccurrence(fileName, ".txt", ".asm");
+
+    //write the output file
+    asmFile.WriteAssemblyFile();
 }
 
 void RunTestFiles(){
@@ -83,6 +90,8 @@ void RunTestFiles(){
 
     //generate our table
     Table table = Table();
+    //generate the file we will be writing
+    AssemblyFile asmFile = AssemblyFile();
 
     //read each line from the file
     while (std::getline(file, line)){
@@ -91,7 +100,7 @@ void RunTestFiles(){
         if(parse.successfulParse){
             //try to evaluate the line
             try{
-                parse.EvaluateLine(table, <#initializer#>);
+                parse.EvaluateLine(table, asmFile);
             }
             //normally we would just kill the program if we cannot evaluate but in this instance
             //we want to keep going and test the entire file
@@ -126,4 +135,11 @@ void RunTestFiles(){
 
         std::cout << output << std::endl;
     }
+}
+
+//taken from: https://stackoverflow.com/questions/5878775/how-to-find-and-replace-string/5878802
+std::string replaceFirstOccurrence(std::string s, const std::string& toReplace, const std::string& replaceWith){
+    std::size_t pos = s.find(toReplace);
+    if (pos == std::string::npos) return s;
+    return s.replace(pos, toReplace.length(), replaceWith);
 }

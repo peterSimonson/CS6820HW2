@@ -337,16 +337,19 @@ void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
 
     bool startsWithDataType = tokens.front() == DATA_TYPE_TOKEN;
     bool isProcedureDeclaration = tokens[1] == PROCEDURE_TOKEN;
+    //look for an equals sign
+    auto equalsIt = std::find(tokens.begin(), tokens.end(), EQUALS_TOKEN);
+    //see if we have assignment
+    bool hasEquals = equalsIt != tokens.end();
+
     //if we start with a datatype and are not declaring a procedure
     if(startsWithDataType && !isProcedureDeclaration){
-        DeclareNewVariable(table);
+        DeclareNewVariable(table, hasEquals, file);
     }
-    //look for an equals sign
-    auto it = std::find(tokens.begin(), tokens.end(), EQUALS_TOKEN);
     //if we have an equals sign we are performing an assignment operation
-    if( it != tokens.end()){
-        int indexOfEqualsSign = (int)(it - tokens.begin());
-        PerformAssignmentOperation(table, indexOfEqualsSign);
+    if(hasEquals){
+        int indexOfEqualsSign = (int)(equalsIt - tokens.begin());
+        PerformAssignmentOperation(table, indexOfEqualsSign, file);
     }
     //if we have an open bracket
     else if(std::find(tokens.begin(), tokens.end(), OPEN_CURLY_TOKEN) != tokens.end()){
@@ -379,7 +382,7 @@ void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
 
 }
 
-void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
+void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, AssemblyFile &file) {
     std::string variableName;
     std::shared_ptr<VariableNode> variable;
 
@@ -399,6 +402,17 @@ void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
     try{
         //assign the evaluated value to the variable
         variable->AssignValue(HandleType(variable));
+        //if the variable has not been declared in assembly, and we are in the global scope
+        if(!variable->declaredInAsm && table.variableScopes.size() == 1){
+            if(variable->type == "ish"){
+                file.AddInitializedIsh(variableName, variable->EvaluateNode());
+            }
+            else if(variable->type == "num"){
+                file.AddInitializedNum(variableName, (int) variable->EvaluateNode());
+            }
+            //we have now declared the variable
+            variable->declaredInAsm = true;
+        }
     }
     //if we are in a method we cannot evaluate yet because parameters are not assigned
     catch (std::runtime_error const & err){
@@ -407,7 +421,7 @@ void Expression::PerformAssignmentOperation(Table& table, int indexOfEquals) {
 
 }
 
-void Expression::DeclareNewVariable(Table& table) {
+void Expression::DeclareNewVariable(Table &table, bool unitializedVariable, AssemblyFile &file) {
     std::string variableName;
     //variable type is the first word
     std::string variableType = words[0];
@@ -418,6 +432,13 @@ void Expression::DeclareNewVariable(Table& table) {
 
     if(!table.AddVariable(variable)){
         throw std::logic_error(variableName + " is being declared multiple times\n");
+    }
+
+    //check if we need to add an uninitialized num to the assembly file
+    if(unitializedVariable){
+        file.AddUnInitializedNum(variableName);
+        //we have declared this in assembly
+        variable->declaredInAsm = true;
     }
 }
 

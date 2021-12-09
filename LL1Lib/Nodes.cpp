@@ -22,6 +22,8 @@ IntegerNode::IntegerNode(int valueOfNode) {
 VariableNode::VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) :
         ObjectNode(nameOfVar, typeOfVar){
     AssignValue(std::move(valueOfVar));
+    //we have not declared this in assembly yet
+    declaredInAsm = false;
 }
 
 std::string VariableNode::NodeToString() {

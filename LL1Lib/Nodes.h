@@ -64,6 +64,7 @@ public:
 class VariableNode : public ObjectNode{
 public:
     std::shared_ptr<TreeNode>valueOfVariable = nullptr;
+    bool declaredInAsm;
 
     explicit VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar);
     void AssignValue(std::shared_ptr<TreeNode> valueOfVar);

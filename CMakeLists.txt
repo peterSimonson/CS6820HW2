@@ -14,8 +14,8 @@ add_executable(${TARGET_NAME} main.cpp)
 
 add_subdirectory(${LL1_Lib_Name}) #Contains our ll1 library
 add_subdirectory(${Assembly_Writer_Lib_Name}) #Contains our assembly writer library
-add_subdirectory(Test)
+add_subdirectory(Test) #Contains all the tests
 
 #linke the libraries
-target_link_libraries(${TARGET_NAME} ${LL1_Lib_Name})
-target_link_directories(${TARGET_NAME} PRIVATE ${LL1_Lib_Name})
+target_link_libraries(${TARGET_NAME} ${LL1_Lib_Name} ${Assembly_Writer_Lib_Name})
+target_link_directories(${TARGET_NAME} PRIVATE ${LL1_Lib_Name} ${Assembly_Writer_Lib_Name})

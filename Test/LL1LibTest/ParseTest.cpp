@@ -416,10 +416,11 @@ namespace {
         std::string line = "num var1 = 1-2";
 
         Table table = Table();
+        AssemblyFile file = AssemblyFile();
         Parser parse = Parser(line, table);
 
         ASSERT_TRUE(parse.successfulParse);
-        parse.EvaluateLine(table, <#initializer#>);
+        parse.EvaluateLine(table, file);
 
         ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), -1);
 
@@ -427,7 +428,7 @@ namespace {
         parse = Parser(line, table);
 
         ASSERT_TRUE(parse.successfulParse);
-        parse.EvaluateLine(table, <#initializer#>);
+        parse.EvaluateLine(table, file);
 
         ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), -3);
 
@@ -435,7 +436,7 @@ namespace {
         parse = Parser(line, table);
 
         ASSERT_TRUE(parse.successfulParse);
-        parse.EvaluateLine(table, <#initializer#>);
+        parse.EvaluateLine(table, file);
 
         ASSERT_EQ(table.variableScopes.back().back()->EvaluateNode(), 8);
     }
@@ -445,11 +446,12 @@ namespace {
         std::string line = "num var1 = 5 / 0";
 
         Table table = Table();
+        AssemblyFile file = AssemblyFile();
         Parser parse = Parser(line, table);
 
         //try to divide by zero
         try {
-            parse.EvaluateLine(table, <#initializer#>);
+            parse.EvaluateLine(table, file);
             table.variableScopes.back().back()->EvaluateNode();
             FAIL() << "Expected runtime error";
         }
