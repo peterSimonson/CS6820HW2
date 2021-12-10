@@ -337,6 +337,9 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
     return {tokens, text};
 }
 
+/// Now that we have parsed a line to have correct syntax, we know need to process it into the IR and assembly.
+/// \param table table that holds our programs variables, procedures, etc.
+/// \param file the assembly file we want tow write output to
 void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
 
     bool startsWithDataType = tokens.front() == DATA_TYPE_TOKEN;
@@ -383,7 +386,7 @@ void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
         //we need to handle a print statement
         HandlePrintStatement(table, words[1], tokens.front(), file);
     }
-    //if the fisrt token is a read token
+    //if the first token is a read token
     else if(is_Read_Token(tokens.front())){
         //we need to handle a read statement
         HandleReadStatement(table, words[1], tokens.front(), file);
@@ -391,6 +394,10 @@ void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
 
 }
 
+/// We have a line where we need to assign a value to a variable
+/// \param table table containing our programs symbols
+/// \param indexOfEquals where the equals sign is in the line
+/// \param file the assembly file we need to write the operation to
 void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, AssemblyFile &file) {
     std::string variableName;
     std::shared_ptr<VariableNode> variable;
@@ -430,7 +437,11 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
 
 }
 
-void Expression::DeclareNewVariable(Table &table, bool unitializedVariable, AssemblyFile &file) {
+/// handles a line of code where a variable is being declared
+/// \param table the table we are saving symbols to
+/// \param uninitializedVariable is the variable initialized or not
+/// \param file assembly file we need to write the variable declaration to
+void Expression::DeclareNewVariable(Table &table, bool uninitializedVariable, AssemblyFile &file) {
     std::string variableName;
     //variable type is the first word
     std::string variableType = words[0];
@@ -444,15 +455,17 @@ void Expression::DeclareNewVariable(Table &table, bool unitializedVariable, Asse
     }
 
     //check if we need to add an uninitialized num to the assembly file
-    if(unitializedVariable){
+    if(uninitializedVariable){
         file.AddUnInitializedNum(variableName);
         //we have declared this in assembly
         variable->declaredInAsm = true;
     }
 }
 
+/// When handling a procedure declaration we need to parse the parameters
+/// \param table table where we store our symbols to
+/// \return a vector of variables that corresponds to the procedures parameters
 std::vector<std::shared_ptr<VariableNode>> Expression::DeclareNewParams(Table &table) {
-
     std::vector<std::shared_ptr<VariableNode>> parameters;
     //find where the parameters start
     auto it = std::find(tokens.begin(), tokens.end(), OPEN_PAREN_TOKEN);
@@ -483,6 +496,8 @@ std::vector<std::shared_ptr<VariableNode>> Expression::DeclareNewParams(Table &t
     return parameters;
 }
 
+/// Handle a line of code where we are declaring a new procedure
+/// \param table table that holds our symbols. We will store the new procedure here
 void Expression::DeclareNewProcedure(Table &table) {
     //get the return type
     std::string returnType = words[0];
@@ -498,6 +513,10 @@ void Expression::DeclareNewProcedure(Table &table) {
 
 }
 
+/// Handle a line of code that contains a procedure being called
+/// \param table table that contains symbols like variables
+/// \param procedureCall the string containing the entire procedure call
+/// \return the result of procedure call
 std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedureCall) {
     //get the opening and closing parenthesis
     int indexOfOpenParen = (int)procedureCall.find_first_of('(');
@@ -561,6 +580,10 @@ std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedur
     return HandleType(procedureToCall);
 }
 
+/// handle a line of code that references a variable
+/// \param table contains all of our symbols. This includes variables
+/// \param variable string containing the reference to a variable. Can be a negative variable like '-var1'
+/// \return
 std::shared_ptr<TreeNode> HandleVariable(Table &table, const std::string& variable) {
     std::shared_ptr<TreeNode> nodeToReturn;
     //if it is a negative variable
@@ -578,6 +601,9 @@ std::shared_ptr<TreeNode> HandleVariable(Table &table, const std::string& variab
     return nodeToReturn;
 }
 
+/// Handle a call to a number
+/// \param number the string containing the number being called. Number can be int or decimal
+/// \return the value of the number.
 std::shared_ptr<TreeNode> HandleNumber(const std::string& number) {
     std::shared_ptr<TreeNode> nodeToReturn;
     //check if it is a decimal
@@ -604,6 +630,11 @@ std::shared_ptr<TreeNode> HandleType(const std::shared_ptr<ObjectNode>& NodeToEv
     return nodeToReturn;
 }
 
+/// Handle a print statement in the code
+/// \param table table containing all of our symbols
+/// \param valueToPrint the value being printed
+/// \param printType the type of data being printed. This is a token
+/// \param file assembly file we are writing the print statement to
 void HandlePrintStatement(Table &table, const std::string& valueToPrint, int printType, AssemblyFile &file) {
     //Note: for ish and nums we only print variables
     //      for strings we only print constants
@@ -625,7 +656,15 @@ void HandlePrintStatement(Table &table, const std::string& valueToPrint, int pri
     }
 }
 
+/// Handle a read statement in the code
+/// \param table table containing all the symbols
+/// \param readDest the variable where the result from reading will be stored
+/// \param readType the type of data being read. This is a token
+/// \param file assembly file we are saving the read statement to
 void HandleReadStatement(Table &table, const std::string &readDest, int readType, AssemblyFile &file) {
+    //check that the read destination exists
+    table.GetVariable(readDest);
+
     //currently, we only support reading nums but this could change
     if(readType == READ_NUM_TOKEN){
         file.WriteNumRead(readDest);

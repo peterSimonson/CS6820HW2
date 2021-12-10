@@ -20,7 +20,7 @@ public:
     //Function to evaluate expression
     void EvaluateExpression(Table &table, AssemblyFile &file);
     void PerformAssignmentOperation(Table &table, int indexOfEquals, AssemblyFile &file);
-    void DeclareNewVariable(Table &table, bool unitializedVariable, AssemblyFile &file);
+    void DeclareNewVariable(Table &table, bool uninitializedVariable, AssemblyFile &file);
     void DeclareNewProcedure(Table& table);
     std::vector<std::shared_ptr<VariableNode>> DeclareNewParams(Table& table);
 };

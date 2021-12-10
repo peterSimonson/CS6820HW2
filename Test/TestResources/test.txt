@@ -1,3 +1,5 @@
+ish ish1 = 25.25
+printIsh ish1
 num var1 = 2 + 2
 printNum var1
 printString "enter a number"

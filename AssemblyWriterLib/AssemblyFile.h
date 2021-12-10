@@ -36,20 +36,20 @@ public:
 
     AssemblyFile();
 
-    void WriteAssemblyFile();
-    void AddInitializedString(std::string name, std::string text);
-    void AddUnInitializedNum(std::string name);
-    void AddInitializedNum(std::string name, int value);
-    void AddInitializedIsh(std::string name, double value);
+    void WriteAssemblyFile() const;
+    void AddInitializedString(const std::string& name, const std::string& text);
+    void AddUnInitializedNum(const std::string& name);
+    void AddInitializedNum(const std::string& name, int value);
+    void AddInitializedIsh(const std::string& name, double value);
     void SetNumToConstant(std::string name, int value);
     void SetTempRegister(std::string source, bool isVariable);
     void SetVariableToTempRegister(std::string destination);
     void AddOrSubVariable(std::string source, bool isSourceAVariable, std::string operation);
     void MulOrDivVariable(std::string source, bool isSourceAVariable, std::string operation);
     void ExponentVariable(std::string power, bool isVariable);
-    void WriteStringPrint(std::string dataToPrint, bool isVariable);
-    void WriteNumPrint(std::string dataToPrint, bool isVariable);
-    void WriteIshPrint(std::string dataToPrint);
+    void WriteStringPrint(const std::string& dataToPrint, bool isVariable);
+    void WriteNumPrint(const std::string& dataToPrint, bool isVariable);
+    void WriteIshPrint(const std::string& dataToPrint);
     void WriteNumRead(const std::string& readDestination);
 
 };

@@ -36,7 +36,7 @@ AssemblyFile::AssemblyFile() {
 }
 
 ///Once you have populated an assembly file object, run this class to create the .asm file
-void AssemblyFile::WriteAssemblyFile(){
+void AssemblyFile::WriteAssemblyFile() const{
 
     std::ofstream fileHandle(fileName);//holds file we are writing to
 
@@ -82,7 +82,7 @@ void writeSectionToFile(section sectionToWrite, std::ofstream& file){
 /// Adds an initialized string variable to the .data section
 /// \param name the name of the variable you wish to create
 /// \param text the text you wish to be contained in the in the variable
-void AssemblyFile::AddInitializedString(std::string name, std::string text){
+void AssemblyFile::AddInitializedString(const std::string& name, const std::string& text){
 
     dataSection.sectionLines.push_back(name + ":");
     dataSection.sectionLines.emplace_back("default rel");
@@ -94,17 +94,17 @@ void AssemblyFile::AddInitializedString(std::string name, std::string text){
 /// Adds an initialized num variable to the .data section
 /// \param name name of the variable
 /// \param value value you wish to be saved in the num
-void AssemblyFile::AddInitializedNum(std::string name, int value){
+void AssemblyFile::AddInitializedNum(const std::string& name, int value){
     dataSection.sectionLines.push_back(name + ":" + " dq " + std::to_string(value));
 }
 
-void AssemblyFile::AddInitializedIsh(std::string name, double value) {
+void AssemblyFile::AddInitializedIsh(const std::string& name, double value) {
     dataSection.sectionLines.push_back(name + ":" + " dq " + std::to_string(value));
 }
 
 /// adds an uninitialized variable to the .bss section
 /// \param name the name of the variable
-void AssemblyFile::AddUnInitializedNum(std::string name){
+void AssemblyFile::AddUnInitializedNum(const std::string& name){
     bssSection.sectionLines.push_back(name + ": resb 8");
 }
 
@@ -236,7 +236,10 @@ void AssemblyFile::ExponentVariable(std::string power, bool isVariable) {
     textSection.sectionLines.emplace_back("pop rax");
 }
 
-void AssemblyFile::WriteNumPrint(std::string dataToPrint, bool isVariable){
+/// Write a printf call for a num. Supports constants and variables
+/// \param dataToPrint the data you wish to print. Either a num variable or a string containing a num
+/// \param isVariable is dataToPrint a constant or a variable
+void AssemblyFile::WriteNumPrint(const std::string& dataToPrint, bool isVariable){
 
     textSection.sectionLines.push_back("lea rdi, [" + numOutFormatter + "]");
     //if it is a variable put the variable into rsi
@@ -252,7 +255,10 @@ void AssemblyFile::WriteNumPrint(std::string dataToPrint, bool isVariable){
     textSection.sectionLines.emplace_back("call _printf");
 }
 
-void AssemblyFile::WriteStringPrint(std::string dataToPrint, bool isVariable){
+/// Prints a string. Can support printing a variable or a constant
+/// \param dataToPrint the data you wish to print. Either a variable name or a constant string
+/// \param isVariable is dataToPrint either a variable or a constant
+void AssemblyFile::WriteStringPrint(const std::string& dataToPrint, bool isVariable){
     textSection.sectionLines.push_back("lea rdi, [" + stringOutFormatter + "]");
     std::string nameOfVariableToPrint;
     //if it is a variable save the name of the variable
@@ -271,7 +277,9 @@ void AssemblyFile::WriteStringPrint(std::string dataToPrint, bool isVariable){
 
 }
 
-void AssemblyFile::WriteIshPrint(std::string dataToPrint) {
+/// Print an ish. Only accepts variables
+/// \param dataToPrint the name of the ish variable you wish to print
+void AssemblyFile::WriteIshPrint(const std::string& dataToPrint) {
     //offset to 16 bit addressing
     textSection.sectionLines.emplace_back("sub rsp, 8");
     //add the printf formatter
@@ -286,6 +294,8 @@ void AssemblyFile::WriteIshPrint(std::string dataToPrint) {
     textSection.sectionLines.emplace_back("add rsp, 8");
 }
 
+/// Write a assembly scanf call for a num
+/// \param readDestination the destination where you wish to store the scanf results
 void AssemblyFile::WriteNumRead(const std::string& readDestination) {
     //add the scanf formatter
     textSection.sectionLines.push_back("lea rdi, [" + numInFormatter + "]");
