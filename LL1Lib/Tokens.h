@@ -75,6 +75,7 @@ enum token{
 bool is_terminal(const int& token);
 bool is_Value_Token(int token);
 bool is_Print_Token(int token);
+bool is_Read_Token(int token);
 std::vector<int> removeEpsilonFromSet(std::vector<int> set);
 std::vector<int> unionize_sets(const std::vector<int>& firstSet, const std::vector<int>& secondSet);
 bool set_contains_epsilon(std::vector<int> set);

@@ -214,6 +214,10 @@ Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vec
             tokens.push_back(PRINT_STRING_TOKEN);
             text.push_back(word);
         }
+        else if(word == "readNum") {
+            tokens.push_back(READ_NUM_TOKEN);
+            text.push_back(word);
+        }
         else if(str_check::is_positive_name(word)){
             tokens.push_back(NAME_TOKEN);
             text.push_back(word);
@@ -378,6 +382,11 @@ void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
     else if(is_Print_Token(tokens.front())){
         //we need to handle a print statement
         HandlePrintStatement(table, words[1], tokens.front(), file);
+    }
+    //if the fisrt token is a read token
+    else if(is_Read_Token(tokens.front())){
+        //we need to handle a read statement
+        HandleReadStatement(table, words[1], tokens.front(), file);
     }
 
 }
@@ -604,13 +613,22 @@ void HandlePrintStatement(Table &table, const std::string& valueToPrint, int pri
             file.WriteStringPrint(valueToPrint, false);
             break;
         case PRINT_NUM_TOKEN:
+            //check that the variable exists
             table.GetVariable(valueToPrint);
             file.WriteNumPrint(valueToPrint, true);
             break;
         case PRINT_ISH_TOKEN:
+            //check that the variable exists
             table.GetVariable(valueToPrint);
             file.WriteIshPrint(valueToPrint);
             break;
+    }
+}
+
+void HandleReadStatement(Table &table, const std::string &readDest, int readType, AssemblyFile &file) {
+    //currently, we only support reading nums but this could change
+    if(readType == READ_NUM_TOKEN){
+        file.WriteNumRead(readDest);
     }
 }
 

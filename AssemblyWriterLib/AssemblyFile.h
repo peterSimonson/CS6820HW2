@@ -29,9 +29,10 @@ public:
     section textSection;
     //will hold the file name we are going to create
     std::string fileName;
-    std::string stringFormatter;
-    std::string numFormatter;
-    std::string ishFormatter;
+    std::string stringOutFormatter;
+    std::string numOutFormatter;
+    std::string ishOutFormatter;
+    std::string numInFormatter;
 
     AssemblyFile();
 
@@ -49,6 +50,7 @@ public:
     void WriteStringPrint(std::string dataToPrint, bool isVariable);
     void WriteNumPrint(std::string dataToPrint, bool isVariable);
     void WriteIshPrint(std::string dataToPrint);
+    void WriteNumRead(const std::string& readDestination);
 
 };
 

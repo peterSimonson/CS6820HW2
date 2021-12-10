@@ -28,8 +28,8 @@ std::vector<std::string> convertInfixToPostFix(const std::vector<std::string>& i
 Expression TranslateWordsToTokens(std::vector<std::string> words, const std::vector<std::string>& dataTypes);
 std::shared_ptr<TreeNode> evaluatePostFix(const std::vector<std::string> &postFixExpression, Table table);
 std::shared_ptr<TreeNode> HandleProcedureCall(Table& table, std::string procedureCall);
-void
-HandlePrintStatement(Table &table, const std::string& valueToPrint, int printType, AssemblyFile &file);
+void HandlePrintStatement(Table &table, const std::string& valueToPrint, int printType, AssemblyFile &file);
+void HandleReadStatement(Table &table, const std::string& readDest, int readType, AssemblyFile &file);
 std::shared_ptr<TreeNode> HandleVariable(Table& table, const std::string& variable);
 std::shared_ptr<TreeNode> HandleNumber(const std::string& number);
 std::shared_ptr<TreeNode> HandleType(const std::shared_ptr<ObjectNode>& NodeToEval);

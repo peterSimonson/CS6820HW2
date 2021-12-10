@@ -73,3 +73,12 @@ bool is_Print_Token(int token) {
         return false;
     }
 }
+
+bool is_Read_Token(int token) {
+    if(token == READ_NUM_TOKEN){
+        return true;
+    }
+    else{
+        return false;
+    }
+}

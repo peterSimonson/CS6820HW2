@@ -1,2 +1,6 @@
 num var1 = 2 + 2
 printNum var1
+printString "enter a number"
+num var2 = 0
+readNum var2
+printNum var2

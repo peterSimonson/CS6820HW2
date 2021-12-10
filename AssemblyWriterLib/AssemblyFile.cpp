@@ -15,14 +15,16 @@ AssemblyFile::AssemblyFile() {
     entryPoint = "_main";
 
     //save names of format strings
-    stringFormatter = "formatStr";
-    numFormatter = "formatInt";
-    ishFormatter = "formatIsh";
+    stringOutFormatter = "formatOutStr";
+    numOutFormatter = "formatOutInt";
+    ishOutFormatter = "formatOutIsh";
+    numInFormatter = "formatInNum";
 
     //add format strings to data section
-    AddInitializedString(stringFormatter, "\"%s\", 10");
-    AddInitializedString(numFormatter, "\"%d\", 10");
-    AddInitializedString(ishFormatter, "\"%f\", 10");
+    AddInitializedString(stringOutFormatter, "\"%s\", 10");
+    AddInitializedString(numOutFormatter, "\"%d\", 10");
+    AddInitializedString(ishOutFormatter, "\"%f\", 10");
+    AddInitializedString(numInFormatter, "\"%d\"");
 
     //these are our parameters we will use for function calls
     assemblyParameters = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
@@ -236,7 +238,7 @@ void AssemblyFile::ExponentVariable(std::string power, bool isVariable) {
 
 void AssemblyFile::WriteNumPrint(std::string dataToPrint, bool isVariable){
 
-    textSection.sectionLines.push_back("lea rdi, [" + numFormatter + "]");
+    textSection.sectionLines.push_back("lea rdi, [" + numOutFormatter + "]");
     //if it is a variable put the variable into rsi
     if(isVariable){
         textSection.sectionLines.push_back("mov rsi, [" + dataToPrint + "]");
@@ -251,7 +253,7 @@ void AssemblyFile::WriteNumPrint(std::string dataToPrint, bool isVariable){
 }
 
 void AssemblyFile::WriteStringPrint(std::string dataToPrint, bool isVariable){
-    textSection.sectionLines.push_back("lea rdi, [" + stringFormatter + "]");
+    textSection.sectionLines.push_back("lea rdi, [" + stringOutFormatter + "]");
     std::string nameOfVariableToPrint;
     //if it is a variable save the name of the variable
     if(isVariable){
@@ -273,7 +275,7 @@ void AssemblyFile::WriteIshPrint(std::string dataToPrint) {
     //offset to 16 bit addressing
     textSection.sectionLines.emplace_back("sub rsp, 8");
     //add the printf formatter
-    textSection.sectionLines.push_back("lea rdi, [" + ishFormatter + "]");
+    textSection.sectionLines.push_back("lea rdi, [" + ishOutFormatter + "]");
     //add the variable move
     textSection.sectionLines.push_back("movq xmm0, qword [" + dataToPrint + "]");
     //set rax to 1
@@ -282,4 +284,15 @@ void AssemblyFile::WriteIshPrint(std::string dataToPrint) {
     textSection.sectionLines.emplace_back("call _printf");
     //reset offset
     textSection.sectionLines.emplace_back("add rsp, 8");
+}
+
+void AssemblyFile::WriteNumRead(const std::string& readDestination) {
+    //add the scanf formatter
+    textSection.sectionLines.push_back("lea rdi, [" + numInFormatter + "]");
+    //add the destination for scanf data
+    textSection.sectionLines.push_back("lea rsi, [" + readDestination + "]");
+    //zero out rax
+    textSection.sectionLines.emplace_back("xor rax, rax");
+    //call scanf
+    textSection.sectionLines.emplace_back("call _scanf");
 }
