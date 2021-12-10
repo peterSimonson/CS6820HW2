@@ -26,6 +26,11 @@ AssemblyFile::AssemblyFile() {
 
     //these are our parameters we will use for function calls
     assemblyParameters = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
+
+    //write the beginning of the asm file
+    std::string line = entryPoint + ":";
+    textSection.sectionLines.push_back(line);
+    textSection.sectionLines.emplace_back("push rbx");
 }
 
 ///Once you have populated an assembly file object, run this class to create the .asm file
@@ -37,12 +42,17 @@ void AssemblyFile::WriteAssemblyFile(){
     fileHandle << "global " << entryPoint << "\n";
     //write extern statement for
     fileHandle << "extern _printf" << "\n";
+    fileHandle << "extern _scanf" << "\n";
     fileHandle << "\n";
 
     //write each section to the file
     writeSectionToFile(dataSection, fileHandle);
     writeSectionToFile(bssSection, fileHandle);
     writeSectionToFile(textSection, fileHandle);
+
+    //write the exit call
+    fileHandle << "pop rbx" << "\n";
+    fileHandle << "ret" << "\n";
 
     fileHandle.close(); //all done writing
 }

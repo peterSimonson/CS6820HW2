@@ -344,7 +344,7 @@ void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
 
     //if we start with a datatype and are not declaring a procedure
     if(startsWithDataType && !isProcedureDeclaration){
-        DeclareNewVariable(table, hasEquals, file);
+        DeclareNewVariable(table, !hasEquals, file);
     }
     //if we have an equals sign we are performing an assignment operation
     if(hasEquals){
@@ -402,6 +402,10 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
     try{
         //assign the evaluated value to the variable
         variable->AssignValue(HandleType(variable));
+    }
+    //if we are in a method we cannot evaluate yet because parameters are not assigned
+    catch (std::runtime_error const & err){
+        variable->AssignValue(variableOperation);
         //if the variable has not been declared in assembly, and we are in the global scope
         if(!variable->declaredInAsm && table.variableScopes.size() == 1){
             if(variable->type == "ish"){
@@ -413,10 +417,6 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
             //we have now declared the variable
             variable->declaredInAsm = true;
         }
-    }
-    //if we are in a method we cannot evaluate yet because parameters are not assigned
-    catch (std::runtime_error const & err){
-        variable->AssignValue(variableOperation);
     }
 
 }
