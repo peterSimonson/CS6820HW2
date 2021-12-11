@@ -411,19 +411,16 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
     //convert infix to postfix
     std::vector<std::string> postfix  = convertInfixToPostFix(infix);
     //evaluate the expression in postfix form
-    std::shared_ptr<TreeNode> variableOperation = evaluatePostFix(postfix, table);
+    variable->AssignValue(evaluatePostFix(postfix, table));
 
-    //this is a sad workaround...
-    //try to evaluate the expression
+    //try to assign the variable to constant value using our intermediate representation
     try{
-        //assign the evaluated value to the variable
+        //assign a constant to a the variable
         variable->AssignValue(HandleType(variable));
-    }
-    //if we are in a method we cannot evaluate yet because parameters are not assigned
-    catch (std::runtime_error const & err){
-        variable->AssignValue(variableOperation);
+
         //if the variable has not been declared in assembly, and we are in the global scope
         if(!variable->declaredInAsm && table.variableScopes.size() == 1){
+            //we need to declare the variable in assembly
             if(variable->type == "ish"){
                 file.AddInitializedIsh(variableName, variable->EvaluateNode());
             }
@@ -432,6 +429,26 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
             }
             //we have now declared the variable
             variable->declaredInAsm = true;
+        }
+        //we have already declared the variable in assembly, and we need to give it a new constant value
+        else{
+            //set the num to constant
+            if(variable->type == "num"){
+                file.SetNumToConstant(variableName, (int)variable->EvaluateNode());
+            }
+            //set the ish to a constant
+            else if(variable->type == "ish"){
+                //we cannot assign ish numbers yet
+                throw std::runtime_error("Cannot change value of: " + variableName + ". This is not implemented.");
+            }
+        }
+    }
+    //if we cannot assign a constant value to the expression because it contains a variable we cannot evaluate yet
+    catch (std::runtime_error const & err){
+        if(!variable->declaredInAsm && table.variableScopes.size() == 1){
+            //add an uninitialized variable to the assembly file
+            file.AddUnInitializedNum(variableName);
+            //write the variable operation in assembly
         }
     }
 
@@ -617,6 +634,9 @@ std::shared_ptr<TreeNode> HandleNumber(const std::string& number) {
     return nodeToReturn;
 }
 
+/// Returns a constant of the correct type for a variable
+/// \param NodeToEval the TreeNode you wish to use to create a constant
+/// \return a constant of the correct type
 std::shared_ptr<TreeNode> HandleType(const std::shared_ptr<ObjectNode>& NodeToEval) {
     std::shared_ptr<TreeNode> nodeToReturn;
 
@@ -662,8 +682,11 @@ void HandlePrintStatement(Table &table, const std::string& valueToPrint, int pri
 /// \param readType the type of data being read. This is a token
 /// \param file assembly file we are saving the read statement to
 void HandleReadStatement(Table &table, const std::string &readDest, int readType, AssemblyFile &file) {
-    //check that the read destination exists
-    table.GetVariable(readDest);
+    //get the variable we are going to set with a read statement
+    std::shared_ptr<VariableNode> variable = table.GetVariable(readDest);
+
+    //set the variable value to null because we don't know what the user entered
+    variable->valueOfVariable = nullptr;
 
     //currently, we only support reading nums but this could change
     if(readType == READ_NUM_TOKEN){

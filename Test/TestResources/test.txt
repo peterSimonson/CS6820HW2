@@ -1,8 +1,6 @@
-ish ish1 = 25.25
-printIsh ish1
-num var1 = 2 + 2
-printNum var1
 printString "enter a number"
 num var2 = 0
 readNum var2
 printNum var2
+num var3 = var2
+printNum var3
