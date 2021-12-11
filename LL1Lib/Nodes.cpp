@@ -193,7 +193,10 @@ std::string NegateNode::NodeToString() {
 }
 
 void NegateNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    throw std::runtime_error("negate assembly is not implemented");
+    //write the value to assembly
+    value->EvaluateToAssembly(File, destination);
+    //multiply the value of rcx by negative one to negate it
+    File.MulOrDivVariable("-1", false, "mul");
 }
 
 ObjectNode::ObjectNode(std::string objName, std::string objType) {
