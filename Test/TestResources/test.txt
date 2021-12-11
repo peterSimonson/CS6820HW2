@@ -1,6 +1,6 @@
 printString "enter a number"
 num var2 = 0
 readNum var2
-printNum var2
 num var3 = -var2
-printNum var3
+num var4 = var2 - var3
+printNum var4

@@ -124,47 +124,30 @@ void AssemblyFile::SetNumToConstant(std::string name, int value){
 /// Sets the value of the temporary register rcx to either a variable or a constant
 /// \param source the value you wish to set rax to
 /// \param isVariable is rax a variable or not
-void AssemblyFile::SetTempRegister(std::string source, bool isVariable) {
-    //push rax and rcx because we are going to use them
-    textSection.sectionLines.emplace_back("push rcx");
+void AssemblyFile::SetRegister(const std::string& source, bool isVariable, const std::string& registerToSet) {
 
     //move source into rcx.
     if(isVariable){
-        textSection.sectionLines.push_back("mov rcx, [" + source + "]");
+        textSection.sectionLines.push_back("mov " + registerToSet + ", [" + source + "]");
     }
     else{
-        textSection.sectionLines.push_back("mov rcx, " + source);
+        textSection.sectionLines.push_back("mov " + registerToSet + "," + source);
     }
 
 }
 
 /// Take the value you have in the temp register rax and put it into a variable
-/// \param destination the variable which will store the value from temp register rcx
-void AssemblyFile::SetVariableToTempRegister(std::string destination){
+/// \param destinationVariable the variable which will store the value from temp register rcx
+void AssemblyFile::SetVariableToRegister(const std::string& destinationVariable, const std::string& registerSource) {
 
-    textSection.sectionLines.push_back("mov [" + destination + "], rcx");
-    //now that we have loaded rcx into the destination we can pop it back
-    textSection.sectionLines.emplace_back("pop rcx");
+    textSection.sectionLines.push_back("mov [" + destinationVariable + "], " + registerSource);
 }
 
-void AssemblyFile::AddOrSubVariable(std::string source, bool isSourceAVariable, std::string operation) {
-    //push rax because we are going to use it
-    textSection.sectionLines.emplace_back("push rax");
-
-    //if the source is a variable move its value into rax
-    if(isSourceAVariable){
-        textSection.sectionLines.push_back("mov rax, [" + source + "]");
-    }
-    //otherwise, move the constant into rax
-    else{
-        textSection.sectionLines.push_back("mov rax, " + source);
-    }
+void AssemblyFile::AddOrSub(const std::string &destination, const std::string &operation, const std::string &rhs) {
 
     //add rax to the destination
-    textSection.sectionLines.emplace_back(operation +" rcx, " + "rax");
+    textSection.sectionLines.push_back(operation +" "+ destination +", " + rhs);
 
-    //pop rax back because we are done with it
-    textSection.sectionLines.emplace_back("pop rax");
 }
 
 void AssemblyFile::MulOrDivVariable(std::string source, bool isSourceAVariable, std::string operation) {

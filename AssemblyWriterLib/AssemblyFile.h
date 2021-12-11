@@ -42,9 +42,9 @@ public:
     void AddInitializedNum(const std::string& name, int value);
     void AddInitializedIsh(const std::string& name, double value);
     void SetNumToConstant(std::string name, int value);
-    void SetTempRegister(std::string source, bool isVariable);
-    void SetVariableToTempRegister(std::string destination);
-    void AddOrSubVariable(std::string source, bool isSourceAVariable, std::string operation);
+    void SetRegister(const std::string& source, bool isVariable, const std::string& registerToSet);
+    void SetVariableToRegister(const std::string& destinationVariable, const std::string& registerSource);
+    void AddOrSub(const std::string &destination, const std::string &operation, const std::string &rhs);
     void MulOrDivVariable(std::string source, bool isSourceAVariable, std::string operation);
     void ExponentVariable(std::string power, bool isVariable);
     void WriteStringPrint(const std::string& dataToPrint, bool isVariable);

@@ -20,7 +20,7 @@ IntegerNode::IntegerNode(int valueOfNode) {
 }
 
 void IntegerNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    File.SetTempRegister(std::to_string(EvaluateNode()), false);
+    File.SetRegister(std::to_string(EvaluateNode()), false, destination);
 }
 
 VariableNode::VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) :
@@ -49,7 +49,7 @@ void VariableNode::AssignValue(std::shared_ptr<TreeNode> valueOfVar) {
 }
 
 void VariableNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    File.SetTempRegister(name, true);
+    File.SetRegister(name, true, destination);
 }
 
 OperationNode::OperationNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode) {
@@ -66,7 +66,12 @@ std::string AddNode::NodeToString() {
 }
 
 void AddNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    throw std::runtime_error("add assembly is not implemented");
+    //set the left side to rax
+    left->EvaluateToAssembly(File, destination);
+    //set the right side to rax
+    std::string rhsRegister = "rax";
+    right->EvaluateToAssembly(File, rhsRegister);
+    File.AddOrSub(destination, "add", rhsRegister);
 }
 
 double SubtractNode::EvaluateNode() {
@@ -78,7 +83,12 @@ std::string SubtractNode::NodeToString() {
 }
 
 void SubtractNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    throw std::runtime_error("sub assembly is not implemented");
+    //set the left side to rax
+    left->EvaluateToAssembly(File, destination);
+    //set the right side to rax
+    std::string rhsRegister = "rax";
+    right->EvaluateToAssembly(File, rhsRegister);
+    File.AddOrSub(destination, "sub", rhsRegister);
 }
 
 double DivideNode::EvaluateNode() {

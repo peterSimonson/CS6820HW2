@@ -446,12 +446,14 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
     //if we cannot assign a constant value to the expression because it contains a variable we cannot evaluate yet
     catch (std::runtime_error const & err){
         if(!variable->declaredInAsm && table.variableScopes.size() == 1){
+            //this register will hold the result of the operation
+            std::string tempRegister = "rcx";
             //add an uninitialized variable to the assembly file
             file.AddUnInitializedNum(variableName);
             //write the variable operation in assembly
-            variable->valueOfVariable->EvaluateToAssembly(file, variableName);
+            variable->valueOfVariable->EvaluateToAssembly(file, tempRegister);
             //move the result of the assembly operation into the variable
-            file.SetVariableToTempRegister(variableName);
+            file.SetVariableToRegister(variableName, tempRegister);
         }
     }
 
