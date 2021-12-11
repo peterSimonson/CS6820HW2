@@ -449,6 +449,9 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
             //add an uninitialized variable to the assembly file
             file.AddUnInitializedNum(variableName);
             //write the variable operation in assembly
+            variable->valueOfVariable->EvaluateToAssembly(file, variableName);
+            //move the result of the assembly operation into the variable
+            file.SetVariableToTempRegister(variableName);
         }
     }
 

@@ -121,6 +121,9 @@ void AssemblyFile::SetNumToConstant(std::string name, int value){
     textSection.sectionLines.emplace_back("pop rax");
 }
 
+/// Sets the value of the temporary register rcx to either a variable or a constant
+/// \param source the value you wish to set rax to
+/// \param isVariable is rax a variable or not
 void AssemblyFile::SetTempRegister(std::string source, bool isVariable) {
     //push rax and rcx because we are going to use them
     textSection.sectionLines.emplace_back("push rcx");
@@ -135,6 +138,8 @@ void AssemblyFile::SetTempRegister(std::string source, bool isVariable) {
 
 }
 
+/// Take the value you have in the temp register rax and put it into a variable
+/// \param destination the variable which will store the value from temp register rcx
 void AssemblyFile::SetVariableToTempRegister(std::string destination){
 
     textSection.sectionLines.push_back("mov [" + destination + "], rcx");

@@ -19,6 +19,10 @@ IntegerNode::IntegerNode(int valueOfNode) {
     value = valueOfNode;
 }
 
+void IntegerNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    File.SetTempRegister(std::to_string(EvaluateNode()), false);
+}
+
 VariableNode::VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) :
         ObjectNode(nameOfVar, typeOfVar){
     AssignValue(std::move(valueOfVar));
@@ -44,6 +48,10 @@ void VariableNode::AssignValue(std::shared_ptr<TreeNode> valueOfVar) {
     valueOfVariable = std::move(valueOfVar);
 }
 
+void VariableNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    File.SetTempRegister(name, true);
+}
+
 OperationNode::OperationNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode) {
     left = std::move(leftNode);
     right = std::move(rightNode);
@@ -57,12 +65,20 @@ std::string AddNode::NodeToString() {
     return left->NodeToString() + " + " + right->NodeToString();
 }
 
+void AddNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    throw std::runtime_error("add assembly is not implemented");
+}
+
 double SubtractNode::EvaluateNode() {
     return left->EvaluateNode() - right->EvaluateNode();
 }
 
 std::string SubtractNode::NodeToString() {
     return left->NodeToString() + " - " + right->NodeToString();
+}
+
+void SubtractNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    throw std::runtime_error("sub assembly is not implemented");
 }
 
 double DivideNode::EvaluateNode() {
@@ -80,6 +96,10 @@ std::string DivideNode::NodeToString() {
     return left->NodeToString() + " / " + right->NodeToString();
 }
 
+void DivideNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    throw std::runtime_error("div assembly is not implemented");
+}
+
 double MultiplyNode::EvaluateNode() {
     return left->EvaluateNode() * right->EvaluateNode();
 }
@@ -88,12 +108,20 @@ std::string MultiplyNode::NodeToString() {
     return left->NodeToString() + " * " + right->NodeToString();
 }
 
+void MultiplyNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    throw std::runtime_error("mul assembly is not implemented");
+}
+
 std::string ExponentNode::NodeToString() {
     return left->NodeToString() + " ^ " + right->NodeToString();
 }
 
 double ExponentNode::EvaluateNode() {
     return pow(left->EvaluateNode(), right->EvaluateNode());
+}
+
+void ExponentNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    throw std::runtime_error("exponent assembly is not implemented");
 }
 
 DecimalNode::DecimalNode(double valueOfNode) {
@@ -106,6 +134,10 @@ double DecimalNode::EvaluateNode() {
 
 std::string DecimalNode::NodeToString() {
     return std::to_string(value);
+}
+
+void DecimalNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    throw std::runtime_error("Changing ish values in assembly is not implemented");
 }
 
 ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters):
@@ -143,6 +175,10 @@ void ProcedureNode::AssignValue(std::shared_ptr<TreeNode> valueOfVar) {
     procedureOperation = std::move(valueOfVar);
 }
 
+void ProcedureNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    throw std::runtime_error("procedure assembly is not implemented");
+}
+
 NegateNode::NegateNode(std::shared_ptr<TreeNode> valueToNegate) {
     value = std::move(valueToNegate);
 }
@@ -154,6 +190,10 @@ double NegateNode::EvaluateNode() {
 
 std::string NegateNode::NodeToString() {
     return "-" + value->NodeToString();
+}
+
+void NegateNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    throw std::runtime_error("negate assembly is not implemented");
 }
 
 ObjectNode::ObjectNode(std::string objName, std::string objType) {
