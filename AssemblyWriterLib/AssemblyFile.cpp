@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include "AssemblyFile.h"
+#include <stdexcept>
 
 ///Used to init default values in every assembly file.
 AssemblyFile::AssemblyFile() {
@@ -150,30 +151,23 @@ void AssemblyFile::AddOrSub(const std::string &destination, const std::string &o
 
 }
 
-void AssemblyFile::MulOrDivVariable(std::string source, bool isSourceAVariable, std::string operation) {
-    //push rax and bbx because we are going to use them
-    textSection.sectionLines.emplace_back("push rax");
-    textSection.sectionLines.emplace_back("push rbx");
+void AssemblyFile::MulOrDivVariable(const std::string& destination, const std::string& operation, std::string &rhs) {
 
-    //if the source is a variable move its value into rbx
-    if(isSourceAVariable){
-        textSection.sectionLines.push_back("mov rbx, [" + source + "]");
-    }
-    //otherwise, move the constant into rbx
-    else{
-        textSection.sectionLines.push_back("mov rbx, " + source);
+    //the rhs register cannot be rax because that is the left hand side
+    if(rhs == "rbx"){
+        //set the value of rax into rbx
+        textSection.sectionLines.emplace_back("mov rbx, " + rhs);
+        //change the rhs register to rbx
+        rhs = "rbx";
     }
 
     //move the destination value into rax
-    textSection.sectionLines.emplace_back("mov rax, rcx");
+    textSection.sectionLines.emplace_back("mov rax, " + destination);
     //perform the operation on rax and rbx. result is saved in rax
-    textSection.sectionLines.push_back(operation  + " rbx");
+    textSection.sectionLines.push_back(operation + " " + rhs);
     //store rax in the variable
-    textSection.sectionLines.emplace_back("mov rcx, rax");
+    textSection.sectionLines.emplace_back("mov "+ destination + ", rax");
 
-    //pop rax and rbx back because we are done with those registers
-    textSection.sectionLines.emplace_back("pop rbx");
-    textSection.sectionLines.emplace_back("pop rax");
 }
 
 void AssemblyFile::ExponentVariable(std::string power, bool isVariable) {

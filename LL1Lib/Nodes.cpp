@@ -83,7 +83,7 @@ std::string SubtractNode::NodeToString() {
 }
 
 void SubtractNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    //set the left side to rax
+    //set the left side to the destination
     left->EvaluateToAssembly(File, destination);
     //set the right side to rax
     std::string rhsRegister = "rax";
@@ -107,7 +107,12 @@ std::string DivideNode::NodeToString() {
 }
 
 void DivideNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    throw std::runtime_error("div assembly is not implemented");
+    //set the left side to the destination
+    left->EvaluateToAssembly(File, destination);
+    //set the right side to rbx
+    std::string rhsRegister = "rbx";
+    right->EvaluateToAssembly(File, rhsRegister);
+    File.MulOrDivVariable(destination, "div", rhsRegister);
 }
 
 double MultiplyNode::EvaluateNode() {
@@ -119,7 +124,12 @@ std::string MultiplyNode::NodeToString() {
 }
 
 void MultiplyNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    throw std::runtime_error("mul assembly is not implemented");
+    //set the left side to the destination
+    left->EvaluateToAssembly(File, destination);
+    //set the right side to rbx
+    std::string rhsRegister = "rbx";
+    right->EvaluateToAssembly(File, rhsRegister);
+    File.MulOrDivVariable(destination, "mul", rhsRegister);
 }
 
 std::string ExponentNode::NodeToString() {
@@ -205,8 +215,11 @@ std::string NegateNode::NodeToString() {
 void NegateNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
     //write the value to assembly
     value->EvaluateToAssembly(File, destination);
+    //set the rhs of the multiply to negative 1
+    std::string rhsRegister = "rbx";
+    File.SetRegister("-1", false, rhsRegister);
     //multiply the value of rcx by negative one to negate it
-    File.MulOrDivVariable("-1", false, "mul");
+    File.MulOrDivVariable(destination, "mul", rhsRegister);
 }
 
 ObjectNode::ObjectNode(std::string objName, std::string objType) {

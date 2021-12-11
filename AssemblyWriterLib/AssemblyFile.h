@@ -45,7 +45,7 @@ public:
     void SetRegister(const std::string& source, bool isVariable, const std::string& registerToSet);
     void SetVariableToRegister(const std::string& destinationVariable, const std::string& registerSource);
     void AddOrSub(const std::string &destination, const std::string &operation, const std::string &rhs);
-    void MulOrDivVariable(std::string source, bool isSourceAVariable, std::string operation);
+    void MulOrDivVariable(const std::string& destination, const std::string& operation, std::string &rhs);
     void ExponentVariable(std::string power, bool isVariable);
     void WriteStringPrint(const std::string& dataToPrint, bool isVariable);
     void WriteNumPrint(const std::string& dataToPrint, bool isVariable);
