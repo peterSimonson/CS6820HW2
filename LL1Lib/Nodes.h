@@ -83,7 +83,7 @@ public:
     //holds the parameters
     std::vector<std::shared_ptr<VariableNode>> parameters;
 
-    explicit ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters);
+    explicit ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parametersIn);
     void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     void StartAssemblyDeclaration(AssemblyFile &File);
     void EndAssemblyDeclaration(AssemblyFile &File);

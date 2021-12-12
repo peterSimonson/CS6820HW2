@@ -531,7 +531,7 @@ void Expression::DeclareNewProcedure(Table &table, AssemblyFile &File) {
     //get the procedure name
     std::string procedureName = words[2];
     //get the parameters
-    std::vector<std::shared_ptr<VariableNode>> procedureParams = DeclareNewParams(table, AssemblyFile());
+    std::vector<std::shared_ptr<VariableNode>> procedureParams = DeclareNewParams(table, File);
     ProcedureNode newProcedure = ProcedureNode(procedureName, returnType, procedureParams);
     //if we cannot add a new procedure throw an error
     if(!table.AddProcedure(newProcedure)){

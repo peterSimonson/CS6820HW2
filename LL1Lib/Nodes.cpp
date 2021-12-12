@@ -149,10 +149,10 @@ void DecimalNode::EvaluateToAssembly(AssemblyFile &File, std::string destination
     throw std::runtime_error("Changing ish values in assembly is not implemented");
 }
 
-ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters):
+ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parametersIn):
         ObjectNode(std::move(name), std::move(returnType)){
 
-    parameters = std::move(parameters);
+    parameters = std::move(parametersIn);
 }
 
 void ProcedureNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
