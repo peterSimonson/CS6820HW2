@@ -19,8 +19,8 @@ IntegerNode::IntegerNode(int valueOfNode) {
     value = valueOfNode;
 }
 
-void IntegerNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    File.SetRegister(std::to_string(EvaluateNode()), false, destination);
+void IntegerNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
+    File.SetRegister(std::to_string(EvaluateNode()), false, destination, isProcedure);
 }
 
 VariableNode::VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) :
@@ -32,8 +32,8 @@ std::string VariableNode::NodeToString() {
     return name;
 }
 
-void VariableNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    File.SetRegister(name, true, destination);
+void VariableNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
+    File.SetRegister(name, true, destination, isProcedure);
 }
 
 OperationNode::OperationNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode) {
@@ -49,13 +49,13 @@ std::string AddNode::NodeToString() {
     return left->NodeToString() + " + " + right->NodeToString();
 }
 
-void AddNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+void AddNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
     //set the left side to rax
-    left->EvaluateToAssembly(File, destination);
+    left->EvaluateToAssembly(File, destination, isProcedure);
     //set the right side to rax
     std::string rhsRegister = "rax";
-    right->EvaluateToAssembly(File, rhsRegister);
-    File.AddOrSub(destination, "add", rhsRegister);
+    right->EvaluateToAssembly(File, rhsRegister, isProcedure);
+    File.AddOrSub(destination, "add", rhsRegister, isProcedure);
 }
 
 double SubtractNode::EvaluateNode() {
@@ -66,13 +66,13 @@ std::string SubtractNode::NodeToString() {
     return left->NodeToString() + " - " + right->NodeToString();
 }
 
-void SubtractNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+void SubtractNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
     //set the left side to the destination
-    left->EvaluateToAssembly(File, destination);
+    left->EvaluateToAssembly(File, destination, isProcedure);
     //set the right side to rax
     std::string rhsRegister = "rax";
-    right->EvaluateToAssembly(File, rhsRegister);
-    File.AddOrSub(destination, "sub", rhsRegister);
+    right->EvaluateToAssembly(File, rhsRegister, isProcedure);
+    File.AddOrSub(destination, "sub", rhsRegister, isProcedure);
 }
 
 double DivideNode::EvaluateNode() {
@@ -90,13 +90,13 @@ std::string DivideNode::NodeToString() {
     return left->NodeToString() + " / " + right->NodeToString();
 }
 
-void DivideNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+void DivideNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
     //set the left side to the destination
-    left->EvaluateToAssembly(File, destination);
+    left->EvaluateToAssembly(File, destination, isProcedure);
     //set the right side to rbx
     std::string rhsRegister = "rbx";
-    right->EvaluateToAssembly(File, rhsRegister);
-    File.MulOrDivVariable(destination, "div", rhsRegister);
+    right->EvaluateToAssembly(File, rhsRegister, isProcedure);
+    File.MulOrDivVariable(destination, "div", rhsRegister, isProcedure);
 }
 
 double MultiplyNode::EvaluateNode() {
@@ -107,13 +107,13 @@ std::string MultiplyNode::NodeToString() {
     return left->NodeToString() + " * " + right->NodeToString();
 }
 
-void MultiplyNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+void MultiplyNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
     //set the left side to the destination
-    left->EvaluateToAssembly(File, destination);
+    left->EvaluateToAssembly(File, destination, isProcedure);
     //set the right side to rbx
     std::string rhsRegister = "rbx";
-    right->EvaluateToAssembly(File, rhsRegister);
-    File.MulOrDivVariable(destination, "mul", rhsRegister);
+    right->EvaluateToAssembly(File, rhsRegister, isProcedure);
+    File.MulOrDivVariable(destination, "mul", rhsRegister, isProcedure);
 }
 
 std::string ExponentNode::NodeToString() {
@@ -124,13 +124,13 @@ double ExponentNode::EvaluateNode() {
     return pow(left->EvaluateNode(), right->EvaluateNode());
 }
 
-void ExponentNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+void ExponentNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
     //set the left side to the destination
-    left->EvaluateToAssembly(File, destination);
+    left->EvaluateToAssembly(File, destination, isProcedure);
     //set the right side to rbx
     std::string powerRegister = "rsi";
-    right->EvaluateToAssembly(File, powerRegister);
-    File.ExponentVariable(powerRegister, destination);
+    right->EvaluateToAssembly(File, powerRegister, isProcedure);
+    File.ExponentVariable(powerRegister, destination, isProcedure);
 }
 
 DecimalNode::DecimalNode(double valueOfNode) {
@@ -145,27 +145,27 @@ std::string DecimalNode::NodeToString() {
     return std::to_string(value);
 }
 
-void DecimalNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+void DecimalNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
     throw std::runtime_error("Changing ish values in assembly is not implemented");
 }
 
 ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters):
         ObjectNode(std::move(name), std::move(returnType)){
 
-    procedureParameters = std::move(parameters);
+    parameters = std::move(parameters);
 }
 
-void ProcedureNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+void ProcedureNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
 
 }
 
 std::string ProcedureNode::NodeToString() {
     std::string returnVal = name + "(";
 
-    for(int i = 0; i < procedureParameters.size(); i++){
-        returnVal += procedureParameters[i]->name;
+    for(int i = 0; i < parameters.size(); i++){
+        returnVal += parameters[i]->name;
 
-        if(i + 1 != procedureParameters.size()){
+        if(i + 1 != parameters.size()){
             returnVal += ", ";
         }
     }
@@ -175,12 +175,14 @@ std::string ProcedureNode::NodeToString() {
     return returnVal;
 }
 
-void ProcedureNode::DeclareInAssembly(AssemblyFile &File) {
+void ProcedureNode::StartAssemblyDeclaration(AssemblyFile &File) {
     //write the procedure prologue
     File.WriteProcedurePrologue(name);
+}
 
-    //write the procedure
-
+void ProcedureNode::EndAssemblyDeclaration(AssemblyFile &File) {
+    //write the procedure. Save the result to rax
+    operation->EvaluateToAssembly(File, "rax", true);
 
     //write the procedure epilogue
     File.WriteProcedureEpilogue();
@@ -201,14 +203,14 @@ std::string NegateNode::NodeToString() {
     return "-" + value->NodeToString();
 }
 
-void NegateNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+void NegateNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
     //write the value to assembly
-    value->EvaluateToAssembly(File, destination);
+    value->EvaluateToAssembly(File, destination, isProcedure);
     //set the rhs of the multiply to negative 1
     std::string rhsRegister = "rbx";
-    File.SetRegister("-1", false, rhsRegister);
+    File.SetRegister("-1", false, rhsRegister, isProcedure);
     //multiply the value of rcx by negative one to negate it
-    File.MulOrDivVariable(destination, "mul", rhsRegister);
+    File.MulOrDivVariable(destination, "mul", rhsRegister, isProcedure);
 }
 
 ObjectNode::ObjectNode(std::string objName, std::string objType) {

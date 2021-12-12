@@ -44,11 +44,14 @@ public:
     void AddInitializedNum(const std::string& name, int value);
     void AddInitializedIsh(const std::string& name, double value);
     void SetNumToConstant(const std::string& name, int value);
-    void SetRegister(const std::string& source, bool isVariable, const std::string& registerToSet);
+    void SetRegister(const std::string &source, bool isVariable, const std::string &registerToSet,
+                     bool isProcedure);
     void SetVariableToRegister(const std::string& destinationVariable, const std::string& registerSource);
-    void AddOrSub(const std::string &destination, const std::string &operation, const std::string &rhs);
-    void MulOrDivVariable(const std::string& destination, const std::string& operation, std::string &rhs);
-    void ExponentVariable(const std::string& power, const std::string& baseRegister);
+    void AddOrSub(const std::string &destination, const std::string &operation, const std::string &rhs,
+                  bool isProcedure);
+    void MulOrDivVariable(const std::string &destination, const std::string &operation, std::string &rhs,
+                          bool isProcedure);
+    void ExponentVariable(const std::string &power, const std::string &baseRegister, bool isProcedure);
     void WriteStringPrint(const std::string& dataToPrint, bool isVariable);
     void WriteNumPrint(const std::string& dataToPrint, bool isVariable);
     void WriteIshPrint(const std::string& dataToPrint);

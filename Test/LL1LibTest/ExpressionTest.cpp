@@ -310,7 +310,7 @@ namespace{
         ASSERT_EQ(table.procedures.size(), 1);
 
         ASSERT_EQ(table.procedures.back()->name, "add");
-        ASSERT_EQ(table.procedures.back()->procedureParameters.size(), 2);
+        ASSERT_EQ(table.procedures.back()->parameters.size(), 2);
 
         //line in the procedure
         line = {"num", "result", "=", "a", "+", "b"} ;

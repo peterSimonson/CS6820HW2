@@ -345,8 +345,8 @@ bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
         std::string oldProcedureName = procedure->name;
 
         //get the number of parameters for each procedure
-        int newProcedureParamsSize = (int)procedureToAdd.procedureParameters.size();
-        int oldProcedureParamsSize = (int)procedure->procedureParameters.size();
+        int newProcedureParamsSize = (int)procedureToAdd.parameters.size();
+        int oldProcedureParamsSize = (int)procedure->parameters.size();
 
         //if the names match, and we have the same number of parameters
         if(oldProcedureName == newProcedureName && oldProcedureParamsSize == newProcedureParamsSize){
@@ -354,9 +354,9 @@ bool Table::AddProcedure(const ProcedureNode &procedureToAdd) {
             bool paramsMatch = true;
 
             //loop through to ensure all the params do not match
-            for(int paramIndex = 0; paramIndex != procedure->procedureParameters.size(); paramIndex++){
-                std::string newParamType = procedureToAdd.procedureParameters[paramIndex]->type;
-                std::string oldParamType = procedure->procedureParameters[paramIndex]->type;
+            for(int paramIndex = 0; paramIndex != procedure->parameters.size(); paramIndex++){
+                std::string newParamType = procedureToAdd.parameters[paramIndex]->type;
+                std::string oldParamType = procedure->parameters[paramIndex]->type;
 
                 //if at any point the params datatype does not match we can stop checking
                 if(oldParamType != newParamType){
@@ -388,7 +388,7 @@ std::shared_ptr<ProcedureNode> Table::GetProcedure(const std::string &nameOfProc
 
     for(auto & procedure : procedures){
         //check if the procedure name matches and the number of arguments match
-        if(procedure->name == nameOfProcedureToReturn && functionArguments.size() == procedure->procedureParameters.size()){
+        if(procedure->name == nameOfProcedureToReturn && functionArguments.size() == procedure->parameters.size()){
             //TODO: actually check variable type
             return std::make_shared<ProcedureNode>(*procedure);
         }

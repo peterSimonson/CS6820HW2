@@ -364,7 +364,7 @@ void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
         table.AddVariableScope();
         //if we are starting a new procedure
         if(isProcedureDeclaration){
-            DeclareNewProcedure(table);
+            DeclareNewProcedure(table, file);
         }
     }
     //if the line is a return statement
@@ -376,7 +376,7 @@ void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
         //give the last procedure a return operation
         table.procedures.back()->AssignValue(evaluatePostFix(postfix, table));
         //save the last procedure to assembly
-        table.procedures.back()->DeclareInAssembly(file);
+        table.procedures.back()->EndAssemblyDeclaration(file);
     }
     //if we have a close bracket
     else if(std::find(tokens.begin(), tokens.end(), CLOSE_CURLY_TOKEN) != tokens.end()){
@@ -447,13 +447,16 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
     }
     //if we cannot assign a constant value to the expression because it contains a variable we cannot evaluate yet
     catch (std::runtime_error const & err){
-        if(!variable->declaredInAsm && table.variableScopes.size() == 1){
+        //the only time we have more than one scope is when we are in a procedure
+        bool inProcedure = table.variableScopes.size() > 1;
+
+        if(!variable->declaredInAsm){
             //this register will hold the result of the operation
             std::string tempRegister = "rcx";
             //add an uninitialized variable to the assembly file
             file.AddUnInitializedNum(variableName);
             //write the variable operation in assembly
-            variable->operation->EvaluateToAssembly(file, tempRegister);
+            variable->operation->EvaluateToAssembly(file, tempRegister, inProcedure);
             //move the result of the assembly operation into the variable
             file.SetVariableToRegister(variableName, tempRegister);
         }
@@ -489,7 +492,7 @@ void Expression::DeclareNewVariable(Table &table, bool uninitializedVariable, As
 /// When handling a procedure declaration we need to parse the parameters
 /// \param table table where we store our symbols to
 /// \return a vector of variables that corresponds to the procedures parameters
-std::vector<std::shared_ptr<VariableNode>> Expression::DeclareNewParams(Table &table) {
+std::vector<std::shared_ptr<VariableNode>> Expression::DeclareNewParams(Table &table, AssemblyFile File) {
     std::vector<std::shared_ptr<VariableNode>> parameters;
     //find where the parameters start
     auto it = std::find(tokens.begin(), tokens.end(), OPEN_PAREN_TOKEN);
@@ -504,7 +507,7 @@ std::vector<std::shared_ptr<VariableNode>> Expression::DeclareNewParams(Table &t
         else{
             std::string variableType = words[i]; //get the datatype
             i++;//move onto the variable name
-            std::string variableName = words[i]; //get the datatype
+            std::string variableName = words[i]; //get variable name
             std::shared_ptr<VariableNode> procedureParameter(new VariableNode(nullptr, variableName, variableType));
             //add the parameter to the current scope
             table.AddVariable(procedureParameter);
@@ -522,19 +525,20 @@ std::vector<std::shared_ptr<VariableNode>> Expression::DeclareNewParams(Table &t
 
 /// Handle a line of code where we are declaring a new procedure
 /// \param table table that holds our symbols. We will store the new procedure here
-void Expression::DeclareNewProcedure(Table &table) {
+void Expression::DeclareNewProcedure(Table &table, AssemblyFile &File) {
     //get the return type
     std::string returnType = words[0];
     //get the procedure name
     std::string procedureName = words[2];
     //get the parameters
-    std::vector<std::shared_ptr<VariableNode>> procedureParams = DeclareNewParams(table);
+    std::vector<std::shared_ptr<VariableNode>> procedureParams = DeclareNewParams(table, AssemblyFile());
     ProcedureNode newProcedure = ProcedureNode(procedureName, returnType, procedureParams);
     //if we cannot add a new procedure throw an error
     if(!table.AddProcedure(newProcedure)){
         throw std::logic_error(procedureName + " is being declared multiple times without proper overloading\n");
     }
 
+    newProcedure.StartAssemblyDeclaration(File);
 }
 
 /// Handle a line of code that contains a procedure being called
@@ -595,9 +599,9 @@ std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedur
     std::shared_ptr<ProcedureNode> procedureToCall = table.GetProcedure(procedureName, procedureArgs);
 
     //populate the arguments
-    for(int i = 0; i < procedureToCall->procedureParameters.size(); i++){
+    for(int i = 0; i < procedureToCall->parameters.size(); i++){
         //set the args to the ones we parsed
-        procedureToCall->procedureParameters[i]->AssignValue(procedureArgs[i]);
+        procedureToCall->parameters[i]->AssignValue(procedureArgs[i]);
     }
 
     //find the data type of the variable and use that type

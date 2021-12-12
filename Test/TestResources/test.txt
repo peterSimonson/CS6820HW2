@@ -10,3 +10,5 @@ num result2 = add(var1, 3)
 printNum result2
 num result3 = add(3, 3)
 printNum result3
+num var2 = result1 + result2
+printNum result2

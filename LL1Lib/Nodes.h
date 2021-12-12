@@ -16,7 +16,7 @@ class TreeNode {
 public:
     virtual std::string NodeToString() = 0;
     virtual double EvaluateNode() = 0;
-    virtual void EvaluateToAssembly(AssemblyFile &File, std::string destination) = 0;
+    virtual void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) = 0;
     virtual ~TreeNode() = default;
 
 };
@@ -29,7 +29,7 @@ public:
     explicit IntegerNode(int valueOfNode);
 
     double EvaluateNode() override;
-    void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
+    void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     std::string NodeToString() override;
 };
 
@@ -41,7 +41,7 @@ public:
     explicit DecimalNode(double valueOfNode);
 
     double EvaluateNode() override;
-    void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
+    void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     std::string NodeToString() override;
 };
 
@@ -53,7 +53,7 @@ public:
     std::shared_ptr<TreeNode>value;
 
     double EvaluateNode() override;
-    void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
+    void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     std::string NodeToString() override;
 };
 
@@ -74,18 +74,19 @@ public:
 
     explicit VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar);
 
-    void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
+    void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     std::string NodeToString() override;
 };
 
 class ProcedureNode : public ObjectNode{
 public:
     //holds the parameters
-    std::vector<std::shared_ptr<VariableNode>> procedureParameters;
+    std::vector<std::shared_ptr<VariableNode>> parameters;
 
     explicit ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters);
-    void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
-    void DeclareInAssembly(AssemblyFile &File);
+    void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
+    void StartAssemblyDeclaration(AssemblyFile &File);
+    void EndAssemblyDeclaration(AssemblyFile &File);
     std::string NodeToString() override;
 };
 
@@ -102,7 +103,7 @@ public:
 class AddNode : public OperationNode{
 public:
     double EvaluateNode() override;
-    void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
+    void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
     AddNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode)
@@ -113,7 +114,7 @@ public:
 class SubtractNode : public OperationNode{
 public:
     double EvaluateNode() override;
-    void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
+    void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
     SubtractNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode)
@@ -124,7 +125,7 @@ public:
 class DivideNode : public OperationNode{
 public:
     double EvaluateNode() override;
-    void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
+    void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
     DivideNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode)
@@ -135,7 +136,7 @@ public:
 class MultiplyNode : public OperationNode{
 public:
     double EvaluateNode() override;
-    void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
+    void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
     MultiplyNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode)
@@ -146,7 +147,7 @@ public:
 class ExponentNode : public OperationNode{
 public:
     double EvaluateNode() override;
-    void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
+    void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     std::string NodeToString() override;
     //We just need the constructor for Operation Node
     ExponentNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode)

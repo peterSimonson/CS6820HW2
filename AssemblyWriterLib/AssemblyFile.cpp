@@ -48,6 +48,10 @@ void AssemblyFile::WriteAssemblyFile() {
     fileHandle << "extern _scanf" << "\n";
     fileHandle << "\n";
 
+    //write the exit call
+    textSection.sectionLines.emplace_back("pop rbx");
+    textSection.sectionLines.emplace_back("ret");
+
     //add the procedures to the end of text
     textSection.sectionLines.insert(textSection.sectionLines.end(), procedureLines.begin(), procedureLines.end());
 
@@ -56,9 +60,6 @@ void AssemblyFile::WriteAssemblyFile() {
     writeSectionToFile(bssSection, fileHandle);
     writeSectionToFile(textSection, fileHandle);
 
-    //write the exit call
-    fileHandle << "pop rbx" << "\n";
-    fileHandle << "ret" << "\n";
 
     fileHandle.close(); //all done writing
 }
@@ -128,14 +129,23 @@ void AssemblyFile::SetNumToConstant(const std::string& name, int value){
 /// Sets the value of the temporary register rcx to either a variable or a constant
 /// \param source the value you wish to set rax to
 /// \param isVariable is rax a variable or not
-void AssemblyFile::SetRegister(const std::string& source, bool isVariable, const std::string& registerToSet) {
+void AssemblyFile::SetRegister(const std::string &source, bool isVariable, const std::string &registerToSet,
+                               bool isProcedure) {
+
+    std::vector<std::string> * sectionToWrite;
+    if(isProcedure){
+        sectionToWrite = &procedureLines;
+    }
+    else{
+        sectionToWrite = & textSection.sectionLines;
+    }
 
     //move source into rcx.
     if(isVariable){
-        textSection.sectionLines.push_back("mov " + registerToSet + ", [" + source + "]");
+        sectionToWrite->push_back("mov " + registerToSet + ", [" + source + "]");
     }
     else{
-        textSection.sectionLines.push_back("mov " + registerToSet + "," + source);
+        sectionToWrite->push_back("mov " + registerToSet + "," + source);
     }
 
 }
@@ -147,44 +157,70 @@ void AssemblyFile::SetVariableToRegister(const std::string& destinationVariable,
     textSection.sectionLines.push_back("mov [" + destinationVariable + "], " + registerSource);
 }
 
-void AssemblyFile::AddOrSub(const std::string &destination, const std::string &operation, const std::string &rhs) {
+void AssemblyFile::AddOrSub(const std::string &destination, const std::string &operation, const std::string &rhs,
+                            bool isProcedure) {
+
+    std::vector<std::string> * sectionToWrite;
+    if(isProcedure){
+        sectionToWrite = &procedureLines;
+    }
+    else{
+        sectionToWrite = & textSection.sectionLines;
+    }
 
     //add rax to the destination
-    textSection.sectionLines.push_back(operation +" "+ destination +", " + rhs);
+    sectionToWrite->push_back(operation +" "+ destination +", " + rhs);
 
 }
 
-void AssemblyFile::MulOrDivVariable(const std::string& destination, const std::string& operation, std::string &rhs) {
+void AssemblyFile::MulOrDivVariable(const std::string &destination, const std::string &operation, std::string &rhs,
+                                    bool isProcedure) {
+
+    std::vector<std::string> * sectionToWrite;
+    if(isProcedure){
+        sectionToWrite = &procedureLines;
+    }
+    else{
+        sectionToWrite = & textSection.sectionLines;
+    }
 
     //the rhs register cannot be rax because that is the left-hand side
     if(rhs == "rbx"){
         //set the value of rax into rbx
-        textSection.sectionLines.emplace_back("mov rbx, " + rhs);
+        sectionToWrite->emplace_back("mov rbx, " + rhs);
         //change the rhs register to rbx
         rhs = "rbx";
     }
 
     //move the destination value into rax
-    textSection.sectionLines.emplace_back("mov rax, " + destination);
+    sectionToWrite->emplace_back("mov rax, " + destination);
     //perform the operation on rax and rbx. result is saved in rax
-    textSection.sectionLines.push_back(operation + " " + rhs);
+    sectionToWrite->push_back(operation + " " + rhs);
     //store rax in the variable
-    textSection.sectionLines.emplace_back("mov "+ destination + ", rax");
+    sectionToWrite->emplace_back("mov "+ destination + ", rax");
 
 }
 
-void AssemblyFile::ExponentVariable(const std::string& power, const std::string& baseRegister) {
+void AssemblyFile::ExponentVariable(const std::string &power, const std::string &baseRegister, bool isProcedure) {
 
-    textSection.sectionLines.emplace_back("push rax");
-    textSection.sectionLines.emplace_back("push rbx");
-    textSection.sectionLines.emplace_back("push rdi");
+    std::vector<std::string> * sectionToWrite;
+    if(isProcedure){
+        sectionToWrite = &procedureLines;
+    }
+    else{
+        sectionToWrite = & textSection.sectionLines;
+    }
+
+    sectionToWrite->emplace_back("push rax");
+    sectionToWrite->emplace_back("push rbx");
+    sectionToWrite->emplace_back("push rdi");
 
     //move the base value into rax
-    textSection.sectionLines.emplace_back("mov rax, " + baseRegister);
+    sectionToWrite->emplace_back("mov rax, " + baseRegister);
     //move the multiply value into rbx
-    textSection.sectionLines.emplace_back("mov rbx, " + baseRegister);
+    sectionToWrite->emplace_back("mov rbx, " + baseRegister);
     //move the counter into rdi
-    textSection.sectionLines.emplace_back("mov rdi, 1");
+    sectionToWrite->emplace_back("mov rdi, 1");
 
 
     //save the labels which should have unique names
@@ -192,25 +228,25 @@ void AssemblyFile::ExponentVariable(const std::string& power, const std::string&
     std::string doneLabel = "done" + std::to_string(dataSection.sectionLines.size());
 
     //label for the beginning of our loop
-    textSection.sectionLines.push_back(againLabel + ":");
+    sectionToWrite->push_back(againLabel + ":");
     //see if we are done looping
-    textSection.sectionLines.emplace_back("cmp rdi, " + power);
-    textSection.sectionLines.push_back("jge " + doneLabel);
+    sectionToWrite->emplace_back("cmp rdi, " + power);
+    sectionToWrite->push_back("jge " + doneLabel);
     //if we are not done looping multiply rax by the default value
-    textSection.sectionLines.emplace_back("mul rbx");
+    sectionToWrite->emplace_back("mul rbx");
     //increase the counter
-    textSection.sectionLines.emplace_back("inc rdi");
+    sectionToWrite->emplace_back("inc rdi");
     //repeat the loop
-    textSection.sectionLines.push_back("jmp " + againLabel);
+    sectionToWrite->push_back("jmp " + againLabel);
     //save the label for where to go once the loop is finished
-    textSection.sectionLines.push_back(doneLabel + ":");
+    sectionToWrite->push_back(doneLabel + ":");
 
     //move the final value back into rcx
-    textSection.sectionLines.emplace_back("mov " + baseRegister + ", rax");
+    sectionToWrite->emplace_back("mov " + baseRegister + ", rax");
 
-    textSection.sectionLines.emplace_back("pop rdi");
-    textSection.sectionLines.emplace_back("pop rbx");
-    textSection.sectionLines.emplace_back("pop rax");
+    sectionToWrite->emplace_back("pop rdi");
+    sectionToWrite->emplace_back("pop rbx");
+    sectionToWrite->emplace_back("pop rax");
 }
 
 /// Write a printf call for a num. Supports constants and variables
