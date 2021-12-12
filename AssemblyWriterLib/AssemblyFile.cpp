@@ -112,7 +112,7 @@ void AssemblyFile::AddUnInitializedNum(const std::string& name){
 /// Sets the value of a previously defined variable to a constant
 /// \param name name of the variable you wish to set
 /// \param value integer value you wish to set to the constant
-void AssemblyFile::SetNumToConstant(std::string name, int value){
+void AssemblyFile::SetNumToConstant(const std::string& name, int value){
     //push rax because we are going to use it
     textSection.sectionLines.emplace_back("push rax");
     //move the value into rax and then into the variable
@@ -153,7 +153,7 @@ void AssemblyFile::AddOrSub(const std::string &destination, const std::string &o
 
 void AssemblyFile::MulOrDivVariable(const std::string& destination, const std::string& operation, std::string &rhs) {
 
-    //the rhs register cannot be rax because that is the left hand side
+    //the rhs register cannot be rax because that is the left-hand side
     if(rhs == "rbx"){
         //set the value of rax into rbx
         textSection.sectionLines.emplace_back("mov rbx, " + rhs);
@@ -170,26 +170,19 @@ void AssemblyFile::MulOrDivVariable(const std::string& destination, const std::s
 
 }
 
-void AssemblyFile::ExponentVariable(std::string power, bool isVariable) {
+void AssemblyFile::ExponentVariable(const std::string& power, const std::string& baseRegister) {
+
     textSection.sectionLines.emplace_back("push rax");
     textSection.sectionLines.emplace_back("push rbx");
     textSection.sectionLines.emplace_back("push rdi");
-    textSection.sectionLines.emplace_back("push rsi");
 
     //move the base value into rax
-    textSection.sectionLines.emplace_back("mov rax, rcx");
+    textSection.sectionLines.emplace_back("mov rax, " + baseRegister);
     //move the multiply value into rbx
-    textSection.sectionLines.emplace_back("mov rbx, rax");
+    textSection.sectionLines.emplace_back("mov rbx, " + baseRegister);
     //move the counter into rdi
     textSection.sectionLines.emplace_back("mov rdi, 1");
 
-    //move the count limit into rsi
-    if(isVariable){
-        textSection.sectionLines.push_back("mov rsi, [" + power + "]");
-    }
-    else{
-        textSection.sectionLines.push_back("mov rsi, " + power);
-    }
 
     //save the labels which should have unique names
     std::string againLabel = "again" + std::to_string(dataSection.sectionLines.size());
@@ -198,7 +191,7 @@ void AssemblyFile::ExponentVariable(std::string power, bool isVariable) {
     //label for the beginning of our loop
     textSection.sectionLines.push_back(againLabel + ":");
     //see if we are done looping
-    textSection.sectionLines.emplace_back("cmp rdi, rsi");
+    textSection.sectionLines.emplace_back("cmp rdi, " + power);
     textSection.sectionLines.push_back("jge " + doneLabel);
     //if we are not done looping multiply rax by the default value
     textSection.sectionLines.emplace_back("mul rbx");
@@ -210,9 +203,8 @@ void AssemblyFile::ExponentVariable(std::string power, bool isVariable) {
     textSection.sectionLines.push_back(doneLabel + ":");
 
     //move the final value back into rcx
-    textSection.sectionLines.emplace_back("mov rcx, rax");
+    textSection.sectionLines.emplace_back("mov " + baseRegister + ", rax");
 
-    textSection.sectionLines.emplace_back("pop rsi");
     textSection.sectionLines.emplace_back("pop rdi");
     textSection.sectionLines.emplace_back("pop rbx");
     textSection.sectionLines.emplace_back("pop rax");

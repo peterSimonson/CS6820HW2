@@ -141,7 +141,12 @@ double ExponentNode::EvaluateNode() {
 }
 
 void ExponentNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    throw std::runtime_error("exponent assembly is not implemented");
+    //set the left side to the destination
+    left->EvaluateToAssembly(File, destination);
+    //set the right side to rbx
+    std::string powerRegister = "rsi";
+    right->EvaluateToAssembly(File, powerRegister);
+    File.ExponentVariable(powerRegister, destination);
 }
 
 DecimalNode::DecimalNode(double valueOfNode) {

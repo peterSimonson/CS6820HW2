@@ -41,12 +41,12 @@ public:
     void AddUnInitializedNum(const std::string& name);
     void AddInitializedNum(const std::string& name, int value);
     void AddInitializedIsh(const std::string& name, double value);
-    void SetNumToConstant(std::string name, int value);
+    void SetNumToConstant(const std::string& name, int value);
     void SetRegister(const std::string& source, bool isVariable, const std::string& registerToSet);
     void SetVariableToRegister(const std::string& destinationVariable, const std::string& registerSource);
     void AddOrSub(const std::string &destination, const std::string &operation, const std::string &rhs);
     void MulOrDivVariable(const std::string& destination, const std::string& operation, std::string &rhs);
-    void ExponentVariable(std::string power, bool isVariable);
+    void ExponentVariable(const std::string& power, const std::string& baseRegister);
     void WriteStringPrint(const std::string& dataToPrint, bool isVariable);
     void WriteNumPrint(const std::string& dataToPrint, bool isVariable);
     void WriteIshPrint(const std::string& dataToPrint);
