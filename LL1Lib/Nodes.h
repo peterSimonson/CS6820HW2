@@ -61,19 +61,19 @@ class ObjectNode : public TreeNode{
 public:
     std::string name;
     std::string type;
-
+    bool declaredInAsm;
+    std::shared_ptr<TreeNode> operation = nullptr;
+    double EvaluateNode() override;
+    void AssignValue(std::shared_ptr<TreeNode> value);
     ObjectNode(std::string objName, std::string objType);
 };
 
 //represents a variable value
 class VariableNode : public ObjectNode{
 public:
-    std::shared_ptr<TreeNode>valueOfVariable = nullptr;
-    bool declaredInAsm;
 
     explicit VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar);
-    void AssignValue(std::shared_ptr<TreeNode> valueOfVar);
-    double EvaluateNode() override;
+
     void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
     std::string NodeToString() override;
 };
@@ -82,14 +82,10 @@ class ProcedureNode : public ObjectNode{
 public:
     //holds the parameters
     std::vector<std::shared_ptr<VariableNode>> procedureParameters;
-    //holds the operation the procedure performs
-    std::shared_ptr<TreeNode> procedureOperation = nullptr;
 
     explicit ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters);
-    double EvaluateNode() override;
     void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
     std::string NodeToString() override;
-    void AssignValue(std::shared_ptr<TreeNode>);
 };
 
 //Interface for our operation classes

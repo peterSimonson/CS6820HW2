@@ -1,8 +1,12 @@
-printString "enter a number for var1"
+num procedure add(num a, num b) {
+  num result = a + b
+  return result
+}
 num var1 = 0
 readNum var1
-printString "enter a number for var2"
-num var2 = 0
-readNum var2
-num var4 = var1 ^ var2
-printNum var4
+num result1 = add(2, 3)
+printNum result1
+num result2 = add(var1, 3)
+printNum result2
+num result3 = add(3, 3)
+printNum result3

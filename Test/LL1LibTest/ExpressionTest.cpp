@@ -326,7 +326,7 @@ namespace{
         expr = TranslateWordsToTokens(line, table.dataTypes);
         expr.EvaluateExpression(table, file);
         //We should have a return operation now
-        ASSERT_NE(table.procedures.back()->procedureOperation, nullptr);
+        ASSERT_NE(table.procedures.back()->operation, nullptr);
 
         //end the procedure
         line = {"}"} ;
@@ -486,7 +486,7 @@ namespace{
         }
         catch(std::logic_error const & err) {
             //ensure we have not set the variable to anything
-            ASSERT_EQ(table.variableScopes.back().back()->valueOfVariable, nullptr);
+            ASSERT_EQ(table.variableScopes.back().back()->operation, nullptr);
         }
         catch(...) {
             FAIL() << "Expected logic error but got a different kind of error";

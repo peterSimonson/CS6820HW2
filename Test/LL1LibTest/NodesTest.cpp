@@ -128,7 +128,7 @@ namespace {
             FAIL() << "Expected runtime error when evaluating an unassigned node";
         }
         catch(std::runtime_error const & err) {
-            EXPECT_EQ(err.what(),std::string("Error: Attempted to evaluate unassigned variable\n"));
+            EXPECT_EQ(err.what(),std::string("Error: Attempted to evaluate test before it was defined.\n"));
         }
         catch(...) {
             FAIL() << "Expected runtime error but got a different kind of error";

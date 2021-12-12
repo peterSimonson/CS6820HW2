@@ -451,7 +451,7 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
             //add an uninitialized variable to the assembly file
             file.AddUnInitializedNum(variableName);
             //write the variable operation in assembly
-            variable->valueOfVariable->EvaluateToAssembly(file, tempRegister);
+            variable->operation->EvaluateToAssembly(file, tempRegister);
             //move the result of the assembly operation into the variable
             file.SetVariableToRegister(variableName, tempRegister);
         }
@@ -599,7 +599,12 @@ std::shared_ptr<TreeNode> HandleProcedureCall(Table &table, std::string procedur
     }
 
     //find the data type of the variable and use that type
-    return HandleType(procedureToCall);
+    try{
+        return HandleType(procedureToCall);
+    }
+    catch(std::runtime_error const & err){
+        return procedureToCall;
+    }
 }
 
 /// handle a line of code that references a variable
@@ -691,7 +696,7 @@ void HandleReadStatement(Table &table, const std::string &readDest, int readType
     std::shared_ptr<VariableNode> variable = table.GetVariable(readDest);
 
     //set the variable value to null because we don't know what the user entered
-    variable->valueOfVariable = nullptr;
+    variable->operation = nullptr;
 
     //currently, we only support reading nums but this could change
     if(readType == READ_NUM_TOKEN){

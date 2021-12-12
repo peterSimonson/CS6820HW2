@@ -26,26 +26,10 @@ void IntegerNode::EvaluateToAssembly(AssemblyFile &File, std::string destination
 VariableNode::VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) :
         ObjectNode(nameOfVar, typeOfVar){
     AssignValue(std::move(valueOfVar));
-    //we have not declared this in assembly yet
-    declaredInAsm = false;
 }
 
 std::string VariableNode::NodeToString() {
     return name;
-}
-
-double VariableNode::EvaluateNode() {
-    if(valueOfVariable != nullptr){
-        return valueOfVariable->EvaluateNode();
-    }
-    else{
-        throw std::runtime_error("Error: Attempted to evaluate unassigned variable\n");
-    }
-
-}
-
-void VariableNode::AssignValue(std::shared_ptr<TreeNode> valueOfVar) {
-    valueOfVariable = std::move(valueOfVar);
 }
 
 void VariableNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
@@ -171,13 +155,8 @@ ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vect
     procedureParameters = std::move(parameters);
 }
 
-double ProcedureNode::EvaluateNode() {
-    if(procedureOperation != nullptr){
-        return procedureOperation->EvaluateNode();
-    }
-    else{
-        throw std::runtime_error("Error: Attempted to evaluate undefined procedure\n");
-    }
+void ProcedureNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
+    throw std::runtime_error("procedure assembly is not implemented");
 }
 
 std::string ProcedureNode::NodeToString() {
@@ -196,13 +175,6 @@ std::string ProcedureNode::NodeToString() {
     return returnVal;
 }
 
-void ProcedureNode::AssignValue(std::shared_ptr<TreeNode> valueOfVar) {
-    procedureOperation = std::move(valueOfVar);
-}
-
-void ProcedureNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    throw std::runtime_error("procedure assembly is not implemented");
-}
 
 NegateNode::NegateNode(std::shared_ptr<TreeNode> valueToNegate) {
     value = std::move(valueToNegate);
@@ -230,4 +202,18 @@ void NegateNode::EvaluateToAssembly(AssemblyFile &File, std::string destination)
 ObjectNode::ObjectNode(std::string objName, std::string objType) {
     name = std::move(objName);
     type = std::move(objType);
+    declaredInAsm = false;
+}
+
+void ObjectNode::AssignValue(std::shared_ptr<TreeNode> value) {
+    operation = std::move(value);
+}
+
+double ObjectNode::EvaluateNode() {
+    if(operation != nullptr){
+        return operation->EvaluateNode();
+    }
+    else{
+        throw std::runtime_error("Error: Attempted to evaluate " + name + " before it was defined.\n");
+    }
 }
