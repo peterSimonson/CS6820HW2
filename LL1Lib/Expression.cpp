@@ -375,6 +375,8 @@ void Expression::EvaluateExpression(Table &table, AssemblyFile &file) {
         std::vector<std::string> postfix  = convertInfixToPostFix(infix);
         //give the last procedure a return operation
         table.procedures.back()->AssignValue(evaluatePostFix(postfix, table));
+        //save the last procedure to assembly
+        table.procedures.back()->DeclareInAssembly(file);
     }
     //if we have a close bracket
     else if(std::find(tokens.begin(), tokens.end(), CLOSE_CURLY_TOKEN) != tokens.end()){

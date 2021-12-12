@@ -27,6 +27,8 @@ public:
     section dataSection;
     section bssSection;
     section textSection;
+    //holds the lines for procedures
+    std::vector<std::string> procedureLines;
     //will hold the file name we are going to create
     std::string fileName;
     std::string stringOutFormatter;
@@ -36,7 +38,7 @@ public:
 
     AssemblyFile();
 
-    void WriteAssemblyFile() const;
+    void WriteAssemblyFile();
     void AddInitializedString(const std::string& name, const std::string& text);
     void AddUnInitializedNum(const std::string& name);
     void AddInitializedNum(const std::string& name, int value);
@@ -51,6 +53,8 @@ public:
     void WriteNumPrint(const std::string& dataToPrint, bool isVariable);
     void WriteIshPrint(const std::string& dataToPrint);
     void WriteNumRead(const std::string& readDestination);
+    void WriteProcedurePrologue(const std::string& procedureName);
+    void WriteProcedureEpilogue();
 
 };
 

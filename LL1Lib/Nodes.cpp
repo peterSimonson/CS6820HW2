@@ -156,7 +156,7 @@ ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vect
 }
 
 void ProcedureNode::EvaluateToAssembly(AssemblyFile &File, std::string destination) {
-    throw std::runtime_error("procedure assembly is not implemented");
+
 }
 
 std::string ProcedureNode::NodeToString() {
@@ -173,6 +173,18 @@ std::string ProcedureNode::NodeToString() {
     returnVal += ")";
 
     return returnVal;
+}
+
+void ProcedureNode::DeclareInAssembly(AssemblyFile &File) {
+    //write the procedure prologue
+    File.WriteProcedurePrologue(name);
+
+    //write the procedure
+
+
+    //write the procedure epilogue
+    File.WriteProcedureEpilogue();
+    declaredInAsm = true;
 }
 
 

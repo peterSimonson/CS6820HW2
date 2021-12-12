@@ -85,6 +85,7 @@ public:
 
     explicit ProcedureNode(std::string name, std::string returnType, std::vector<std::shared_ptr<VariableNode>> parameters);
     void EvaluateToAssembly(AssemblyFile &File, std::string destination) override;
+    void DeclareInAssembly(AssemblyFile &File);
     std::string NodeToString() override;
 };
 

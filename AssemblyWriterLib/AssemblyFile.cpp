@@ -37,7 +37,7 @@ AssemblyFile::AssemblyFile() {
 }
 
 ///Once you have populated an assembly file object, run this class to create the .asm file
-void AssemblyFile::WriteAssemblyFile() const{
+void AssemblyFile::WriteAssemblyFile() {
 
     std::ofstream fileHandle(fileName);//holds file we are writing to
 
@@ -47,6 +47,9 @@ void AssemblyFile::WriteAssemblyFile() const{
     fileHandle << "extern _printf" << "\n";
     fileHandle << "extern _scanf" << "\n";
     fileHandle << "\n";
+
+    //add the procedures to the end of text
+    textSection.sectionLines.insert(textSection.sectionLines.end(), procedureLines.begin(), procedureLines.end());
 
     //write each section to the file
     writeSectionToFile(dataSection, fileHandle);
@@ -280,3 +283,17 @@ void AssemblyFile::WriteNumRead(const std::string& readDestination) {
     //call scanf
     textSection.sectionLines.emplace_back("call _scanf");
 }
+
+void AssemblyFile::WriteProcedurePrologue(const std::string &procedureName) {
+    //add the name of the procedure
+    procedureLines.push_back(procedureName + ":");
+    procedureLines.emplace_back("push rbp");
+    procedureLines.emplace_back("mov rbp, rsp");
+}
+
+void AssemblyFile::WriteProcedureEpilogue() {
+    procedureLines.emplace_back("mov rsp, rbp");
+    procedureLines.emplace_back("pop rbp");
+    procedureLines.emplace_back("ret");
+}
+
