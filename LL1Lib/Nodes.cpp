@@ -33,7 +33,12 @@ std::string VariableNode::NodeToString() {
 }
 
 void VariableNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
-    File.SetRegister(name, true, destination, isProcedure);
+    if(isProcedure){
+        File.SetRegister(asmRegister, false, destination, isProcedure);
+    }
+    else{
+        File.SetRegister(name, true, destination, isProcedure);
+    }
 }
 
 OperationNode::OperationNode(std::shared_ptr<TreeNode> leftNode, std::shared_ptr<TreeNode> rightNode) {

@@ -2,6 +2,10 @@ num procedure add(num a, num b) {
   num result = a + b
   return result
 }
+num procedure mult(num a, num b) {
+  num result = a * b
+  return result
+}
 num var1 = 0
 readNum var1
 num result1 = add(2, 3)

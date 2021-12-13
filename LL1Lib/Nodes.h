@@ -73,7 +73,7 @@ class VariableNode : public ObjectNode{
 public:
 
     explicit VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar);
-
+    std::string asmRegister;
     void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     std::string NodeToString() override;
 };

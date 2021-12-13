@@ -451,10 +451,19 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
         bool inProcedure = table.variableScopes.size() > 1;
 
         if(!variable->declaredInAsm){
+            //check if we need to add a register
+            if(variable->asmRegister.empty()){
+                variable->asmRegister = file.assemblyParameters[table.variableScopes.back().size()];
+            }
+            //otherwise, declare an uninitialized variable
+            else{
+                //add an uninitialized variable to the assembly file
+                file.AddUnInitializedNum(variableName);
+            }
+
             //this register will hold the result of the operation
             std::string tempRegister = "rcx";
-            //add an uninitialized variable to the assembly file
-            file.AddUnInitializedNum(variableName);
+
             //write the variable operation in assembly
             variable->operation->EvaluateToAssembly(file, tempRegister, inProcedure);
             //move the result of the assembly operation into the variable
@@ -509,6 +518,8 @@ std::vector<std::shared_ptr<VariableNode>> Expression::DeclareNewParams(Table &t
             i++;//move onto the variable name
             std::string variableName = words[i]; //get variable name
             std::shared_ptr<VariableNode> procedureParameter(new VariableNode(nullptr, variableName, variableType));
+            //add the register name
+            procedureParameter->asmRegister = File.assemblyParameters[table.variableScopes.back().size()];
             //add the parameter to the current scope
             table.AddVariable(procedureParameter);
             //add the parameter to the list of parameters

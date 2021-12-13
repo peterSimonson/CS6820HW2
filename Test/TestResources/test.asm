@@ -20,13 +20,10 @@ section .data
 	result3: dq 6
 	var2: dq 11
 
-section .bss
-	result: resb 8
-	result2: resb 8
-
 section .text
 	_main:
 	push rbx
+	mov [result], rcx
 	mov [result], rcx
 	lea rdi, [formatInNum]
 	lea rsi, [var1]
@@ -54,10 +51,23 @@ section .text
 	add:
 	push rbp
 	mov rbp, rsp
-	mov rcx, [a]
-	mov rax, [b]
+	mov rcx,rdi
+	mov rax,rsi
 	add rcx, rax
-	mov rax, [result]
+	mov rax,rcx
+	mov rsp, rbp
+	pop rbp
+	ret
+	mult:
+	push rbp
+	mov rbp, rsp
+	mov rcx,rdi
+	mov rbx,rsi
+	mov rbx, rbx
+	mov rax, rcx
+	mul rbx
+	mov rcx, rax
+	mov rax,rcx
 	mov rsp, rbp
 	pop rbp
 	ret
