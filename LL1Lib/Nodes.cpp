@@ -20,7 +20,7 @@ IntegerNode::IntegerNode(int valueOfNode) {
 }
 
 void IntegerNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
-    File.SetRegister(std::to_string(EvaluateNode()), false, destination, isProcedure);
+    File.SetRegister(std::to_string((int)EvaluateNode()), false, destination, isProcedure);
 }
 
 VariableNode::VariableNode(std::shared_ptr<TreeNode> valueOfVar, std::string const &nameOfVar, std::string const &typeOfVar) :
@@ -162,6 +162,11 @@ ProcedureNode::ProcedureNode(std::string name, std::string returnType, std::vect
 
 void ProcedureNode::EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) {
 
+    for(auto & parameter : parameters){
+        parameter->operation->EvaluateToAssembly(File, parameter->asmRegister, isProcedure);
+    }
+
+    File.WriteProcedureCall(name, isProcedure);
 }
 
 std::string ProcedureNode::NodeToString() {

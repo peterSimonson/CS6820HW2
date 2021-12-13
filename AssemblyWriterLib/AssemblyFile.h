@@ -58,6 +58,8 @@ public:
     void WriteNumRead(const std::string& readDestination);
     void WriteProcedurePrologue(const std::string& procedureName);
     void WriteProcedureEpilogue();
+    void WriteProcedureCall(const std::string& procedureName, bool isProcedure);
+    std::vector<std::string> * GetSection(bool isProcedure);
 
 };
 

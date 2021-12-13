@@ -33,6 +33,9 @@ section .text
 	mov rsi, [result1]
 	xor rax, rax
 	call _printf
+	mov rdi, [var1]
+	mov rsi,3
+	call add
 	mov [result2], rcx
 	lea rdi, [formatOutInt]
 	mov rsi, [result2]

@@ -132,13 +132,7 @@ void AssemblyFile::SetNumToConstant(const std::string& name, int value){
 void AssemblyFile::SetRegister(const std::string &source, bool isVariable, const std::string &registerToSet,
                                bool isProcedure) {
 
-    std::vector<std::string> * sectionToWrite;
-    if(isProcedure){
-        sectionToWrite = &procedureLines;
-    }
-    else{
-        sectionToWrite = & textSection.sectionLines;
-    }
+    std::vector<std::string> * sectionToWrite = GetSection(isProcedure);
 
     //move source into rcx.
     if(isVariable){
@@ -160,13 +154,7 @@ void AssemblyFile::SetVariableToRegister(const std::string& destinationVariable,
 void AssemblyFile::AddOrSub(const std::string &destination, const std::string &operation, const std::string &rhs,
                             bool isProcedure) {
 
-    std::vector<std::string> * sectionToWrite;
-    if(isProcedure){
-        sectionToWrite = &procedureLines;
-    }
-    else{
-        sectionToWrite = & textSection.sectionLines;
-    }
+    std::vector<std::string> * sectionToWrite = GetSection(isProcedure);
 
     //add rax to the destination
     sectionToWrite->push_back(operation +" "+ destination +", " + rhs);
@@ -176,13 +164,7 @@ void AssemblyFile::AddOrSub(const std::string &destination, const std::string &o
 void AssemblyFile::MulOrDivVariable(const std::string &destination, const std::string &operation, std::string &rhs,
                                     bool isProcedure) {
 
-    std::vector<std::string> * sectionToWrite;
-    if(isProcedure){
-        sectionToWrite = &procedureLines;
-    }
-    else{
-        sectionToWrite = & textSection.sectionLines;
-    }
+    std::vector<std::string> * sectionToWrite = GetSection(isProcedure);
 
     //the rhs register cannot be rax because that is the left-hand side
     if(rhs == "rbx"){
@@ -203,13 +185,7 @@ void AssemblyFile::MulOrDivVariable(const std::string &destination, const std::s
 
 void AssemblyFile::ExponentVariable(const std::string &power, const std::string &baseRegister, bool isProcedure) {
 
-    std::vector<std::string> * sectionToWrite;
-    if(isProcedure){
-        sectionToWrite = &procedureLines;
-    }
-    else{
-        sectionToWrite = & textSection.sectionLines;
-    }
+    std::vector<std::string> * sectionToWrite = GetSection(isProcedure);
 
     sectionToWrite->emplace_back("push rax");
     sectionToWrite->emplace_back("push rbx");
@@ -331,5 +307,23 @@ void AssemblyFile::WriteProcedureEpilogue() {
     procedureLines.emplace_back("mov rsp, rbp");
     procedureLines.emplace_back("pop rbp");
     procedureLines.emplace_back("ret");
+}
+
+void AssemblyFile::WriteProcedureCall(const std::string& procedureName, bool isProcedure) {
+    std::vector<std::string> * sectionToWrite = GetSection(isProcedure);
+
+    sectionToWrite->push_back("call " + procedureName);
+}
+
+std::vector<std::string> *AssemblyFile::GetSection(bool isProcedure) {
+    std::vector<std::string> * sectionToReturn;
+    if(isProcedure){
+        sectionToReturn = &procedureLines;
+    }
+    else{
+        sectionToReturn = & textSection.sectionLines;
+    }
+
+    return sectionToReturn;
 }
 
