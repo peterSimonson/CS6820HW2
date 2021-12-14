@@ -87,6 +87,7 @@ public:
     void EvaluateToAssembly(AssemblyFile &File, std::string destination, bool isProcedure) override;
     void StartAssemblyDeclaration(AssemblyFile &File);
     void EndAssemblyDeclaration(AssemblyFile &File);
+    double EvaluateNode() override;
     std::string NodeToString() override;
 };
 

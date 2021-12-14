@@ -167,6 +167,10 @@ void ProcedureNode::EvaluateToAssembly(AssemblyFile &File, std::string destinati
     }
 
     File.WriteProcedureCall(name, isProcedure, destination);
+
+    for(auto & parameter : parameters){
+        parameter->operation = nullptr;
+    }
 }
 
 std::string ProcedureNode::NodeToString() {
@@ -197,6 +201,15 @@ void ProcedureNode::EndAssemblyDeclaration(AssemblyFile &File) {
     //write the procedure epilogue
     File.WriteProcedureEpilogue();
     declaredInAsm = true;
+}
+
+double ProcedureNode::EvaluateNode() {
+    double result = ObjectNode::EvaluateNode();
+
+    for(auto & parameter : parameters){
+        parameter->operation = nullptr;
+    }
+    return result;
 }
 
 
