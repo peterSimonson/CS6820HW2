@@ -9,10 +9,14 @@ num procedure mult(num a, num b) {
 num var1 = 0
 readNum var1
 num result1 = add(2, 3)
+printString "result of 2 + 3"
 printNum result1
 num result2 = add(var1, 3)
+printString "result of input + 3"
 printNum result2
 num result3 = add(3, 3)
+printString "result of 3 + 3"
 printNum result3
+printString "result of 5 + (input + 3)"
 num var2 = result1 + result2
-printNum result2
+printNum var2

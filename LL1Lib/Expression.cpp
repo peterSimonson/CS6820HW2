@@ -467,7 +467,9 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
             //write the variable operation in assembly
             variable->operation->EvaluateToAssembly(file, tempRegister, inProcedure);
             //move the result of the assembly operation into the variable
-            file.SetVariableToRegister(variableName, tempRegister);
+            if(!inProcedure){
+                file.SetVariableToRegister(variableName, tempRegister);
+            }
         }
     }
 
