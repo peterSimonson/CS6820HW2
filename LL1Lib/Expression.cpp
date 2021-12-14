@@ -452,7 +452,7 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
 
         if(!variable->declaredInAsm){
             //check if we need to add a register
-            if(variable->asmRegister.empty()){
+            if(variable->asmRegister.empty() && inProcedure){
                 variable->asmRegister = file.assemblyParameters[table.variableScopes.back().size()];
             }
             //otherwise, declare an uninitialized variable

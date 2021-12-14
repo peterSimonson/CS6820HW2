@@ -20,6 +20,9 @@ section .data
 	result3: dq 6
 	var2: dq 11
 
+section .bss
+	result2: resb 8
+
 section .text
 	_main:
 	push rbx
