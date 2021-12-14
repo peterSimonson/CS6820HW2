@@ -309,10 +309,12 @@ void AssemblyFile::WriteProcedureEpilogue() {
     procedureLines.emplace_back("ret");
 }
 
-void AssemblyFile::WriteProcedureCall(const std::string& procedureName, bool isProcedure) {
+void AssemblyFile::WriteProcedureCall(const std::string &procedureName, bool isProcedure, const std::string& destination) {
     std::vector<std::string> * sectionToWrite = GetSection(isProcedure);
-
+    //write the procedure call
     sectionToWrite->push_back("call " + procedureName);
+    //move rax into the destination
+    SetRegister("rax", false, destination, isProcedure);
 }
 
 std::vector<std::string> *AssemblyFile::GetSection(bool isProcedure) {

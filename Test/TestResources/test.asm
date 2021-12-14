@@ -36,6 +36,7 @@ section .text
 	mov rdi, [var1]
 	mov rsi,3
 	call add
+	mov rcx,rax
 	mov [result2], rcx
 	lea rdi, [formatOutInt]
 	mov rsi, [result2]

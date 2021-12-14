@@ -166,7 +166,7 @@ void ProcedureNode::EvaluateToAssembly(AssemblyFile &File, std::string destinati
         parameter->operation->EvaluateToAssembly(File, parameter->asmRegister, isProcedure);
     }
 
-    File.WriteProcedureCall(name, isProcedure);
+    File.WriteProcedureCall(name, isProcedure, destination);
 }
 
 std::string ProcedureNode::NodeToString() {
