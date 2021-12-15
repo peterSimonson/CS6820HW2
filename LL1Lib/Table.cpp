@@ -106,14 +106,9 @@ void Table::GenerateRules() {
     addRule(MORE_PARAMS_TOKEN,       {EPSILON_TOKEN});//21
     addRule(PROCEDURE_ARGS_TOKEN,    {OPEN_PAREN_TOKEN, ARGS_TOKEN, CLOSE_PAREN_TOKEN});//21
     addRule(PROCEDURE_ARGS_TOKEN,    {EPSILON_TOKEN});//22
-    addRule(ARGS_TOKEN,              {NAME_TOKEN, MORE_ARGS_TOKEN});//23
-    addRule(ARGS_TOKEN,              {NEG_NAME_TOKEN, MORE_ARGS_TOKEN});//24
-    addRule(ARGS_TOKEN,              {SPACE_NEG_NAME_TOKEN, MORE_ARGS_TOKEN});//25
-    addRule(ARGS_TOKEN,              {NUM_TOKEN, MORE_ARGS_TOKEN});//26
-    addRule(ARGS_TOKEN,              {NEG_NUM_TOKEN, MORE_ARGS_TOKEN});//27
-    addRule(ARGS_TOKEN,              {SPACE_NEG_NUM_TOKEN, MORE_ARGS_TOKEN});//28
+    addRule(ARGS_TOKEN,              {EXPR_TOKEN, MORE_ARGS_TOKEN});//23
     addRule(ARGS_TOKEN,              {EPSILON_TOKEN});//29
-    addRule(MORE_ARGS_TOKEN,         {COMMA_TOKEN, ARGS_TOKEN});//30
+    addRule(MORE_ARGS_TOKEN,         {COMMA_TOKEN, EXPR_TOKEN, MORE_ARGS_TOKEN});//30
     addRule(MORE_ARGS_TOKEN,         {EPSILON_TOKEN});//31
     addRule(EXPR_TOKEN,              {L_TERM_ADD_SUB_TOKEN, ADD_SUB_PRIME_TOKEN});//32
     addRule(L_TERM_ADD_SUB_TOKEN,    {L_TERM_MULT_DIV_TOKEN, MULT_DIV_PRIME_TOKEN});//33

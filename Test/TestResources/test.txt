@@ -6,17 +6,21 @@ num procedure mult(num a, num b) {
   num result = a * b
   return result
 }
-num var1 = 0
-readNum var1
 num result1 = add(2, 3)
-printString "result1 = result of 2 + 3"
 printNum result1
-num result2 = add(var1, 3)
-printString "result2 = result of input + 3"
+num a = 2
+num b = 3
+num result2 = add(a, b)
 printNum result2
-num result3 = add(3, 3)
-printString "result3 = result of 3 + 3"
+num result3 = mult(a, b)
 printNum result3
-num var2 = result1 + result2
-printString "var2 = result of 5 + (input + 3)"
-printNum var2
+num result4 = mult(a,a)
+printNum result4
+num result5 = mult(b,b)
+printNum result5
+num result7 = add(a, b) - mult(a, b)
+printNum result7
+num result8 = add(a,a) + mult(a,b) * mult(b,b)
+printNum result8
+num result9 = add(add(a,b), mult(b,a)) + 7
+printNum result9
