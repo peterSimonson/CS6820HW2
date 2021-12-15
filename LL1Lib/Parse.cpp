@@ -7,6 +7,7 @@
 #include "stdexcept"
 
 void PrintParserError(const std::string& expr);
+std::string trim(const std::string& str, const std::string& whitespace);
 
 /// Parse the words from a line of code. Separate words based on whitespace and reserved chars such as ';'
 /// Note: strings will be parsed into one word
@@ -22,13 +23,13 @@ std::vector<std::string> parseWords(std::string const& line){
     const std::string keyChar = "=+-()*^/,{}";
     const char doubleQuote = '\"';
     bool inString = false;
-
-    auto it = line.begin();
+    std::string trimmedLine = trim(line, whitespace);
+    auto it = trimmedLine.begin();
     std::string word; //holds a word we are parsing
 
     //put while loop here to get all words
     bool leadingWhiteSpace = false;
-    while(it != line.end()){
+    while(it != trimmedLine.end()){
         //check if there is whitespace leading up to our term
         while(whitespace.find(*it) != std::string::npos && !inString){
             if(!word.empty()){
@@ -199,4 +200,19 @@ void Parser::EvaluateLine(Table &table, AssemblyFile &file) {
 /// \param expr the expression you failed to parse
 void PrintParserError(const std::string& expr){
     std::cout << "Error Parsing:\t" << expr << std::endl;
+}
+
+/// Taken from: https://stackoverflow.com/questions/1798112/removing-leading-and-trailing-spaces-from-a-string
+/// \param str the string you wish to trim
+/// \param whitespace the whitespace charecters you are looking for
+/// \return the trimmed string
+std::string trim(const std::string& str, const std::string& whitespace){
+    const auto strBegin = str.find_first_not_of(whitespace);
+    if (strBegin == std::string::npos)
+        return ""; // no content
+
+    const auto strEnd = str.find_last_not_of(whitespace);
+    const auto strRange = strEnd - strBegin + 1;
+
+    return str.substr(strBegin, strRange);
 }
