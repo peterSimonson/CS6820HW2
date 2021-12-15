@@ -176,6 +176,10 @@ void AssemblyFile::MulOrDivVariable(const std::string &destination, const std::s
 
     //move the destination value into rax
     sectionToWrite->emplace_back("mov rax, " + destination);
+    //zero out rdx if we are doing a div
+    if(operation == "div"){
+        sectionToWrite->emplace_back("xor rdx, rdx");
+    }
     //perform the operation on rax and rbx. result is saved in rax
     sectionToWrite->push_back(operation + " " + rhs);
     //store rax in the variable
