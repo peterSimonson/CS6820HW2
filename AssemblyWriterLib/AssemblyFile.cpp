@@ -178,13 +178,16 @@ void AssemblyFile::MulOrDivVariable(const std::string &destination, const std::s
     sectionToWrite->emplace_back("mov rax, " + destination);
     //zero out rdx if we are doing a div
     if(operation == "div"){
+        sectionToWrite->emplace_back("push rdx");
         sectionToWrite->emplace_back("xor rdx, rdx");
     }
     //perform the operation on rax and rbx. result is saved in rax
     sectionToWrite->push_back(operation + " " + rhs);
     //store rax in the variable
     sectionToWrite->emplace_back("mov "+ destination + ", rax");
-
+    if(operation == "div"){
+        sectionToWrite->emplace_back("pop rdx");
+    }
 }
 
 void AssemblyFile::ExponentVariable(const std::string &power, const std::string &baseRegister, bool isProcedure) {

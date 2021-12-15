@@ -417,7 +417,7 @@ void Expression::PerformAssignmentOperation(Table &table, int indexOfEquals, Ass
 
     //try to assign the variable to constant value using our intermediate representation
     try{
-        //assign a constant to a the variable
+        //assign a constant to a variable
         variable->AssignValue(HandleType(variable));
 
         //if the variable has not been declared in assembly, and we are in the global scope
