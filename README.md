@@ -33,6 +33,10 @@ I assemble and link this file using the following commands:
 
 `nasm -f macho64 assembly-1.asm && gcc -arch x86_64 -o assembly-1 assembly-1.o`
 
+##Reading the results
+
+If for whatever reason you do not build and run the assembly file, I have included the results from the video run in the root directory file, `results.txt`
+
 ##LL1Lib Folder
 
 This is a library required to run the LL1 Parser. I seperated this into a library in order to allow unit testing. Additionally, I hope having this as a separate library will be helpful in HW3.
