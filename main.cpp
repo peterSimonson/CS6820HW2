@@ -11,6 +11,7 @@
 void RunTestFiles();
 void ConvertFileToAssembly(const std::string& fileName);
 std::string replaceFirstOccurrence(std::string s, const std::string& toReplace, const std::string& replaceWith);
+bool isEmptyOrCommentLine(std::string & line);
 
 int main(int argc, char *argv[]) {
     std::cout << "CS6820 LL(1) Parser" << std::endl;
@@ -96,6 +97,11 @@ void RunTestFiles(){
     //read each line from the file
     while (std::getline(file, line)){
 
+        //if we have an empty or comment line don't do anything
+        if(isEmptyOrCommentLine(line)){
+            continue;
+        }
+
         Parser parse = Parser(line, table);
         if(parse.successfulParse){
             //try to evaluate the line
@@ -142,4 +148,13 @@ std::string replaceFirstOccurrence(std::string s, const std::string& toReplace, 
     std::size_t pos = s.find(toReplace);
     if (pos == std::string::npos) return s;
     return s.replace(pos, toReplace.length(), replaceWith);
+}
+
+bool isEmptyOrCommentLine(std::string & line){
+    if(line.empty() || (line.size() >= 2 && line[0] == '/' && line[1] == '/')){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
