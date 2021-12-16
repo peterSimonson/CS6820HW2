@@ -196,7 +196,7 @@ void ProcedureNode::StartAssemblyDeclaration(AssemblyFile &File) {
 
 void ProcedureNode::EndAssemblyDeclaration(AssemblyFile &File) {
     //write the procedure. Save the result to rax
-    operation->EvaluateToAssembly(File, "rax", true);
+    File.SetRegister("rcx", false, "rax", true);
 
     //write the procedure epilogue
     File.WriteProcedureEpilogue();
