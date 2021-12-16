@@ -78,6 +78,8 @@ num var39 = -2 - (-2 - (-2 - 2))
 printNum var39
 num var40 = -11-(-22 - (-33-(-44 - (-55 - (-66)))))
 printNum var40
+
+// Exponents
 num var41 = 3^3
 printNum var41
 num var42 = 4 ^ 4
@@ -88,6 +90,8 @@ num var44 = 3^(3^3)
 printNum var44
 num var45 = 5 + 4 * 3 ^ 2
 printNum var45
+
+// 32-bit floats
 ish float1 = 3.5
 printIsh float1
 ish float2 = (3.5)
@@ -96,12 +100,22 @@ ish float3 = ((3.55))
 printIsh float3
 ish float4 = 3.14159+2.718218
 printIsh float4
+
+// Prevent reuse (don't compute the last value, just report the issue and continue)
 num issue1 = 5
 num issue2 = 3 + 4
+num issue1 = 16
+
+// Spot this issue during the IR phase
+num error = 5 / 0
+
+// Allow copies
 num orig = 4 + 2
 printNum orig
 num copy = orig
 printNum copy
+
+// Allow reuse
 num var49 = var1 + var2
 printNum var49
 num var50 = var1 - var2
@@ -112,24 +126,32 @@ num var52 = var1 * var1
 printNum var52
 num var53 = (var3 + var4) * (var5 + var3)
 printNum var53
+
+// Support printable text
 printString "This begins the user input section"
 printString "Supply data and hit enter"
+
+// Support user input
 printString "Enter a number: "
 num user1 = 0
 readNum user1
 printNum user1
+
 printString "Enter a number: "
 num user2 = 0
 readNum user2
 printNum user2
+
 printString "Enter a number: "
 num user3 = 0
 readNum user3
 printNum user3
+
 printString "Enter a number: "
 num user4 = 0
 readNum user4
 printNum user4
+
 num userResult1 = user1 + user2
 printNum userResult1
 num userResult2 = user3 - user4
@@ -138,14 +160,18 @@ num userResult3 = user1 * user2
 printNum userResult3
 num userResult4 = user3 / user4
 printNum userResult4
+
+// Support procedures
 num procedure add(num a, num b) {
   num result = a + b
   return result
 }
+
 num procedure mult(num a, num b) {
   num result = a * b
   return result
 }
+
 num result1 = add(2, 3)
 printNum result1
 num a = 2
@@ -164,20 +190,30 @@ num result8 = add(a,a) + mult(a,b) * mult(b,b)
 printNum result8
 num result9 = add(add(a,b), mult(b,a)) + 7
 printNum result9
+
+
+//User procedures
 printString "Result of adding first and second user inputs: "
 num userResult5 = add(user1, user2)
 printNum userResult5
 printString "Result of multiplying third and fourth user inputs: "
 num userResult6 = mult(user3, user4)
 printNum userResult6
-num procedure computeApproxSphereVolume(num radius) {
+
+
+// Put it all together
+num procedure computeApproxSphereVolume(num radius){
+
   num result = radius ^ 3 * 4 * 31416 / 10000 / 3
   return result
 }
+
 printString "Enter a radius: "
 num userRadius = 0
 readNum userRadius
 num volume = computeApproxSphereVolume(userRadius)
+
 printString "The volume is: "
 printNum volume
+
 printString "Congratulations on the great semester!"

@@ -1,4 +1,4 @@
-# Peter Simonson CS6820 Homework 2
+# Peter Simonson CS6820 Final Homework
 
 This is a C++ Cmake project
 
@@ -11,14 +11,27 @@ In the root directory to build. You can also run the script ``buildWithCmake.sh`
 
 Once you have built the project there should be an executable called ``CS6820HW2`` located in `cmake-build-debug`. This executable accepts a string containing a mathematical expression.
 
+### Building on Morpheus
+The last time you built my program you had difficulty building the unit tests. I would recommend remove line number 17 in the root CmakeLists.txt. This line contains the statement `add_subdirectory(Test) #Contains all the tests`. Removing this will stop the unit tests from being built when you build the entire project.
+
+I also believe you changed my version of Cmake to `cmake_minimum_required(VERSION 3.16)` in the root CmakeLists.txt file. I used 3.20 because it added features for my unit tests.
+
 ### Command Syntax
 
 To run the program enter the following
 
-    ./CS6820HW2 [Expr]
-       OPTIONAL <Expr>: The string containing the mathematical expression you wish to parse
+    ./CS6820HW2 [FileName]
+       OPTIONAL <FileName>: The text file you wish to convert to assembly
 
-Please note: If you run `./CS6820HW2` without any command line arguments the program will parse all the expressions in the text file located in `./Test/TestResources/HW3Test.txt`
+Please note: If you run `./CS6820HW2` without any command line arguments the program will parse all the expressions in the text file located in `./Test/TestResources/assembly-1.txt`.
+
+## Running the output ASM file
+
+If for whatever reason you do not build and run my program, I have included the asm file featured in the video demonstration. It should be in the root project directory and is titled `assembly-1.asm`.
+
+I assemble and link this file using the following commands:
+
+`nasm -f macho64 assembly-1.asm && gcc -arch x86_64 -o assembly-1 assembly-1.o`
 
 ##LL1Lib Folder
 
@@ -44,4 +57,4 @@ This folder contains any resources needed to run the tests. For this homework I 
 Note: I use the files in this folder when you run the executable without any command line arguments.
 
 ## .github Folder
-This folder contains my github workflow. This workflow initializes the submodules, builds the project, and runs all the unit tests.
+This folder contains my github workflow. This workflow initializes the submodules, builds the project, and runs all the unit tests when you push to master.
