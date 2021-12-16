@@ -89,7 +89,7 @@ std::string replaceFirstOccurrence(std::string s, const std::string& toReplace, 
 }
 
 bool isEmptyOrCommentLine(std::string & line){
-    if(line.empty() || (line.size() >= 2 && line[0] == '/' && line[1] == '/')){
+    if(line.empty() || line.find_first_not_of(' ') == std::string::npos || (line.size() >= 2 && line[0] == '/' && line[1] == '/')){
         return true;
     }
     else{
