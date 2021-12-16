@@ -8,7 +8,6 @@
 #define INCORRECT_NUM_OF_ARGS_ERR 1
 #define CORRECT_NUM_OF_ARGS 0
 
-void RunTestFiles();
 void ConvertFileToAssembly(const std::string& fileName);
 std::string replaceFirstOccurrence(std::string s, const std::string& toReplace, const std::string& replaceWith);
 bool isEmptyOrCommentLine(std::string & line);
@@ -18,7 +17,7 @@ int main(int argc, char *argv[]) {
 
     //if no command line args are entered just run the test files
     if(argc == 1){
-        RunTestFiles();
+        ConvertFileToAssembly("../Test/TestResources/assembly-1.txt");
         return CORRECT_NUM_OF_ARGS;
     }
     //check command line args
@@ -57,6 +56,10 @@ void ConvertFileToAssembly(const std::string& fileName){
 
     //read each line from the file
     while (std::getline(file, line)){
+        if(isEmptyOrCommentLine(line)){
+            continue;
+        }
+
         //parse each line
         Parser parse = Parser(line, table);
         //if we successfully parsed a line, evaluate the line
@@ -76,71 +79,6 @@ void ConvertFileToAssembly(const std::string& fileName){
 
     //write the output file
     asmFile.WriteAssemblyFile();
-}
-
-void RunTestFiles(){
-    std::cout << "Reading expressions from: Test/TestResources/HW3Test.txt" <<std::endl << std::endl;
-
-    std::ifstream file("../Test/TestResources/HW3Test.txt");//holds file we are opening
-    std::string line; //holds a single expression we wish to parse
-
-    if(!file.is_open()){
-        std::cout << "Could not open file containing HW3Test";
-        return;
-    }
-
-    //generate our table
-    Table table = Table();
-    //generate the file we will be writing
-    AssemblyFile asmFile = AssemblyFile();
-
-    //read each line from the file
-    while (std::getline(file, line)){
-
-        //if we have an empty or comment line don't do anything
-        if(isEmptyOrCommentLine(line)){
-            continue;
-        }
-
-        Parser parse = Parser(line, table);
-        if(parse.successfulParse){
-            //try to evaluate the line
-            try{
-                parse.EvaluateLine(table, asmFile);
-            }
-            //normally we would just kill the program if we cannot evaluate but in this instance
-            //we want to keep going and test the entire file
-            catch(const std::exception &exc) {
-                std::cout << "Error evaluating:\t" << line <<std::endl;
-                std::cout << exc.what();
-            }
-        }
-        //stop because we failed to parse a line
-        else{
-            return;
-        }
-    }
-
-    file.close();
-    std::vector<std::shared_ptr<VariableNode>> currentScope = table.variableScopes.back();
-    for(auto & variable : currentScope){
-
-        std::string output = "Current Value of: " + variable->type + " " + variable->name + " = ";
-        try{
-            if(variable->type == "num"){
-                //so we are saving all values as doubles and converting them back to ints at the very end if need be
-                output += std::to_string((int)variable->EvaluateNode());
-            }
-            else{
-                output += std::to_string(variable->EvaluateNode());
-            }
-        }
-        catch(...){
-            output += "UNASSIGNED";
-        }
-
-        std::cout << output << std::endl;
-    }
 }
 
 //taken from: https://stackoverflow.com/questions/5878775/how-to-find-and-replace-string/5878802
